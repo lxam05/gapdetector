@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gap Detector – Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(94, 98, 238, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(94, 98, 238, 0.055) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .hero-heading {
+      font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+
+    #wifi-loader {
+      --background: #62abff;
+      --front-color: #4f29f0;
+      --back-color: #c3c8de;
+      --text-color: #414856;
+      width: 64px;
+      height: 64px;
+      border-radius: 50px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #wifi-loader svg {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #wifi-loader svg circle {
+      position: absolute;
+      fill: none;
+      stroke-width: 6px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transform: rotate(-100deg);
+      transform-origin: center;
+    }
+
+    #wifi-loader svg circle.back {
+      stroke: var(--back-color);
+    }
+
+    #wifi-loader svg circle.front {
+      stroke: var(--front-color);
+    }
+
+    #wifi-loader svg.circle-outer {
+      height: 86px;
+      width: 86px;
+    }
+
+    #wifi-loader svg.circle-outer circle {
+      stroke-dasharray: 62.75 188.25;
+    }
+
+    #wifi-loader svg.circle-outer circle.back {
+      animation: circle-outer135 1.8s ease infinite 0.3s;
+    }
+
+    #wifi-loader svg.circle-outer circle.front {
+      animation: circle-outer135 1.8s ease infinite 0.15s;
+    }
+
+    #wifi-loader svg.circle-middle {
+      height: 60px;
+      width: 60px;
+    }
+
+    #wifi-loader svg.circle-middle circle {
+      stroke-dasharray: 42.5 127.5;
+    }
+
+    #wifi-loader svg.circle-middle circle.back {
+      animation: circle-middle6123 1.8s ease infinite 0.25s;
+    }
+
+    #wifi-loader svg.circle-middle circle.front {
+      animation: circle-middle6123 1.8s ease infinite 0.1s;
+    }
+
+    #wifi-loader svg.circle-inner {
+      height: 34px;
+      width: 34px;
+    }
+
+    #wifi-loader svg.circle-inner circle {
+      stroke-dasharray: 22 66;
+    }
+
+    #wifi-loader svg.circle-inner circle.back {
+      animation: circle-inner162 1.8s ease infinite 0.2s;
+    }
+
+    #wifi-loader svg.circle-inner circle.front {
+      animation: circle-inner162 1.8s ease infinite 0.05s;
+    }
+
+    #wifi-loader .text {
+      position: absolute;
+      bottom: -40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: lowercase;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    #wifi-loader .text::before,
+    #wifi-loader .text::after {
+      content: attr(data-text);
+    }
+
+    #wifi-loader .text::before {
+      color: var(--text-color);
+    }
+
+    #wifi-loader .text::after {
+      color: var(--front-color);
+      animation: text-animation76 3.6s ease infinite;
+      position: absolute;
+      left: 0;
+    }
+
+    @keyframes circle-outer135 {
+      0% {
+        stroke-dashoffset: 25;
+      }
+
+      25% {
+        stroke-dashoffset: 0;
+      }
+
+      65% {
+        stroke-dashoffset: 301;
+      }
+
+      80% {
+        stroke-dashoffset: 276;
+      }
+
+      100% {
+        stroke-dashoffset: 276;
+      }
+    }
+
+    @keyframes circle-middle6123 {
+      0% {
+        stroke-dashoffset: 17;
+      }
+
+      25% {
+        stroke-dashoffset: 0;
+      }
+
+      65% {
+        stroke-dashoffset: 204;
+      }
+
+      80% {
+        stroke-dashoffset: 187;
+      }
+
+      100% {
+        stroke-dashoffset: 187;
+      }
+    }
+
+    @keyframes circle-inner162 {
+      0% {
+        stroke-dashoffset: 9;
+      }
+
+      25% {
+        stroke-dashoffset: 0;
+      }
+
+      65% {
+        stroke-dashoffset: 106;
+      }
+
+      80% {
+        stroke-dashoffset: 97;
+      }
+
+      100% {
+        stroke-dashoffset: 97;
+      }
+    }
+
+    @keyframes text-animation76 {
+      0% {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      50% {
+        clip-path: inset(0);
+      }
+
+      100% {
+        clip-path: inset(0 0 0 100%);
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <!-- Top nav (matches index) -->
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-full bg-[#5e62ee] flex items-center justify-center text-xs font-bold text-white">
+            GD
+          </div>
+          <span class="text-sm font-semibold tracking-tight">Gap&nbsp;Detector</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-xs text-slate-500">
+        </nav>
+        <div class="flex items-center gap-2">
+          <a
+            href="/"
+            class="inline-flex items-center rounded-full border border-[#5e62ee]/20 px-3 py-1 text-xs font-medium text-[#5e62ee] hover:bg-[#5e62ee]/5 transition-colors"
+          >
+            Back to home
+          </a>
+          <a
+            href="/"
+            class="inline-flex items-center rounded-full bg-[#5e62ee] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] transition-colors"
+          >
+            New scan
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-8">
+        <section class="bg-white/90 border border-slate-200 rounded-2xl shadow-xl shadow-slate-900/5 p-6 sm:p-8 space-y-6">
+        <div class="flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <h1 class="text-xl font-semibold text-slate-900 hero-heading">Run a competitor scan</h1>
+            <p class="text-sm text-slate-500">Enter a company or domain to analyze reviews, discussions, and market sentiment.</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 text-xs text-slate-500">
+            <span class="mb-1 hidden sm:inline">Compare mode</span>
+            <div class="inline-flex rounded-full border border-slate-200 bg-slate-50 p-0.5">
+              <button type="button" data-mode="solo" id="mode-solo" class="px-2.5 py-1 rounded-full text-xs font-medium bg-white text-slate-700 border border-slate-200">See competitor only</button>
+              <button type="button" data-mode="other" id="mode-other" class="px-2.5 py-1 rounded-full text-xs font-medium text-slate-600">Compare vs other company</button>
+              <button type="button" data-mode="own" id="mode-own" class="px-2.5 py-1 rounded-full text-xs font-medium text-slate-600">Compare vs my company</button>
+            </div>
+          </div>
+        </div>
+
+        <form id="analyze-form" class="space-y-4">
+          <!-- Primary / competitor inputs -->
+          <div class="space-y-1.5">
+            <label for="query" class="block text-sm font-medium text-slate-800">
+              Company or domain
+            </label>
+            <p class="text-xs text-slate-500">
+              Examples: <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">notion.so</code>,
+            </p>
+            <input
+              id="query"
+              name="query"
+              type="text"
+              class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+              placeholder="Enter a company name or domain"
+              autocomplete="off"
+            />
+          </div>
+
+          <div id="competitor-field" class="space-y-1.5 hidden">
+            <label for="competitor" class="block text-sm font-medium text-slate-800">
+              Company to compare against
+            </label>
+            <p class="text-xs text-slate-500">
+              Compare against another company, maybe even your own (e.g. <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">Notion</code> vs <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">Evernote</code>).
+            </p>
+            <input
+              id="competitor"
+              name="competitor"
+              type="text"
+              class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+              placeholder="Optional: competitor company or product"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="submit"
+              id="submit-btn"
+              class="inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              <span id="submit-label">Analyze market sentiment</span>
+            </button>
+            <div class="text-xs text-slate-500" id="status">
+            </div>
+          </div>
+
+          <div class="text-xs text-red-600 min-h-[1rem]" id="error"></div>
+        </form>
+
+        <!-- Loading state -->
+        <div id="results-loading" class="hidden border-t border-slate-200 pt-8 flex flex-col items-center justify-center gap-4 py-12">
+          <div id="wifi-loader">
+            <svg class="circle-outer" viewBox="0 0 86 86">
+              <circle class="back" cx="43" cy="43" r="40"></circle>
+              <circle class="front" cx="43" cy="43" r="40"></circle>
+              <circle class="new" cx="43" cy="43" r="40"></circle>
+            </svg>
+            <svg class="circle-middle" viewBox="0 0 60 60">
+              <circle class="back" cx="30" cy="30" r="27"></circle>
+              <circle class="front" cx="30" cy="30" r="27"></circle>
+            </svg>
+            <svg class="circle-inner" viewBox="0 0 34 34">
+              <circle class="back" cx="17" cy="17" r="14"></circle>
+              <circle class="front" cx="17" cy="17" r="14"></circle>
+            </svg>
+          </div>
+          <p id="results-loading-text" class="text-sm text-slate-600">Analyzing public sources…</p>
+        </div>
+
+        <!-- Dashboard (populated by JS) -->
+        <div id="results-dashboard" class="hidden border-t border-slate-200 pt-6 space-y-8">
+          <!-- TL;DR + actions -->
+          <section id="dashboard-tldr" class="rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-900/5 p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">TL;DR</span>
+                <span id="tldr-sentiment" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">—</span>
+                <span id="tldr-opportunity" class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Opp: —/10</span>
+                <span id="tldr-difficulty" class="inline-flex items-center rounded-full bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-700">Difficulty: —</span>
+              </div>
+              <div class="flex flex-wrap gap-2 justify-end">
+                <button type="button" id="export-pdf" class="text-[11px] text-slate-600 hover:text-[#5e62ee]">Export PDF</button>
+                <button type="button" id="copy-all" class="text-[11px] text-[#5e62ee] hover:underline">Copy full report</button>
+              </div>
+            </div>
+            <div class="space-y-1.5 text-sm text-slate-800">
+              <p id="tldr-strength">What they do well: —</p>
+              <p id="tldr-weakness">Where they lose: —</p>
+              <p id="tldr-wedge" class="font-medium">Best wedge for you: —</p>
+            </div>
+          </section>
+
+          <!-- 1) Executive Summary -->
+          <section id="dashboard-executive" class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 overflow-hidden">
+            <div class="p-6 sm:p-8">
+              <h2 class="text-lg font-semibold text-slate-900 mb-4">Executive Summary</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Overall Sentiment</span>
+                  <span id="exec-sentiment-badge" class="inline-flex w-fit rounded-full px-3 py-1 text-sm font-medium">—</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Biggest Opportunity</span>
+                  <p id="exec-opportunity" class="text-sm text-slate-800">—</p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">What this competitor does best</span>
+                  <p id="exec-strength" class="text-sm text-slate-800">—</p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Confidence</span>
+                  <span id="exec-confidence" class="text-sm text-slate-800">—</span>
+                </div>
+              </div>
+              <p id="exec-headline" class="mt-4 text-sm text-slate-600 hidden"></p>
+            </div>
+          </section>
+
+          <!-- 2) Opportunity Scoreboard -->
+          <section id="dashboard-opportunities" class="hidden">
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <h2 class="text-xl font-semibold text-slate-900">Top Opportunities to Win</h2>
+            </div>
+            <div id="opportunities-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+          </section>
+
+          <!-- 3) Strengths vs Weaknesses -->
+          <section id="dashboard-strengths-weaknesses" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">What They Do Well</h3>
+              <ul id="strengths-list" class="space-y-2 text-sm text-slate-700"></ul>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-rose-50/30 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">Where They Fall Short</h3>
+              <ul id="weaknesses-list" class="space-y-2 text-sm text-slate-700"></ul>
+            </div>
+          </section>
+
+          <!-- 4) Real Customer Voice -->
+          <section id="dashboard-quotes" class="hidden">
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">What Customers Actually Say</h2>
+            <div id="quotes-grid" class="grid gap-4 sm:grid-cols-2"></div>
+          </section>
+
+          <!-- 5) Feature Requests -->
+          <section id="dashboard-feature-requests" class="hidden">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Feature Requests / Unmet Needs</h2>
+            </div>
+            <ul id="feature-requests-list" class="space-y-2 text-sm text-slate-700"></ul>
+          </section>
+
+          <!-- 6) How to Beat Them -->
+          <section id="dashboard-how-to-beat" class="hidden rounded-xl border border-[#5e62ee]/20 bg-[#5e62ee]/5 p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">How to Outperform This Competitor</h2>
+            </div>
+            <ul id="how-to-beat-list" class="space-y-2 text-sm text-slate-700"></ul>
+          </section>
+
+          <!-- 7) Recommended Positioning for YOU -->
+          <section id="dashboard-tailored" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Recommended Positioning for YOU</h2>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Positioning angle</h3>
+                <p id="tailored-angle" class="text-sm text-slate-800">—</p>
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500 mt-3">ICP</h3>
+                <p id="tailored-icp" class="text-sm text-slate-800">—</p>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Key differentiators</h3>
+                <ul id="tailored-diffs" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Homepage headlines</h3>
+                <ul id="tailored-headlines" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Homepage subheadlines</h3>
+                <ul id="tailored-subheadlines" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Objections &amp; rebuttals</h3>
+              <ul id="tailored-objections" class="space-y-1.5 text-sm text-slate-800"></ul>
+            </div>
+          </section>
+
+          <!-- 8) Underserved Segments -->
+          <section id="dashboard-segments" class="hidden rounded-2xl border border-slate-200 bg-white p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Underserved Segments</h2>
+            </div>
+            <div id="segments-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 9) Switch Triggers -->
+          <section id="dashboard-switch-triggers" class="hidden rounded-2xl border border-slate-200 bg-white p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Likely Switching Moments</h2>
+            </div>
+            <div id="switch-triggers-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 10) Messaging & Angles -->
+          <section id="dashboard-messaging" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Messaging &amp; Angles</h2>
+                <div class="flex flex-wrap gap-2 items-center">
+                <div class="flex items-center gap-1 text-[11px] text-slate-500">
+                  <span class="mr-1">Use on:</span>
+                  <button type="button" data-message-filter="all" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600 bg-slate-50">All</button>
+                  <button type="button" data-message-filter="hero" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Hero</button>
+                  <button type="button" data-message-filter="ads" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Ads</button>
+                  <button type="button" data-message-filter="cold email" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Cold email</button>
+                </div>
+                <button type="button" id="regen-messaging" class="text-xs text-[#5e62ee] hover:underline">Generate variants</button>
+                </div>
+              </div>
+            </div>
+            <div id="messaging-themes" class="grid gap-4 sm:grid-cols-2"></div>
+          </section>
+
+          <!-- 11) Feature Gap Map -->
+          <section id="dashboard-gap-map" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Feature Gap Map</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-left text-xs text-slate-700">
+                <thead class="text-[11px] uppercase text-slate-500 border-b">
+                  <tr>
+                    <th class="py-2 pr-4">Feature Area</th>
+                    <th class="py-2 pr-4">Competitor Weakness</th>
+                    <th class="py-2 pr-4">Opportunity</th>
+                    <th class="py-2 pr-4">Build vs Market</th>
+                    <th class="py-2 pr-4">Severity</th>
+                    <th class="py-2 pr-2">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody id="gap-map-rows" class="align-top"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 12) Blind Spots -->
+          <section id="dashboard-blind-spots" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Blind Spots</h2>
+            </div>
+            <ul id="blind-spots-list" class="space-y-2 text-sm text-slate-800"></ul>
+            <button type="button" id="add-sources" class="inline-flex items-center rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:border-[#5e62ee] hover:text-[#5e62ee]">
+              Add sources to expand scan
+            </button>
+          </section>
+
+          <!-- 13) Strategic Options -->
+          <section id="dashboard-strategic-options" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Paths to Win</h2>
+            </div>
+            <div id="strategic-options-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 14) Compare Mode -->
+          <section id="dashboard-compare" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Compare Mode</h2>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Overlap strengths</h3>
+                <ul id="compare-overlap" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Unique advantages</h3>
+                <ul id="compare-uniques" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Biggest narrative wedge</h3>
+              <p id="compare-wedge" class="text-sm text-slate-800">—</p>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Battlecard summary</h3>
+              <pre id="compare-battlecard" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-3 text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap"></pre>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Fallback: raw report if no structured data -->
+        <section id="results-fallback" class="hidden border-t border-slate-200 pt-6 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-sm font-semibold text-slate-800">Full report</h2>
+          </div>
+          <pre id="results-raw" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-4 text-sm leading-relaxed overflow-y-auto max-h-[50vh] whitespace-pre-wrap"></pre>
+        </section>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <div class="h-6 w-6 rounded-full bg-[#5e62ee] flex items-center justify-center text-[10px] font-bold text-white">
+              GD
+            </div>
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const form = document.getElementById('analyze-form');
+    const queryInput = document.getElementById('query');
+    const competitorInput = document.getElementById('competitor');
+    const competitorField = document.getElementById('competitor-field');
+    const modeSoloBtn = document.getElementById('mode-solo');
+    const modeOtherBtn = document.getElementById('mode-other');
+    const modeOwnBtn = document.getElementById('mode-own');
+    const statusEl = document.getElementById('status');
+    const errorEl = document.getElementById('error');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitLabel = document.getElementById('submit-label');
+    const resultsLoading = document.getElementById('results-loading');
+    const resultsLoadingText = document.getElementById('results-loading-text');
+    const resultsDashboard = document.getElementById('results-dashboard');
+    const resultsRaw = document.getElementById('results-raw');
+    const resultsFallback = document.getElementById('results-fallback');
+
+    let lastResult = null;
+
+    let compareMode = 'solo'; // 'solo' | 'other' | 'own'
+
+    function setCompareMode(mode) {
+      compareMode = mode;
+      if (!competitorField) return;
+      var helper = document.querySelector('#competitor-field p.text-xs');
+
+      if (mode === 'solo') {
+        competitorField.classList.add('hidden');
+        if (competitorInput) competitorInput.value = '';
+      } else {
+        competitorField.classList.remove('hidden');
+        if (helper) {
+          if (mode === 'own') {
+            helper.textContent = "Paste your own product's website to compare against this competitor (e.g. yourapp.com).";
+          } else {
+            helper.textContent = 'Compare against another company (e.g. Notion vs Evernote).';
+          }
+        }
+      }
+
+      // Update button styles
+      if (modeSoloBtn && modeOtherBtn && modeOwnBtn) {
+        [modeSoloBtn, modeOtherBtn, modeOwnBtn].forEach(function (btn) {
+          btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+          btn.classList.add('text-slate-600');
+        });
+        if (mode === 'solo') {
+          modeSoloBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        } else if (mode === 'other') {
+          modeOtherBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        } else if (mode === 'own') {
+          modeOwnBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        }
+      }
+    }
+
+    if (modeSoloBtn) modeSoloBtn.onclick = function () { setCompareMode('solo'); };
+    if (modeOtherBtn) modeOtherBtn.onclick = function () { setCompareMode('other'); };
+    if (modeOwnBtn) modeOwnBtn.onclick = function () { setCompareMode('own'); };
+    setCompareMode('solo');
+
+    // Simple analytics hook (no-op if no global tracker is present)
+    function track(eventName, props) {
+      try {
+        if (window.gtag) {
+          window.gtag('event', eventName, props || {});
+        } else if (window.analytics && window.analytics.track) {
+          window.analytics.track(eventName, props || {});
+        } else {
+          // Fallback: console for debugging
+          console.debug('[gd-analytics]', eventName, props || {});
+        }
+      } catch (e) {
+        console.debug('[gd-analytics-error]', e);
+      }
+    }
+
+    // If page is opened from a share link, hydrate from server instead of re-running a scan.
+    (async function hydrateFromShareIfNeeded() {
+      try {
+        const params = new URLSearchParams(window.location.search || '');
+        const token = params.get('share');
+        if (!token) return;
+        const res = await fetch('/share/' + encodeURIComponent(token));
+        if (!res.ok) return;
+        const data = await res.json();
+        resultsDashboard.classList.remove('hidden');
+        renderDashboard(data);
+      } catch (e) {
+        console.error('Failed to hydrate shared report', e);
+      }
+    })();
+
+    function stripMd(s) {
+      if (!s) return '';
+      var out = String(s);
+      out = out.replace(/\*\*/g, '');        // bold
+      out = out.replace(/#+\s*/g, '');       // markdown headings like ### Title
+      return out;
+    }
+
+    function bulletsFromSection(text) {
+      if (!text || !text.trim()) return [];
+      return text.split(/\n/).map(function (line) {
+        var s = line.replace(/^[-*]\s*/, '').trim();
+        s = stripMd(s);
+        // Drop leading "1." style numbering but keep the actual content.
+        s = s.replace(/^\d+\.\s*/, '');
+        // Drop bullets that are just dashes or bare numbers
+        if (!s) return '';
+        if (/^[-–—]+$/.test(s)) return '';
+        if (/^\d+\.?$/.test(s)) return '';
+        return s;
+      }).filter(function (s) { return s && s.length > 0; });
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      var div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    function formatTimestamp(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' });
+      } catch (e) { return iso; }
+    }
+
+    function sentimentBadgeClass(sentiment) {
+      if (sentiment === 'Positive') return 'bg-emerald-100 text-emerald-800';
+      if (sentiment === 'Negative') return 'bg-rose-100 text-rose-800';
+      return 'bg-amber-100 text-amber-800';
+    }
+
+    function getSection(sections, keys) {
+      if (!sections || typeof sections !== 'object') return '';
+      for (var i = 0; i < keys.length; i++) {
+        var v = sections[keys[i]];
+        if (v && typeof v === 'string' && v.trim()) return v;
+      }
+      return '';
+    }
+
+    function renderDashboard(data) {
+      const sections = data.sections || {};
+      const sources = Array.isArray(data.sources) ? data.sources : [];
+      const quotes = Array.isArray(data.quotes) ? data.quotes : [];
+      lastResult = data;
+
+      // Scores & TL;DR
+      const opportunityScore = typeof data.opportunity_score === 'number' ? data.opportunity_score : null;
+      const difficultyScore = typeof data.difficulty_score === 'number' ? data.difficulty_score : null;
+      const breakdown = data.score_breakdown || {};
+
+      const difficultyLabel = (function () {
+        if (difficultyScore == null) return '—';
+        if (difficultyScore >= 8) return 'High';
+        if (difficultyScore >= 4) return 'Medium';
+        return 'Low';
+      })();
+
+      const tldrSent = document.getElementById('tldr-sentiment');
+      const tldrOpp = document.getElementById('tldr-opportunity');
+      const tldrDiff = document.getElementById('tldr-difficulty');
+      if (tldrSent) tldrSent.textContent = 'Customer sentiment: ' + (data.sentiment_badge || 'Mixed').trim();
+      if (tldrOpp) tldrOpp.textContent = 'Opportunity for you: ' + (opportunityScore != null ? opportunityScore : '—') + '/10';
+      if (tldrDiff) tldrDiff.textContent = 'Win difficulty: ' + difficultyLabel;
+
+      // Opportunities text and strengths/weaknesses bullets (used in multiple places)
+      const oppText = getSection(sections, ['Opportunities for a New Competitor', 'Opportunities for New Competitors', 'Opportunities']) || '';
+      const oppBullets = bulletsFromSection(oppText);
+      const strText = getSection(sections, ['Key Strengths', 'Strengths', 'What customers like']) || '';
+      const weakText = (getSection(sections, ['Key Weaknesses', 'Weaknesses', 'What customers dislike']) || '') + '\n' + (getSection(sections, ['Common Complaints', 'Complaints']) || '');
+      const strBullets = bulletsFromSection(strText);
+      const weakBullets = bulletsFromSection(weakText);
+
+      // Executive Summary
+      const sent = (data.sentiment_badge || 'Mixed').trim();
+      const execBadge = document.getElementById('exec-sentiment-badge');
+      execBadge.textContent = sent;
+      execBadge.className = 'inline-flex w-fit rounded-full px-3 py-1 text-sm font-medium ' + sentimentBadgeClass(sent);
+      document.getElementById('exec-opportunity').textContent = stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+      // Clean biggest strength and remove any "competitors in this space" style clauses
+      var strengthText = stripMd(data.biggest_strength || (strBullets[0] || '—'));
+      strengthText = strengthText.replace(/competitors? in this space.*$/i, '').trim();
+      document.getElementById('exec-strength').textContent = strengthText || '—';
+      document.getElementById('exec-confidence').textContent = data.confidence || '—';
+      const execHeadline = document.getElementById('exec-headline');
+      if (data.sentiment_headline) {
+        execHeadline.textContent = stripMd(data.sentiment_headline);
+        execHeadline.classList.remove('hidden');
+      }
+
+      // Opportunities (top 6)
+      const oppSection = document.getElementById('dashboard-opportunities');
+      const oppList = document.getElementById('opportunities-list');
+      oppList.innerHTML = '';
+      if (oppBullets.length > 0) {
+        oppSection.classList.remove('hidden');
+        oppBullets.forEach(function (text, i) {
+          const card = document.createElement('div');
+          card.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+          var clean = stripMd(text);
+          var safe = escapeHtml(clean);
+          card.innerHTML = '<div class="flex items-start gap-2"><span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span><div><p class="text-sm font-medium text-slate-800">' + safe + '</p><div class="mt-2 flex gap-2"><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Demand: Medium</span><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Impact: High</span></div></div></div>';
+          oppList.appendChild(card);
+        });
+      }
+
+      // Strengths vs Weaknesses
+      const swSection = document.getElementById('dashboard-strengths-weaknesses');
+      const strList = document.getElementById('strengths-list');
+      const weakList = document.getElementById('weaknesses-list');
+      strList.innerHTML = '';
+      weakList.innerHTML = '';
+      if (strBullets.length > 0 || weakBullets.length > 0) {
+        swSection.classList.remove('hidden');
+        strBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-emerald-500 mt-0.5">✓</span><span>' + escapeHtml(stripMd(s)) + '</span>'; strList.appendChild(li); });
+        weakBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-rose-500 mt-0.5">✕</span><span>' + escapeHtml(stripMd(s)) + '</span>'; weakList.appendChild(li); });
+      }
+
+      // Quotes
+      const quotesSection = document.getElementById('dashboard-quotes');
+      const quotesGrid = document.getElementById('quotes-grid');
+      quotesGrid.innerHTML = '';
+      if (quotes.length > 0) {
+        quotesSection.classList.remove('hidden');
+        quotes.forEach(function (q) {
+          const card = document.createElement('div');
+          card.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+          card.innerHTML = '<p class="text-sm text-slate-700 italic">"' + escapeHtml(q.text || '') + '"</p><p class="text-xs text-slate-500 mt-2">— ' + escapeHtml(q.domain || '') + '</p>';
+          quotesGrid.appendChild(card);
+        });
+      }
+
+      // TL;DR text
+      var tldrStrengthEl = document.getElementById('tldr-strength');
+      var tldrWeaknessEl = document.getElementById('tldr-weakness');
+      var tldrWedgeEl = document.getElementById('tldr-wedge');
+      var tldrStrength = 'What they do well: ' + (strBullets[0] || (sections['Key Strengths'] || '').split('\n')[0] || '—');
+      var tldrWeakness = 'Where they lose: ' + (weakBullets[0] || (sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '—');
+      var tldrWedge = 'Best wedge for you: ' + stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+      if (tldrStrengthEl) tldrStrengthEl.textContent = tldrStrength;
+      if (tldrWeaknessEl) tldrWeaknessEl.textContent = tldrWeakness;
+      if (tldrWedgeEl) tldrWedgeEl.textContent = tldrWedge;
+
+      // Feature Requests
+      const frText = getSection(sections, ['Feature Requests / Unmet Needs', 'Feature Requests and Unmet Needs', 'Feature Requests', 'Unmet Needs']) || '';
+      const frBullets = bulletsFromSection(frText);
+      const frSection = document.getElementById('dashboard-feature-requests');
+      const frList = document.getElementById('feature-requests-list');
+      frList.innerHTML = '';
+      if (frBullets.length > 0) {
+        frSection.classList.remove('hidden');
+        frBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-[#5e62ee] mt-0.5">•</span><span>' + escapeHtml(stripMd(s)) + '</span>'; frList.appendChild(li); });
+      }
+
+      // How to Beat (reuse opportunities or dedicated section)
+      const beatText = getSection(sections, ['How to Outperform This Competitor', 'How to Outperform', 'Opportunities for a New Competitor', 'Opportunities']) || '';
+      const beatBullets = bulletsFromSection(beatText);
+      const beatSection = document.getElementById('dashboard-how-to-beat');
+      const beatList = document.getElementById('how-to-beat-list');
+      beatList.innerHTML = '';
+      if (beatBullets.length > 0) {
+        beatSection.classList.remove('hidden');
+        beatBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-[#5e62ee] font-medium">→</span><span>' + escapeHtml(stripMd(s)) + '</span>'; beatList.appendChild(li); });
+      }
+
+      // Tailored strategy (Recommended Positioning for YOU)
+      var tailoredSection = document.getElementById('dashboard-tailored');
+      if (tailoredSection) tailoredSection.classList.add('hidden');
+      if (data.tailoredStrategy && tailoredSection) {
+        var ts = data.tailoredStrategy;
+        var angleEl = document.getElementById('tailored-angle');
+        var icpEl = document.getElementById('tailored-icp');
+        var diffsEl = document.getElementById('tailored-diffs');
+        var headsEl = document.getElementById('tailored-headlines');
+        var subsEl = document.getElementById('tailored-subheadlines');
+        var objEl = document.getElementById('tailored-objections');
+        if (angleEl) angleEl.textContent = stripMd(ts.positioningAngle || '—');
+        if (icpEl) icpEl.textContent = stripMd(ts.icp || '—');
+        if (diffsEl) {
+          diffsEl.innerHTML = '';
+          (Array.isArray(ts.differentiators) ? ts.differentiators : []).forEach(function (d) {
+            var li = document.createElement('li');
+            li.textContent = stripMd(d);
+            diffsEl.appendChild(li);
+          });
+        }
+        if (headsEl) {
+          headsEl.innerHTML = '';
+          (Array.isArray(ts.headlines) ? ts.headlines : []).forEach(function (h) {
+            var li = document.createElement('li');
+            li.textContent = stripMd(h);
+            headsEl.appendChild(li);
+          });
+        }
+        if (subsEl) {
+          subsEl.innerHTML = '';
+          (Array.isArray(ts.subheadlines) ? ts.subheadlines : []).forEach(function (s) {
+            var li = document.createElement('li');
+            li.textContent = stripMd(s);
+            subsEl.appendChild(li);
+          });
+        }
+        if (objEl) {
+          objEl.innerHTML = '';
+          (Array.isArray(ts.objections) ? ts.objections : []).forEach(function (o) {
+            var li = document.createElement('li');
+            li.innerHTML = '<span class="font-semibold">' + escapeHtml(stripMd(o.objection || '')) + ':</span> <span class="text-slate-700">' + escapeHtml(stripMd(o.rebuttal || '')) + '</span>';
+            objEl.appendChild(li);
+          });
+        }
+        tailoredSection.classList.remove('hidden');
+      }
+
+      // Underserved Segments
+      var segmentsSection = document.getElementById('dashboard-segments');
+      var segmentsList = document.getElementById('segments-list');
+      if (segmentsSection && segmentsList) {
+        segmentsSection.classList.add('hidden');
+        segmentsList.innerHTML = '';
+        if (Array.isArray(data.underservedSegments) && data.underservedSegments.length) {
+          segmentsSection.classList.remove('hidden');
+          data.underservedSegments.forEach(function (seg) {
+            var div = document.createElement('div');
+            div.className = 'rounded-xl border border-slate-200 bg-slate-50/50 p-4';
+            var tags = Array.isArray(seg.bestFor) ? seg.bestFor : [];
+            var tagsHtml = tags.map(function (t) { return '<span class="inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-0.5 text-[10px] mr-1">' + escapeHtml(stripMd(t)) + '</span>'; }).join('');
+            div.innerHTML = '<div class="flex items-start justify-between gap-2 mb-2"><div><h3 class="text-sm font-semibold text-slate-900">' +
+              escapeHtml(stripMd(seg.name || 'Segment')) +
+              '</h3><p class="text-xs text-slate-600">' + escapeHtml(stripMd(seg.pain || '')) + '</p></div><div class="flex flex-wrap justify-end gap-1">' + tagsHtml + '</div></div>' +
+              '<p class="text-xs text-slate-600 mb-1"><span class="font-semibold">Why competitor fails:</span> ' + escapeHtml(stripMd(seg.whyCompetitorFails || '')) + '</p>' +
+              '<p class="text-xs text-slate-600"><span class="font-semibold">What to build / claim:</span> ' + escapeHtml(stripMd(seg.whatToBuildOrClaim || '')) + '</p>';
+            segmentsList.appendChild(div);
+          });
+        }
+      }
+
+      // Switch Triggers
+      var stSection = document.getElementById('dashboard-switch-triggers');
+      var stList = document.getElementById('switch-triggers-list');
+      if (stSection && stList) {
+        stSection.classList.add('hidden');
+        stList.innerHTML = '';
+        if (Array.isArray(data.switchTriggers) && data.switchTriggers.length) {
+          stSection.classList.remove('hidden');
+          data.switchTriggers.forEach(function (st) {
+            var div = document.createElement('div');
+            div.className = 'rounded-xl border border-slate-200 bg-white p-4';
+            div.innerHTML = '<p class="text-sm font-medium text-slate-900">' + escapeHtml(stripMd(st.trigger || '')) + '</p>' +
+              '<p class="text-xs text-slate-600 mt-1">' + escapeHtml(stripMd(st.why || '')) + '</p>' +
+              '<p class="text-xs text-emerald-700 mt-2"><span class="font-semibold">Hook:</span> ' + escapeHtml(stripMd(st.hook || '')) + '</p>';
+            stList.appendChild(div);
+          });
+        }
+      }
+
+      // Messaging & Angles
+      var messagingSection = document.getElementById('dashboard-messaging');
+      var messagingThemesEl = document.getElementById('messaging-themes');
+      if (messagingSection && messagingThemesEl) {
+        messagingSection.classList.add('hidden');
+        messagingThemesEl.innerHTML = '';
+        var messagingAngles = data.messagingAngles || {};
+        var themeKeys = Object.keys(messagingAngles || {});
+        if (themeKeys.length) {
+          messagingSection.classList.remove('hidden');
+          themeKeys.forEach(function (theme) {
+            var lines = messagingAngles[theme] || [];
+            if (!Array.isArray(lines) || !lines.length) return;
+            var card = document.createElement('div');
+            card.className = 'rounded-xl border border-slate-200 bg-slate-50/40 p-4 space-y-1.5';
+            var inner = '<h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500 mb-1">' + escapeHtml(stripMd(theme)) + '</h3>';
+            inner += '<ul class="space-y-1 text-sm text-slate-800">';
+            lines.forEach(function (item) {
+              var line = typeof item === 'string' ? item : item.line;
+              var useOn = (item.useOn || []).join(', ');
+              inner += '<li><span>' + escapeHtml(stripMd(line || '')) + '</span>' + (useOn ? '<span class="ml-1 text-[11px] text-slate-500">(' + escapeHtml(stripMd(useOn)) + ')</span>' : '') + '</li>';
+            });
+            inner += '</ul>';
+            card.innerHTML = inner;
+            messagingThemesEl.appendChild(card);
+          });
+        }
+      }
+
+      // Feature Gap Map
+      var gapSection = document.getElementById('dashboard-gap-map');
+      var gapBody = document.getElementById('gap-map-rows');
+      if (gapSection && gapBody) {
+        gapSection.classList.add('hidden');
+        gapBody.innerHTML = '';
+        if (Array.isArray(data.featureGapMap) && data.featureGapMap.length) {
+          gapSection.classList.remove('hidden');
+          data.featureGapMap.forEach(function (row) {
+            var tr = document.createElement('tr');
+            tr.className = 'border-t border-slate-100';
+            var sevBadge = row.severity ? '<span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ' +
+              (row.severity === 'High' ? 'bg-rose-50 text-rose-700' : row.severity === 'Medium' ? 'bg-amber-50 text-amber-700' : 'bg-slate-50 text-slate-700') +
+              '">' + escapeHtml(stripMd(row.severity)) + '</span>' : '';
+            var confBadge = row.confidence ? '<span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ml-1 ' +
+              (row.confidence === 'High' ? 'bg-emerald-50 text-emerald-700' : row.confidence === 'Medium' ? 'bg-slate-50 text-slate-700' : 'bg-slate-50 text-slate-500') +
+              '">' + escapeHtml(stripMd(row.confidence)) + '</span>' : '';
+            tr.innerHTML =
+              '<td class="py-2 pr-4 align-top">' + escapeHtml(stripMd(row.featureArea || '')) + '</td>' +
+              '<td class="py-2 pr-4 align-top text-slate-700">' + escapeHtml(stripMd(row.competitorWeakness || '')) + '</td>' +
+              '<td class="py-2 pr-4 align-top text-slate-700">' + escapeHtml(stripMd(row.opportunity || '')) + '</td>' +
+              '<td class="py-2 pr-4 align-top text-xs text-slate-700">' + escapeHtml(stripMd(row.buildVsMarket || '')) + '</td>' +
+              '<td class="py-2 pr-4 align-top">' + sevBadge + '</td>' +
+              '<td class="py-2 pr-2 align-top">' + confBadge + '</td>';
+            gapBody.appendChild(tr);
+          });
+        }
+      }
+
+      // Blind Spots
+      var bsSection = document.getElementById('dashboard-blind-spots');
+      var bsList = document.getElementById('blind-spots-list');
+      if (bsSection && bsList) {
+        bsSection.classList.add('hidden');
+        bsList.innerHTML = '';
+        if (Array.isArray(data.blindSpots) && data.blindSpots.length) {
+          bsSection.classList.remove('hidden');
+          data.blindSpots.forEach(function (b) {
+            var li = document.createElement('li');
+            li.innerHTML = '<span class="font-semibold">' + escapeHtml(stripMd(b.topic || '')) + ':</span> <span class="text-slate-700">' + escapeHtml(stripMd(b.reason || '')) + '</span>';
+            bsList.appendChild(li);
+          });
+        }
+      }
+
+      // Strategic Options
+      var soSection = document.getElementById('dashboard-strategic-options');
+      var soList = document.getElementById('strategic-options-list');
+      if (soSection && soList) {
+        soSection.classList.add('hidden');
+        soList.innerHTML = '';
+        if (Array.isArray(data.strategicOptions) && data.strategicOptions.length) {
+          soSection.classList.remove('hidden');
+          data.strategicOptions.forEach(function (opt) {
+            var div = document.createElement('div');
+            div.className = 'rounded-xl border border-slate-200 bg-white p-4';
+            var risks = (opt.risks || []).map(stripMd).join(', ');
+            div.innerHTML =
+              '<div class="flex items-center justify-between gap-2 mb-1">' +
+              '<h3 class="text-sm font-semibold text-slate-900">' + escapeHtml(stripMd(opt.name || '')) + '</h3>' +
+              (opt.bestChannel ? '<span class="inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-0.5 text-[10px] font-medium">' + escapeHtml(stripMd(opt.bestChannel)) + '</span>' : '') +
+              '</div>' +
+              '<p class="text-xs text-slate-600"><span class="font-semibold">Who it\'s for:</span> ' + escapeHtml(stripMd(opt.whoFor || '')) + '</p>' +
+              '<p class="text-xs text-slate-600 mt-1"><span class="font-semibold">What to build:</span> ' + escapeHtml(stripMd(opt.whatToBuild || '')) + '</p>' +
+              '<p class="text-xs text-slate-600 mt-1"><span class="font-semibold">What to claim:</span> ' + escapeHtml(stripMd(opt.whatToClaim || '')) + '</p>' +
+              (risks ? '<p class="text-xs text-rose-700 mt-1"><span class="font-semibold">Risks:</span> ' + escapeHtml(risks) + '</p>' : '');
+            soList.appendChild(div);
+          });
+        }
+      }
+
+      // Compare Mode
+      var cmpSection = document.getElementById('dashboard-compare');
+      var cmpOverlap = document.getElementById('compare-overlap');
+      var cmpUniques = document.getElementById('compare-uniques');
+      var cmpWedge = document.getElementById('compare-wedge');
+      var cmpBattle = document.getElementById('compare-battlecard');
+      if (cmpSection && cmpOverlap && cmpUniques && cmpWedge && cmpBattle) {
+        cmpSection.classList.add('hidden');
+        cmpOverlap.innerHTML = '';
+        cmpUniques.innerHTML = '';
+        cmpWedge.textContent = '—';
+        cmpBattle.textContent = '';
+        if (data.compareResults) {
+          var cr = data.compareResults;
+          if (Array.isArray(cr.overlapStrengths)) {
+            cr.overlapStrengths.forEach(function (item) {
+              var li = document.createElement('li');
+              li.textContent = stripMd((item.area || '') + (item.detail ? ' — ' + item.detail : ''));
+              cmpOverlap.appendChild(li);
+            });
+          }
+          if (Array.isArray(cr.uniqueAdvantages)) {
+            cr.uniqueAdvantages.forEach(function (item) {
+              var li = document.createElement('li');
+              li.textContent = stripMd((item.owner ? item.owner + ': ' : '') + (item.area || '') + (item.detail ? ' — ' + item.detail : ''));
+              cmpUniques.appendChild(li);
+            });
+          }
+          if (cr.biggestWedge && cmpWedge) cmpWedge.textContent = stripMd(cr.biggestWedge);
+          if (cr.battlecard && cmpBattle) cmpBattle.textContent = stripMd(cr.battlecard);
+          if ((cr.overlapStrengths && cr.overlapStrengths.length) || (cr.uniqueAdvantages && cr.uniqueAdvantages.length) || cr.biggestWedge || cr.battlecard) {
+            cmpSection.classList.remove('hidden');
+            track('compare_used', {});
+          }
+        }
+      }
+
+
+      // Fallback raw report (when backend returns plain text only)
+      if (data.report && Object.keys(sections).length === 0) {
+        resultsRaw.textContent = data.report;
+        resultsFallback.classList.remove('hidden');
+      } else {
+        resultsFallback.classList.add('hidden');
+      }
+
+      // Export / share / markdown
+      var copyMarkdownBtn = document.getElementById('copy-markdown');
+      if (copyMarkdownBtn) {
+        copyMarkdownBtn.onclick = function () {
+          var md = data.report || '';
+          if (md && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(md).then(function () {
+              const original = copyMarkdownBtn.textContent;
+              copyMarkdownBtn.textContent = 'Copied!';
+              setTimeout(function () { copyMarkdownBtn.textContent = original; }, 1500);
+            });
+          }
+        };
+      }
+
+      var regenMessagingBtn = document.getElementById('regen-messaging');
+      if (regenMessagingBtn) {
+        regenMessagingBtn.onclick = function () {
+          track('generate_variants_clicked', {});
+          alert('To generate fresh variants, tweak your query or product context and run the scan again.');
+        };
+      }
+
+      var addSourcesBtn = document.getElementById('add-sources');
+      if (addSourcesBtn) {
+        addSourcesBtn.onclick = function () {
+          track('add_sources_clicked', {});
+          alert('Future versions will let you plug in additional sources (e.g. G2, Reddit).');
+        };
+      }
+
+      var exportPdfBtn = document.getElementById('export-pdf');
+      if (exportPdfBtn) {
+        exportPdfBtn.onclick = function () {
+          track('export_pdf', {});
+          window.print();
+        };
+      }
+
+      var copyAllBtn = document.getElementById('copy-all');
+      if (copyAllBtn) {
+        copyAllBtn.onclick = function () {
+          var text = data && data.report ? stripMd(data.report) : '';
+          if (text && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text);
+          }
+        };
+      }
+    }
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      errorEl.textContent = '';
+
+      var query = (queryInput.value || '').trim();
+      var competitor = (competitorInput.value || '').trim();
+
+      if (!query) {
+        errorEl.textContent = 'Please enter a primary company or domain.';
+        queryInput.focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitLabel.textContent = 'Analyzing...';
+      resultsLoading.classList.remove('hidden');
+      resultsLoadingText.textContent = 'Analyzing public sources…';
+      resultsDashboard.classList.add('hidden');
+      resultsFallback.classList.add('hidden');
+      resultsRaw.classList.add('hidden');
+
+      track('scan_started', { has_competitor: !!competitor, compare_mode: compareMode });
+
+      try {
+        var response = await fetch('/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            competitor: competitor && compareMode !== 'solo' ? competitor : null
+          })
+        });
+
+        var data = null;
+        try { data = await response.json(); } catch (e) { console.error(e); }
+
+        if (!response.ok) {
+          errorEl.textContent = (data && (data.detail || data.error || data.message)) || 'Something went wrong.';
+          resultsLoading.classList.add('hidden');
+          return;
+        }
+
+        resultsLoading.classList.add('hidden');
+        statusEl.textContent = 'Analysis complete.';
+        resultsDashboard.classList.remove('hidden');
+        renderDashboard(data);
+        resultsDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = 'Network error. Please try again.';
+        resultsLoading.classList.add('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Analyze market sentiment';
+      }
+    });
+  </script>
+</body>
+</html>

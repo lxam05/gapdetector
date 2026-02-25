@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Local environment & secrets
+.env
+.env.*
+
+# IDE / editor
+.idea/
+.vscode/
+
+# OS / misc
+.DS_Store
+*.log
+
+# Python tooling caches
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Packaging / build artefacts
+build/
+dist/
+*.egg-info/
+
+# Bytecode in Alembic versions
+alembic/versions/*.pyc
