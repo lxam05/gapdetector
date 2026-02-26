@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gap Detector – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(94, 98, 238, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(94, 98, 238, 0.055) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .hero-heading {
+      font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-8 w-8">
+          <span class="text-sm font-semibold tracking-tight">Gap&nbsp;Detector</span>
+        </a>
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a id="nav-new-scan" href="/app" class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden">New scan</a>
+            <a id="nav-reports" href="/dashboard" class="text-slate-900 font-semibold">Dashboard</a>
+            <a id="nav-pricing" href="/pricing" class="text-slate-500 hover:text-[#5e62ee] transition-colors">Pricing</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a id="header-login" href="/auth" class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">Log in</a>
+            <button id="header-avatar" type="button" class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center" aria-label="Account">
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+        <div id="avatar-menu" class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1">
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Account / Profile</button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Billing</button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Settings</button>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button id="avatar-signout" type="button" class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
+      <div id="dashboard-summary" class="mb-8 hidden">
+        <div class="rounded-3xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="space-y-1">
+              <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500">
+                Dashboard
+              </p>
+              <h1 class="text-xl sm:text-2xl font-semibold text-slate-900 hero-heading">
+                Welcome back
+              </h1>
+              <p id="dashboard-plan-label" class="text-xs text-slate-500">
+                Plan: —
+              </p>
+            </div>
+            <div class="flex flex-col items-start sm:items-end gap-2 text-[11px] text-slate-600">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="summary-credits" class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-800">
+                  Credits: —
+                </span>
+              </div>
+              <a
+                href="/app"
+                class="inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors"
+              >
+                Run new analysis
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-slate-900">Your reports</h2>
+        </div>
+      </div>
+
+      <div id="reports-login-prompt" class="hidden rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p class="text-sm text-slate-600 mb-4">Log in to see your saved scans.</p>
+        <a href="/auth" class="inline-flex items-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white hover:bg-[#4a4ed8] transition-colors">Log in</a>
+      </div>
+
+      <div id="reports-loading" class="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+        Loading your scans…
+      </div>
+
+      <div id="reports-list" class="hidden space-y-3">
+        <!-- Filled by JS -->
+      </div>
+
+      <div id="reports-empty" class="hidden rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p class="text-sm text-slate-600">You haven't done any scans yet.</p>
+        <a href="/app" class="mt-3 inline-block text-sm font-medium text-[#5e62ee] hover:underline">Run your first scan</a>
+      </div>
+
+      <div id="reports-session-expired" class="hidden rounded-2xl border border-amber-200 bg-amber-50/50 p-8 text-center">
+        <p class="text-sm text-slate-700 mb-4">Your session has expired. Please log in again.</p>
+        <a href="/auth" class="inline-flex items-center rounded-full bg-[#5e62ee] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4a4ed8] transition-colors">Log in</a>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">© 2026 Gap Detector. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function initHeaderAuth() {
+      var loginLink = document.getElementById('header-login');
+      var avatarBtn = document.getElementById('header-avatar');
+      var avatarInitial = document.getElementById('header-avatar-initial');
+      var avatarMenu = document.getElementById('avatar-menu');
+      var navNewScan = document.getElementById('nav-new-scan');
+      var navReports = document.getElementById('nav-reports');
+
+      function getStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) { return null; }
+      }
+
+      async function loadHeaderCredits(stored) {
+        var creditsEl = document.getElementById('avatar-credits');
+        if (!stored || !stored.accessToken || !creditsEl) return;
+        try {
+          var res = await fetch('/me/credits', {
+            headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+          });
+          if (!res.ok) return;
+          var data = await res.json();
+          var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+          creditsEl.textContent = val != null ? String(val) : '0';
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      function applyHeaderAuthState() {
+        var stored = getStoredAuth();
+        var isAuthed = stored && stored.accessToken;
+        if (loginLink) {
+          if (isAuthed) loginLink.classList.add('hidden');
+          else loginLink.classList.remove('hidden');
+        }
+        if (avatarBtn) {
+          if (isAuthed && stored.email) {
+            var initial = (stored.email || '').trim().charAt(0).toUpperCase() || 'G';
+            if (avatarInitial) avatarInitial.textContent = initial;
+            avatarBtn.classList.remove('hidden');
+            avatarBtn.classList.add('flex');
+          } else {
+            avatarBtn.classList.add('hidden');
+            avatarBtn.classList.remove('flex');
+          }
+        }
+        if (navNewScan) {
+          if (isAuthed) navNewScan.classList.remove('hidden');
+          else navNewScan.classList.add('hidden');
+        }
+        if (navReports) {
+          if (isAuthed) navReports.classList.remove('hidden');
+          else navReports.classList.add('hidden');
+        }
+        if (isAuthed) {
+          loadHeaderCredits(stored);
+        }
+      }
+
+      applyHeaderAuthState();
+
+      if (avatarBtn && avatarMenu) {
+        avatarBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          avatarMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () { avatarMenu.classList.add('hidden'); });
+      }
+
+      var signout = document.getElementById('avatar-signout');
+      if (signout) {
+        signout.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { window.localStorage.removeItem('gd_auth'); } catch (err) {}
+          avatarMenu.classList.add('hidden');
+          applyHeaderAuthState();
+          window.location.href = '/';
+        });
+      }
+    })();
+
+    (function initReportsList() {
+      var loginPrompt = document.getElementById('reports-login-prompt');
+      var loadingEl = document.getElementById('reports-loading');
+      var listEl = document.getElementById('reports-list');
+      var emptyEl = document.getElementById('reports-empty');
+      var sessionExpiredEl = document.getElementById('reports-session-expired');
+      var summaryEl = document.getElementById('dashboard-summary');
+      var summaryCreditsEl = document.getElementById('summary-credits');
+      var summaryPlanLabelEl = document.getElementById('dashboard-plan-label');
+
+      function hideAll() {
+        if (loginPrompt) loginPrompt.classList.add('hidden');
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (listEl) listEl.classList.add('hidden');
+        if (emptyEl) emptyEl.classList.add('hidden');
+        if (sessionExpiredEl) sessionExpiredEl.classList.add('hidden');
+      }
+
+      function show(el) {
+        if (el) el.classList.remove('hidden');
+      }
+
+      function formatDate(iso) {
+        if (!iso) return '—';
+        try {
+          var d = new Date(iso);
+          return d.toLocaleDateString(undefined, { dateStyle: 'medium' });
+        } catch (e) { return iso; }
+      }
+
+      async function loadScans() {
+        var auth;
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          auth = raw ? JSON.parse(raw) : null;
+        } catch (e) { auth = null; }
+
+        // No token at all → show "Log in to see your saved scans"
+        var token = (auth && (auth.accessToken || auth.access_token)) || null;
+        if (!token) {
+          hideAll();
+          show(loginPrompt);
+          if (summaryEl) summaryEl.classList.add('hidden');
+          return;
+        }
+
+        // We have a token: always try to fetch (show loading)
+        hideAll();
+        show(loadingEl);
+
+        // Fire off account summary load in parallel
+        if (summaryEl) {
+          (async function loadSummary() {
+            try {
+              var resCredits = await fetch('/me/credits', {
+                headers: { 'Authorization': 'Bearer ' + token }
+              });
+              if (!resCredits.ok) {
+                summaryEl.classList.add('hidden');
+                return;
+              }
+              var info = await resCredits.json();
+              var credits = (info && typeof info.credits_remaining === 'number') ? info.credits_remaining : 0;
+              var subscription = !!(info && info.subscription_active);
+              var renewalIso = info && info.renewal_date;
+
+              if (summaryCreditsEl) {
+                summaryCreditsEl.textContent = 'Credits: ' + credits + ' remaining';
+              }
+              if (summaryPlanLabelEl) {
+                if (subscription) {
+                  summaryPlanLabelEl.textContent = 'Plan: Monthly subscription';
+                } else if (credits > 0) {
+                  summaryPlanLabelEl.textContent = 'Plan: Pay-as-you-go';
+                } else {
+                  summaryPlanLabelEl.textContent = 'Plan: Free (no credits yet)';
+                }
+              }
+              summaryEl.classList.remove('hidden');
+            } catch (e) {
+              if (summaryEl) summaryEl.classList.add('hidden');
+            }
+          })();
+        }
+
+        try {
+          var res = await fetch('/scan', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token },
+          });
+
+        if (res.status === 401) {
+          hideAll();
+          show(sessionExpiredEl);
+          if (summaryEl) summaryEl.classList.add('hidden');
+          return;
+        }
+
+          if (!res.ok) {
+            hideAll();
+            show(emptyEl);
+            var p = emptyEl && emptyEl.querySelector('p');
+            if (p) p.textContent = 'Could not load scans. Try again later.';
+            return;
+          }
+
+          var scans = await res.json();
+          if (!Array.isArray(scans) || scans.length === 0) {
+            hideAll();
+            show(emptyEl);
+            var emptyP = emptyEl && emptyEl.querySelector('p');
+            if (emptyP) emptyP.textContent = "You haven't done any scans yet.";
+            return;
+          }
+
+          hideAll();
+          show(listEl);
+          listEl.innerHTML = '';
+
+          scans.forEach(function (s) {
+            var card = document.createElement('a');
+            card.href = '/report?scan_id=' + encodeURIComponent(s.scan_id);
+            card.className = 'block rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-4 sm:p-5 hover:border-[#5e62ee]/50 hover:shadow-md transition-all';
+            var dateStr = formatDate(s.created_at);
+            var badge = s.is_unlocked
+              ? '<span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Unlocked</span>'
+              : '<span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">Teaser</span>';
+            card.innerHTML =
+              '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">' +
+                '<div class="min-w-0">' +
+                  '<h2 class="text-sm font-semibold text-slate-900 truncate">' + (s.company_name || 'Untitled') + '</h2>' +
+                  '<p class="text-xs text-slate-500 mt-0.5">' + dateStr + '</p>' +
+                '</div>' +
+                '<div class="flex items-center gap-2 flex-shrink-0">' +
+                  badge +
+                  '<span class="text-xs font-medium text-[#5e62ee]">View report →</span>' +
+                '</div>' +
+              '</div>';
+            listEl.appendChild(card);
+          });
+        } catch (e) {
+          console.error(e);
+          hideAll();
+          show(emptyEl);
+          var errP = emptyEl && emptyEl.querySelector('p');
+          if (errP) errP.textContent = 'Could not load scans. Try again later.';
+        }
+      }
+
+      loadScans();
+    })();
+  </script>
+</body>
+</html>

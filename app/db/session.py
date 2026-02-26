@@ -16,7 +16,16 @@ def _make_async_database_url(url: str) -> str:
 
 ASYNC_DATABASE_URL = _make_async_database_url(str(settings.DATABASE_URL))
 
-engine = create_async_engine(ASYNC_DATABASE_URL, echo=False, future=True)
+# Longer connection timeout for Railway/remote Postgres (default can be too short).
+# connect_args are passed through to asyncpg.connect().
+engine = create_async_engine(
+  ASYNC_DATABASE_URL,
+  echo=False,
+  future=True,
+  connect_args={"timeout": 90},
+  pool_pre_ping=True,
+  pool_recycle=300,
+)
 
 AsyncSessionLocal = async_sessionmaker(
   bind=engine,

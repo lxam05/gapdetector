@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gap Detector – Pricing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(94, 98, 238, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(94, 98, 238, 0.055) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .hero-heading {
+      font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <!-- Top nav -->
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-8 w-8">
+          <span class="text-sm font-semibold tracking-tight">Gap&nbsp;Detector</span>
+        </a>
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a id="nav-new-scan" href="/app" class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden">
+              New scan
+            </a>
+            <a id="nav-reports" href="/dashboard" class="text-slate-500 hover:text-[#5e62ee] transition-colors hidden">
+              Dashboard
+            </a>
+            <a id="nav-pricing" href="/pricing" class="text-slate-900 font-semibold">
+              Pricing
+            </a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a
+              id="header-login"
+              href="/auth"
+              class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors"
+            >
+              Log in
+            </a>
+            <button
+              id="header-avatar"
+              type="button"
+              class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center"
+              aria-label="Account"
+            >
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Avatar dropdown -->
+        <div
+          id="avatar-menu"
+          class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1"
+        >
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Account / Profile
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Billing
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Settings
+          </button>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button
+            id="avatar-signout"
+            type="button"
+            class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Pricing content -->
+    <main class="flex-1">
+      <section class="max-w-5xl mx-auto px-6 pt-16 pb-20 space-y-10">
+        <div class="text-center space-y-4">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Pricing
+          </p>
+          <h1 class="hero-heading text-3xl sm:text-4xl font-semibold text-slate-900">
+            Unlock the full report when it actually matters
+          </h1>
+          <p class="text-sm text-slate-600 max-w-2xl mx-auto">
+            Start with a teaser for free. When you find a market worth chasing, pick the option that makes sense for
+            your team and unlock the full dashboard.
+          </p>
+        </div>
+
+        <div id="pricing-error" class="hidden rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-xs text-rose-700"></div>
+
+        <!-- Plans -->
+        <div class="grid gap-5 md:grid-cols-3">
+          <!-- Single report -->
+          <div class="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-6 sm:p-7">
+            <div class="mb-4">
+              <h2 class="text-sm font-semibold text-slate-900">Single report</h2>
+              <p class="mt-1 text-xs text-slate-500">
+                Perfect when you just need to go deep on one competitor right now.
+              </p>
+            </div>
+            <div class="mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-semibold text-slate-900">€4.99</span>
+                <span class="text-[11px] text-slate-500">one-time</span>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-500">Unlocks 1 full report credit.</p>
+            </div>
+            <ul class="mt-2 space-y-2 text-xs text-slate-600">
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Full dashboard for one scan (segments, wedges, product moves).</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Great for one-off deep dives.</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Ideal for validating a single idea, pitch, or landing page before you commit.</span>
+              </li>
+            </ul>
+            <button
+              data-plan="single"
+              type="button"
+              class="mt-6 inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors"
+            >
+              Unlock this report – €4.99
+            </button>
+          </div>
+
+          <!-- Bundle of 5 -->
+          <div class="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-[0_18px_45px_-20px_rgba(15,23,42,0.35)] p-6 sm:p-7 relative overflow-hidden">
+            <div class="absolute right-4 top-4 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
+              Most popular
+            </div>
+            <div class="mb-4">
+              <h2 class="text-sm font-semibold text-slate-900">Bundle of 5</h2>
+              <p class="mt-1 text-xs text-slate-500">
+                For teams comparing multiple competitors, markets, or ICPs.
+              </p>
+            </div>
+            <div class="mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-semibold text-slate-900">€19.99</span>
+                <span class="text-[11px] text-slate-500">one-time</span>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-500">Unlocks 5 full report credits.</p>
+            </div>
+            <ul class="mt-2 space-y-2 text-xs text-slate-600">
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Run a mini-battlecard across your top 5 competitors.</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Share credits across your team.</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Works on any future scans too – not tied to just one report.</span>
+              </li>
+            </ul>
+            <button
+              data-plan="bundle"
+              type="button"
+              class="mt-6 inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors"
+            >
+              Get 5 credits – €19.99
+            </button>
+          </div>
+
+          <!-- Monthly subscription -->
+          <div class="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-6 sm:p-7">
+            <div class="mb-4">
+              <h2 class="text-sm font-semibold text-slate-900">Monthly plan</h2>
+              <p class="mt-1 text-xs text-slate-500">
+                Best when you’re running ongoing competitor reviews or client work.
+              </p>
+            </div>
+            <div class="mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-semibold text-slate-900">€24.99</span>
+                <span class="text-[11px] text-slate-500">per month</span>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-500">Includes 8 fresh report credits every month.</p>
+            </div>
+            <ul class="mt-2 space-y-2 text-xs text-slate-600">
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>8 full reports refreshed every month.</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Perfect for agencies or product teams tracking multiple markets.</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="mt-0.5 text-emerald-500">✓</span>
+                <span>Cancel anytime from your Stripe billing portal.</span>
+              </li>
+            </ul>
+            <button
+              data-plan="subscription"
+              type="button"
+              class="mt-6 inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors"
+            >
+              Start monthly – €24.99
+            </button>
+          </div>
+        </div>
+
+        <p class="mt-4 text-[11px] text-slate-500 text-center">
+          All payments are handled securely by Stripe. VAT may apply depending on your location.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      function gdGetStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) {
+          return null;
+        }
+      }
+
+      var avatarBtn = document.getElementById('header-avatar');
+      var avatarInitial = document.getElementById('header-avatar-initial');
+      var avatarMenu = document.getElementById('avatar-menu');
+      var avatarSignout = document.getElementById('avatar-signout');
+      var headerLogin = document.getElementById('header-login');
+      var navNewScan = document.getElementById('nav-new-scan');
+      var navReports = document.getElementById('nav-reports');
+
+      function applyHeaderAuthState() {
+        var stored = gdGetStoredAuth();
+        var isAuthed = !!(stored && stored.accessToken);
+        if (isAuthed) {
+          if (headerLogin) headerLogin.classList.add('hidden');
+          if (avatarBtn) {
+            avatarBtn.classList.remove('hidden');
+            var letter = (stored.email || '').trim().charAt(0).toUpperCase() || 'G';
+            if (avatarInitial) avatarInitial.textContent = letter;
+          }
+        } else {
+          if (headerLogin) headerLogin.classList.remove('hidden');
+          if (avatarBtn) avatarBtn.classList.add('hidden');
+        }
+        if (navNewScan) {
+          if (isAuthed) navNewScan.classList.remove('hidden');
+          else navNewScan.classList.add('hidden');
+        }
+        if (navReports) {
+          if (isAuthed) navReports.classList.remove('hidden');
+          else navReports.classList.add('hidden');
+        }
+        if (isAuthed) {
+          (async function loadCredits() {
+            var creditsEl = document.getElementById('avatar-credits');
+            if (!creditsEl) return;
+            try {
+              var res = await fetch('/me/credits', {
+                headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+              });
+              if (!res.ok) return;
+              var data = await res.json();
+              var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+              creditsEl.textContent = val != null ? String(val) : '0';
+            } catch (e) {
+              // ignore
+            }
+          })();
+        }
+      }
+
+      function closeAvatarMenu() {
+        if (avatarMenu) avatarMenu.classList.add('hidden');
+      }
+
+      applyHeaderAuthState();
+
+      if (avatarBtn && avatarMenu) {
+        avatarBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          avatarMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function () {
+          closeAvatarMenu();
+        });
+      }
+
+      if (avatarSignout) {
+        avatarSignout.addEventListener('click', function (e) {
+          e.preventDefault();
+          try {
+            window.localStorage.removeItem('gd_auth');
+          } catch (err) {}
+          closeAvatarMenu();
+          applyHeaderAuthState();
+          window.location.href = '/';
+        });
+      }
+    })();
+
+    (function initPricing() {
+      var errorBox = document.getElementById('pricing-error');
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('button[data-plan]') || []);
+      var params = new URLSearchParams(window.location.search || '');
+      var scanId = params.get('scan_id');
+
+      function showError(msg) {
+        if (!errorBox) return;
+        errorBox.textContent = msg || 'Something went wrong starting checkout.';
+        errorBox.classList.remove('hidden');
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var plan = (btn.getAttribute('data-plan') || 'single').toLowerCase();
+          (async function () {
+            try {
+              var res, data;
+              // If we arrived here from a specific report and the user picks the single-report plan,
+              // start a scan-specific checkout so that report auto-unlocks after payment.
+              if (plan === 'single' && scanId) {
+                res = await fetch('/scan/' + encodeURIComponent(scanId) + '/checkout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ plan: 'single' })
+                });
+              } else {
+                // Otherwise, generic credit / subscription purchase.
+                res = await fetch('/checkout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ plan: plan })
+                });
+              }
+              try { data = await res.json(); } catch (e) { data = null; }
+              if (res.ok && data && data.url) {
+                window.location.href = data.url;
+                return;
+              }
+              showError((data && (data.detail || data.error || data.message)) || 'Unable to start checkout.');
+            } catch (e) {
+              console.error(e);
+              showError('Network error. Please try again.');
+            }
+          })();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+

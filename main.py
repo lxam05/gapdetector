@@ -16,10 +16,15 @@ from dotenv import load_dotenv
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, ValidationError
 
 from app.api.routes.auth import router as auth_router
+from app.api.routes.me import router as me_router
+from app.api.routes.checkout import router as checkout_router
+from app.api.routes.scan import router as scan_router
+from app.api.routes.stripe_webhook import router as stripe_webhook_router
 from app.core.config import settings
 
 from playstore import (
@@ -49,6 +54,9 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Customer Insight Explorer", version="0.4.0")
 templates = Jinja2Templates(directory="templates")
 
+# Static files (for favicon, logo, etc.)
+app.mount("/images", StaticFiles(directory="images"), name="images")
+
 # CORS
 origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
 app.add_middleware(
@@ -61,6 +69,23 @@ app.add_middleware(
 
 # Routers
 app.include_router(auth_router)
+app.include_router(me_router)
+app.include_router(checkout_router)
+app.include_router(scan_router)
+app.include_router(stripe_webhook_router)
+
+
+# Catch DB connection timeouts/errors so we return a clean 503 and one log line instead of huge tracebacks
+@app.exception_handler(TimeoutError)
+@app.exception_handler(OSError)
+async def handle_db_connection_error(request: Request, exc: BaseException):
+  """Return 503 when DB is unreachable (timeout, connection refused, etc.)."""
+  logger.warning("Database unreachable: %s", type(exc).__name__)
+  from fastapi.responses import JSONResponse
+  return JSONResponse(
+    status_code=503,
+    content={"detail": "Database temporarily unavailable. Check your connection to Railway or try again in a moment."},
+  )
 
 
 class ProductContext(BaseModel):
@@ -1165,6 +1190,46 @@ async def get_root(request: Request) -> HTMLResponse:
 async def get_app_page(request: Request) -> HTMLResponse:
   """Serve the analysis app UI."""
   return templates.TemplateResponse("app.html", {"request": request})
+
+
+@app.get("/report", response_class=HTMLResponse)
+async def get_report_page(request: Request) -> HTMLResponse:
+  """Teaser + premium report page driven by scan_id. Paywall: full report only when unlocked."""
+  return templates.TemplateResponse("report.html", {
+    "request": request,
+    "stripe_payment_link_url": settings.STRIPE_PAYMENT_LINK_URL,
+    "success_url_base": settings.SUCCESS_URL_BASE,
+  })
+
+
+@app.get("/pricing", response_class=HTMLResponse)
+async def get_pricing_page(request: Request) -> HTMLResponse:
+  """Pricing page for credits and subscriptions."""
+  return templates.TemplateResponse("pricing.html", {"request": request})
+
+
+@app.get("/post-purchase", response_class=HTMLResponse)
+async def get_post_purchase_page(request: Request) -> HTMLResponse:
+  """Simple thank-you page after generic purchases."""
+  return templates.TemplateResponse("post_purchase.html", {"request": request})
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def get_dashboard_page(request: Request) -> HTMLResponse:
+  """User dashboard: account summary + previous scans (requires login to see content)."""
+  return templates.TemplateResponse("reports.html", {"request": request})
+
+
+@app.get("/reports", response_class=HTMLResponse)
+async def get_reports_legacy(request: Request) -> HTMLResponse:
+  """Legacy alias for /dashboard to avoid breaking old links."""
+  return templates.TemplateResponse("reports.html", {"request": request})
+
+
+@app.get("/auth", response_class=HTMLResponse)
+async def get_auth_page(request: Request) -> HTMLResponse:
+  """Simple email/password auth page for local testing."""
+  return templates.TemplateResponse("auth.html", {"request": request})
 
 
 @app.post("/analyze")

@@ -10,12 +10,20 @@ from app.core.config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+def _normalize_password(password: str) -> str:
+  # bcrypt only supports up to 72 bytes; truncate to avoid runtime errors
+  data = password.encode("utf-8")
+  if len(data) > 72:
+    data = data[:72]
+  return data.decode("utf-8", "ignore")
+
+
 def hash_password(password: str) -> str:
-  return pwd_context.hash(password)
+  return pwd_context.hash(_normalize_password(password))
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-  return pwd_context.verify(plain_password, hashed_password)
+  return pwd_context.verify(_normalize_password(plain_password), hashed_password)
 
 
 def _create_token(

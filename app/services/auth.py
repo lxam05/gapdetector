@@ -39,20 +39,12 @@ async def register_user(db: AsyncSession, payload: RegisterRequest) -> User:
     email=email,
     hashed_password=hash_password(payload.password),
     is_active=True,
-    is_verified=False,
+    # For now, mark as verified immediately so local dev works without email links.
+    is_verified=True,
   )
   db.add(user)
   await db.commit()
   await db.refresh(user)
-
-  # Send verification email (no tokens issued yet)
-  token = create_email_token(str(user.id), minutes=60 * 24, scope="verify")
-  verify_link = f"{settings.GOOGLE_REDIRECT_URI.rsplit('/auth', 1)[0]}/auth/verify-email?token={token}"
-  send_email(
-    to=user.email,
-    subject="Verify your GapDetector account",
-    html_body=f"<p>Click to verify your email:</p><p><a href='{verify_link}'>Verify email</a></p>",
-  )
 
   return user
 

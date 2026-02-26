@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gap Detector – Welcome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(94, 98, 238, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(94, 98, 238, 0.055) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .hero-heading {
+      font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-10">
+    <main class="w-full max-w-sm">
+      <div class="mb-6 text-center space-y-2">
+        <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 hero-heading">
+          Welcome to Gap Detector
+        </h1>
+        <p class="text-xs text-slate-500">
+          Sign in or create an account with your email and password.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <input
+            id="auth-email"
+            type="email"
+            autocomplete="email"
+            placeholder="Email"
+            class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+          />
+        </div>
+
+        <div>
+          <div class="mt-1 relative">
+            <input
+              id="auth-password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+              class="block w-full rounded-xl border border-slate-200 px-3 pr-10 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+            />
+            <button
+              type="button"
+              id="auth-toggle-password"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+              aria-label="Toggle password visibility"
+            >
+              <svg id="auth-eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button
+            type="button"
+            id="auth-continue"
+            class="inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#4a4ed8] transition-colors disabled:opacity-70 disabled:cursor-not-allowed min-w-[9rem]"
+          >
+            <span id="auth-btn-text">Log in</span>
+          </button>
+        </div>
+
+        <div id="auth-error" class="text-xs text-rose-600 min-h-[1rem]"></div>
+        <div id="auth-success" class="text-xs text-emerald-600 min-h-[1rem]"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const emailInput = document.getElementById('auth-email');
+    const passwordInput = document.getElementById('auth-password');
+    const continueBtn = document.getElementById('auth-continue');
+    const authBtnText = document.getElementById('auth-btn-text');
+    const errorEl = document.getElementById('auth-error');
+    const successEl = document.getElementById('auth-success');
+
+    let loadingDotsTimer = null;
+    let loadingDotsCount = 0;
+
+    function setLoading(loading) {
+      if (!continueBtn || !authBtnText) return;
+      continueBtn.disabled = loading;
+
+      if (loading) {
+        if (loadingDotsTimer) return;
+        authBtnText.textContent = 'Logging in.';
+        loadingDotsCount = 1;
+        loadingDotsTimer = window.setInterval(function () {
+          loadingDotsCount = loadingDotsCount % 3 + 1; // 1 -> 2 -> 3 -> 1 ...
+          authBtnText.textContent = 'Logging in' + '.'.repeat(loadingDotsCount);
+        }, 400);
+      } else {
+        if (loadingDotsTimer) {
+          window.clearInterval(loadingDotsTimer);
+          loadingDotsTimer = null;
+        }
+        authBtnText.textContent = 'Log in';
+      }
+    }
+
+    function loadAuth() {
+      try {
+        const raw = window.localStorage.getItem('gd_auth');
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.debug('Failed to load auth', e);
+        return null;
+      }
+    }
+
+    function saveAuth(payload) {
+      window.localStorage.setItem('gd_auth', JSON.stringify(payload));
+      window.gdAccessToken = payload.accessToken;
+    }
+
+    function redirectBack() {
+      let target = document.referrer || '/dashboard';
+      try {
+        const url = new URL(target, window.location.origin);
+        if (url.pathname === '/auth') {
+          target = '/dashboard';
+        }
+      } catch (e) {
+        target = '/dashboard';
+      }
+      window.location.href = target;
+    }
+
+    async function callAuth(path, body, { silentErrors = false } = {}) {
+      if (!silentErrors) {
+        errorEl.textContent = '';
+        successEl.textContent = '';
+      }
+      try {
+        const res = await fetch(path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body || {}),
+        });
+        let data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (!res.ok) {
+          if (!silentErrors) {
+            const msg = (data && (data.detail || data.error || data.message)) || 'Request failed.';
+            errorEl.textContent = msg;
+          }
+          return { ok: false, data };
+        }
+        return { ok: true, data };
+      } catch (e) {
+        console.error(e);
+        if (!silentErrors) {
+          errorEl.textContent = 'Network error. Please try again.';
+        }
+        return { ok: false, data: null };
+      }
+    }
+
+    async function autoLoginOrSignup() {
+      const email = (emailInput.value || '').trim();
+      const password = (passwordInput.value || '').trim();
+      if (!email || !password) {
+        errorEl.textContent = 'Enter email and password.';
+        return;
+      }
+
+      setLoading(true);
+      errorEl.textContent = '';
+      successEl.textContent = '';
+
+      // 1) Try login first (silent error handling)
+      const loginAttempt = await callAuth('/auth/login', { email, password }, { silentErrors: true });
+      if (loginAttempt && loginAttempt.ok && loginAttempt.data) {
+        const tokens = loginAttempt.data;
+        saveAuth({ email, accessToken: tokens.access_token, refreshToken: tokens.refresh_token });
+        setTimeout(redirectBack, 400);
+        return;
+      }
+
+      authBtnText.textContent = 'Creating account…';
+
+      // 2) If login failed, try to register
+      const registerAttempt = await callAuth('/auth/register', { email, password });
+      if (!registerAttempt || !registerAttempt.ok) {
+        setLoading(false);
+        return;
+      }
+
+      authBtnText.textContent = 'Signing in…';
+
+      // 3) After successful registration, log in to get tokens
+      const finalLogin = await callAuth('/auth/login', { email, password });
+      if (!finalLogin || !finalLogin.ok || !finalLogin.data) {
+        setLoading(false);
+        return;
+      }
+      const tokens = finalLogin.data;
+      saveAuth({ email, accessToken: tokens.access_token, refreshToken: tokens.refresh_token });
+      setTimeout(redirectBack, 400);
+    }
+
+    continueBtn.onclick = autoLoginOrSignup;
+
+    // Simple password visibility toggle
+    (function initPasswordToggle() {
+      const toggleBtn = document.getElementById('auth-toggle-password');
+      if (!toggleBtn || !passwordInput) return;
+      toggleBtn.addEventListener('click', function () {
+        const isHidden = passwordInput.type === 'password';
+        passwordInput.type = isHidden ? 'text' : 'password';
+      });
+    })();
+    // If already signed in, redirect away from auth page
+    (function redirectIfAlreadyAuthed() {
+      const stored = loadAuth();
+      if (stored && (stored.accessToken || stored.access_token)) {
+        var target = document.referrer || '/dashboard';
+        try {
+          var url = new URL(target, window.location.origin);
+          if (url.pathname === '/auth') target = '/dashboard';
+        } catch (e) { target = '/dashboard'; }
+        window.location.replace(target);
+      }
+    })();
+  </script>
+</body>
+</html>
+

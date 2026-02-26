@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Gap Detector – Analyzer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -220,97 +221,148 @@
 </head>
 <body class="text-slate-900">
   <div class="min-h-screen flex flex-col">
-    <!-- Top nav (matches index) -->
+    <!-- Top nav -->
     <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
         <a href="/" class="flex items-center gap-2">
-          <div class="h-8 w-8 rounded-full bg-[#5e62ee] flex items-center justify-center text-xs font-bold text-white">
-            GD
-          </div>
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-8 w-8">
           <span class="text-sm font-semibold tracking-tight">Gap&nbsp;Detector</span>
         </a>
-        <nav class="hidden md:flex items-center gap-6 text-xs text-slate-500">
-        </nav>
-        <div class="flex items-center gap-2">
-          <a
-            href="/"
-            class="inline-flex items-center rounded-full border border-[#5e62ee]/20 px-3 py-1 text-xs font-medium text-[#5e62ee] hover:bg-[#5e62ee]/5 transition-colors"
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a
+              id="nav-new-scan"
+              href="/app"
+              class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden"
+            >
+              New scan
+            </a>
+            <a
+              id="nav-reports"
+              href="/dashboard"
+              class="text-slate-500 hover:text-[#5e62ee] transition-colors hidden"
+            >
+              Dashboard
+            </a>
+            <a
+              id="nav-pricing"
+              href="/pricing"
+              class="text-slate-500 hover:text-[#5e62ee] transition-colors"
+            >
+              Pricing
+            </a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a
+              id="header-login"
+              href="/auth"
+              class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors"
+            >
+              Log in
+            </a>
+            <button
+              id="header-avatar"
+              type="button"
+              class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center"
+              aria-label="Account"
+            >
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Avatar dropdown -->
+        <div
+          id="avatar-menu"
+          class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1"
+        >
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Account / Profile
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Billing
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Settings
+          </button>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button
+            id="avatar-signout"
+            type="button"
+            class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50"
           >
-            Back to home
-          </a>
-          <a
-            href="/"
-            class="inline-flex items-center rounded-full bg-[#5e62ee] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] transition-colors"
-          >
-            New scan
-          </a>
+            Sign out
+          </button>
         </div>
       </div>
     </header>
 
     <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-8">
-        <section class="bg-white/90 border border-slate-200 rounded-2xl shadow-xl shadow-slate-900/5 p-6 sm:p-8 space-y-6">
-        <div class="flex items-start justify-between gap-4">
-          <div class="space-y-1">
-            <h1 class="text-xl font-semibold text-slate-900 hero-heading">Run a competitor scan</h1>
-            <p class="text-sm text-slate-500">Enter a company or domain to analyze reviews, discussions, and market sentiment.</p>
-          </div>
-          <div class="flex flex-col items-end gap-1 text-xs text-slate-500">
-            <span class="mb-1 hidden sm:inline">Compare mode</span>
-            <div class="inline-flex rounded-full border border-slate-200 bg-slate-50 p-0.5">
-              <button type="button" data-mode="solo" id="mode-solo" class="px-2.5 py-1 rounded-full text-xs font-medium bg-white text-slate-700 border border-slate-200">See competitor only</button>
-              <button type="button" data-mode="other" id="mode-other" class="px-2.5 py-1 rounded-full text-xs font-medium text-slate-600">Compare vs other company</button>
-              <button type="button" data-mode="own" id="mode-own" class="px-2.5 py-1 rounded-full text-xs font-medium text-slate-600">Compare vs my company</button>
-            </div>
+        <section class="bg-white border border-slate-200/80 rounded-3xl shadow-lg shadow-slate-900/[0.04] p-8 sm:p-12 md:p-14">
+        <!-- Title + description -->
+        <div class="text-center mb-10 sm:mb-12">
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 hero-heading tracking-tight">
+            Run a competitor scan
+          </h1>
+          <p class="mt-2 text-sm text-slate-500 max-w-md mx-auto">
+            Analyze reviews, discussions, and market sentiment across the web
+          </p>
+        </div>
+
+        <!-- Compare mode: segmented control, connected to main area -->
+        <div class="mb-6">
+          <div class="inline-flex w-full sm:w-auto rounded-xl border border-slate-200 bg-slate-50/80 p-1 gap-0.5">
+            <button type="button" data-mode="solo" id="mode-solo" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors bg-[#5e62ee] text-white">Competitor only</button>
+            <button type="button" data-mode="other" id="mode-other" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors text-slate-600 hover:bg-white hover:shadow-sm">Compare vs another company</button>
+            <button type="button" data-mode="own" id="mode-own" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors text-slate-600 hover:bg-white hover:shadow-sm">Compare vs my product</button>
           </div>
         </div>
 
-        <form id="analyze-form" class="space-y-4">
-          <!-- Primary / competitor inputs -->
-          <div class="space-y-1.5">
-            <label for="query" class="block text-sm font-medium text-slate-800">
-              Company or domain
-            </label>
-            <p class="text-xs text-slate-500">
-              Examples: <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">notion.so</code>,
-            </p>
+        <form id="analyze-form" class="space-y-6">
+          <!-- Helper above input -->
+          <p class="text-xs text-slate-500">Analyze any company, product, or domain</p>
+
+          <!-- Main input + primary button -->
+          <div class="flex flex-col sm:flex-row gap-3">
             <input
               id="query"
               name="query"
               type="text"
-              class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
-              placeholder="Enter a company name or domain"
+              class="flex-1 min-w-0 rounded-2xl border border-slate-200 px-5 py-4 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee] shadow-sm"
+              placeholder="Notion, Slack, Shopify, figma.com…"
               autocomplete="off"
             />
+            <button
+              type="submit"
+              id="submit-btn"
+              class="inline-flex items-center justify-center rounded-2xl bg-[#5e62ee] px-6 py-4 text-sm font-semibold text-white shadow-md shadow-[#5e62ee]/25 hover:bg-[#4a4ed8] disabled:opacity-60 disabled:cursor-not-allowed transition-all shrink-0"
+            >
+              <span id="submit-label">Run competitor scan</span>
+            </button>
           </div>
 
-          <div id="competitor-field" class="space-y-1.5 hidden">
-            <label for="competitor" class="block text-sm font-medium text-slate-800">
-              Company to compare against
-            </label>
-            <p class="text-xs text-slate-500">
-              Compare against another company, maybe even your own (e.g. <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">Notion</code> vs <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">Evernote</code>).
-            </p>
+          <!-- Micro-context -->
+          <p class="text-[11px] text-slate-400">Scans reviews, forums, Reddit, and app stores</p>
+
+          <!-- Competitor field (shown when compare mode is other/own) -->
+          <div id="competitor-field" class="space-y-2 hidden pt-2 border-t border-slate-100">
             <input
               id="competitor"
               name="competitor"
               type="text"
-              class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
-              placeholder="Optional: competitor company or product"
+              class="block w-full rounded-2xl border border-slate-200 px-5 py-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+              placeholder="Company or product to compare against"
               autocomplete="off"
             />
+            <p id="competitor-helper" class="text-xs text-slate-500"></p>
           </div>
 
           <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <button
-              type="submit"
-              id="submit-btn"
-              class="inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-            >
-              <span id="submit-label">Analyze market sentiment</span>
-            </button>
-            <div class="text-xs text-slate-500" id="status">
-            </div>
+            <div class="text-xs text-slate-500" id="status"></div>
           </div>
 
           <div class="text-xs text-red-600 min-h-[1rem]" id="error"></div>
@@ -614,15 +666,118 @@
     const resultsDashboard = document.getElementById('results-dashboard');
     const resultsRaw = document.getElementById('results-raw');
     const resultsFallback = document.getElementById('results-fallback');
+    const headerLoginLink = document.getElementById('header-login');
+    const headerAvatarBtn = document.getElementById('header-avatar');
+    const headerAvatarInitial = document.getElementById('header-avatar-initial');
+    const avatarMenu = document.getElementById('avatar-menu');
+    const avatarSignoutBtn = document.getElementById('avatar-signout');
+    const navNewScan = document.getElementById('nav-new-scan');
+    const navReports = document.getElementById('nav-reports');
 
     let lastResult = null;
 
     let compareMode = 'solo'; // 'solo' | 'other' | 'own'
 
+    function getStoredAuth() {
+      try {
+        const raw = window.localStorage.getItem('gd_auth');
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.debug('Failed to load auth from storage', e);
+        return null;
+      }
+    }
+
+    async function loadHeaderCredits(stored) {
+      const creditsEl = document.getElementById('avatar-credits');
+      if (!stored || !stored.accessToken || !creditsEl) return;
+      try {
+        const res = await fetch('/me/credits', {
+          headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+        creditsEl.textContent = val != null ? String(val) : '0';
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function applyHeaderAuthState() {
+      const stored = getStoredAuth();
+      const isAuthed = stored && stored.accessToken;
+      if (isAuthed) {
+        window.gdAccessToken = stored.accessToken;
+      } else {
+        window.gdAccessToken = null;
+      }
+      if (headerLoginLink) {
+        if (isAuthed) headerLoginLink.classList.add('hidden');
+        else headerLoginLink.classList.remove('hidden');
+      }
+      if (headerAvatarBtn) {
+        if (isAuthed && stored.email) {
+          const email = String(stored.email);
+          const initial = email.trim().charAt(0).toUpperCase() || 'G';
+          if (headerAvatarInitial) headerAvatarInitial.textContent = initial;
+          headerAvatarBtn.classList.remove('hidden');
+          headerAvatarBtn.classList.add('flex');
+        } else {
+          headerAvatarBtn.classList.add('hidden');
+          headerAvatarBtn.classList.remove('flex');
+        }
+      }
+      if (navNewScan) {
+        if (isAuthed) navNewScan.classList.remove('hidden');
+        else navNewScan.classList.add('hidden');
+      }
+      if (navReports) {
+        if (isAuthed) navReports.classList.remove('hidden');
+        else navReports.classList.add('hidden');
+      }
+      if (isAuthed) {
+        loadHeaderCredits(stored);
+      }
+    }
+
+    // Initialize auth state for scans & header buttons.
+    applyHeaderAuthState();
+
+    function closeAvatarMenu() {
+      if (avatarMenu) avatarMenu.classList.add('hidden');
+    }
+
+    if (headerAvatarBtn && avatarMenu) {
+      headerAvatarBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        avatarMenu.classList.toggle('hidden');
+      });
+      document.addEventListener('click', function () {
+        closeAvatarMenu();
+      });
+    }
+
+    if (avatarSignoutBtn) {
+      avatarSignoutBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        try {
+          window.localStorage.removeItem('gd_auth');
+        } catch (err) {
+          console.debug('Failed to clear auth from storage', err);
+        }
+        window.gdAccessToken = null;
+        closeAvatarMenu();
+        applyHeaderAuthState();
+        window.location.href = '/';
+      });
+    }
+
     function setCompareMode(mode) {
       compareMode = mode;
       if (!competitorField) return;
-      var helper = document.querySelector('#competitor-field p.text-xs');
+      var helper = document.getElementById('competitor-helper');
 
       if (mode === 'solo') {
         competitorField.classList.add('hidden');
@@ -638,18 +793,16 @@
         }
       }
 
-      // Update button styles
+      // Update button styles: selected = blue, others = muted with hover
       if (modeSoloBtn && modeOtherBtn && modeOwnBtn) {
         [modeSoloBtn, modeOtherBtn, modeOwnBtn].forEach(function (btn) {
-          btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-          btn.classList.add('text-slate-600');
+          btn.classList.remove('bg-[#5e62ee]', 'text-white');
+          btn.classList.add('text-slate-600', 'hover:bg-white', 'hover:shadow-sm');
         });
-        if (mode === 'solo') {
-          modeSoloBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-        } else if (mode === 'other') {
-          modeOtherBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-        } else if (mode === 'own') {
-          modeOwnBtn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        var selectedBtn = mode === 'solo' ? modeSoloBtn : mode === 'other' ? modeOtherBtn : modeOwnBtn;
+        if (selectedBtn) {
+          selectedBtn.classList.remove('text-slate-600', 'hover:bg-white', 'hover:shadow-sm');
+          selectedBtn.classList.add('bg-[#5e62ee]', 'text-white');
         }
       }
     }
@@ -1171,7 +1324,23 @@
       submitBtn.disabled = true;
       submitLabel.textContent = 'Analyzing...';
       resultsLoading.classList.remove('hidden');
-      resultsLoadingText.textContent = 'Analyzing public sources…';
+      // Rotate loading messages while waiting
+      const loadingMessages = [
+        'Analyzing market feedback…',
+        'Scanning competitor positioning…',
+        'Detecting feature gaps…',
+        'Synthesizing insights…',
+      ];
+      let msgIndex = 0;
+      let loadingTimer = null;
+      if (resultsLoadingText) {
+        resultsLoadingText.textContent = loadingMessages[msgIndex];
+        loadingTimer = window.setInterval(function () {
+          msgIndex = (msgIndex + 1) % loadingMessages.length;
+          resultsLoadingText.textContent = loadingMessages[msgIndex];
+        }, 2000);
+      }
+
       resultsDashboard.classList.add('hidden');
       resultsFallback.classList.add('hidden');
       resultsRaw.classList.add('hidden');
@@ -1179,38 +1348,52 @@
       track('scan_started', { has_competitor: !!competitor, compare_mode: compareMode });
 
       try {
-        var response = await fetch('/analyze', {
+        var headers = { 'Content-Type': 'application/json' };
+        if (window.gdAccessToken) {
+          headers['Authorization'] = 'Bearer ' + window.gdAccessToken;
+        }
+        var response = await fetch('/scan', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: query,
-            competitor: competitor && compareMode !== 'solo' ? competitor : null
-          })
+          headers: headers,
+          body: JSON.stringify({ company_name: query })
         });
 
         var data = null;
         try { data = await response.json(); } catch (e) { console.error(e); }
 
-        if (!response.ok) {
-          errorEl.textContent = (data && (data.detail || data.error || data.message)) || 'Something went wrong.';
+        if (!response.ok || !data || !data.scan_id) {
+          errorEl.textContent = (data && (data.detail || data.error || data.message)) || 'Unable to start scan.';
           resultsLoading.classList.add('hidden');
           return;
         }
 
-        resultsLoading.classList.add('hidden');
-        statusEl.textContent = 'Analysis complete.';
-        resultsDashboard.classList.remove('hidden');
-        renderDashboard(data);
-        resultsDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Redirect to dedicated report page
+        window.location.href = '/report?scan_id=' + encodeURIComponent(data.scan_id);
       } catch (err) {
         console.error(err);
         errorEl.textContent = 'Network error. Please try again.';
         resultsLoading.classList.add('hidden');
       } finally {
+        if (loadingTimer) window.clearInterval(loadingTimer);
         submitBtn.disabled = false;
-        submitLabel.textContent = 'Analyze market sentiment';
+        submitLabel.textContent = 'Run competitor scan';
       }
     });
+
+    // If landing page passed ?query=... in URL, auto-fill and run a scan once.
+    (function autoRunFromQueryParam() {
+      if (!form || !queryInput) return;
+      try {
+        const params = new URLSearchParams(window.location.search || '');
+        const initialQuery = params.get('query');
+        if (!initialQuery) return;
+        queryInput.value = initialQuery;
+        // Trigger the same flow as clicking "Analyze"
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      } catch (e) {
+        console.debug('Failed to auto-run from query param', e);
+      }
+    })();
   </script>
 </body>
 </html>

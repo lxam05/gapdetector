@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gap Detector – Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(to right, rgba(94, 98, 238, 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(94, 98, 238, 0.055) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .hero-heading {
+      font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <!-- Top nav (matches other pages) -->
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-8 w-8">
+          <span class="text-sm font-semibold tracking-tight">Gap&nbsp;Detector</span>
+        </a>
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a
+              id="nav-new-scan"
+              href="/app"
+              class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden"
+            >
+              New scan
+            </a>
+            <a
+              id="nav-reports"
+              href="/dashboard"
+              class="text-slate-500 hover:text-[#5e62ee] transition-colors hidden"
+            >
+              Dashboard
+            </a>
+            <a
+              id="nav-pricing"
+              href="/pricing"
+              class="text-slate-500 hover:text-[#5e62ee] transition-colors"
+            >
+              Pricing
+            </a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a
+              id="header-login"
+              href="/auth"
+              class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors"
+            >
+              Log in
+            </a>
+            <button
+              id="header-avatar"
+              type="button"
+              class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center"
+              aria-label="Account"
+            >
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Avatar dropdown -->
+        <div
+          id="avatar-menu"
+          class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1"
+        >
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Account / Profile
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Billing
+          </button>
+          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+            Settings
+          </button>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button
+            id="avatar-signout"
+            type="button"
+            class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 w-full">
+      <div class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+        <!-- Teaser header -->
+        <section class="space-y-2">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Teaser report
+          </p>
+          <h1 id="company-title" class="text-2xl sm:text-3xl font-semibold text-slate-900 hero-heading">
+            Loading…
+          </h1>
+          <p id="company-subtitle" class="text-sm text-slate-500 max-w-2xl">
+            We’re turning noisy customer feedback into a structured opportunity map you can actually act on.
+          </p>
+        </section>
+
+        <!-- Teaser and premium stacked: teaser card on top, unlock overlay below -->
+        <section id="teaser-layout" class="space-y-4 md:space-y-5">
+          <!-- Top: teaser card -->
+          <div class="space-y-4">
+            <div class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 p-6 sm:p-7 space-y-4">
+              <div>
+                <h2 class="text-sm font-semibold text-slate-900">What the market is saying</h2>
+                <p id="summary" class="mt-2 text-sm text-slate-600">
+                  Loading summary…
+                </p>
+              </div>
+
+              <div class="border border-rose-100 rounded-xl bg-rose-50 p-4 space-y-2">
+                <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-rose-500">
+                  Biggest weakness
+                </p>
+                <p id="biggest-weakness" class="text-sm text-rose-700">
+                  —
+                </p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                  <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">
+                    3 key complaints
+                  </h3>
+                  <ul id="key-complaints" class="space-y-2 text-sm text-slate-700"></ul>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                  <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">
+                    2 missed opportunities
+                  </h3>
+                  <ul id="missed-opportunities" class="space-y-2 text-sm text-slate-700"></ul>
+                </div>
+              </div>
+            </div>
+
+
+            </p>
+          </div>
+
+          <!-- Below: premium section with blur + unlock -->
+          <div class="space-y-3">
+            <div id="premium-section" class="relative rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden">
+              <div class="p-5 space-y-3 premium-content">
+                <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500">
+                  Premium analysis
+                </p>
+                <h2 class="text-sm font-semibold text-slate-900">
+                  Where you can realistically win
+                </h2>
+                <p id="premium-preview" class="text-sm text-slate-700">
+                  Loading…
+                </p>
+              </div>
+
+              <div id="premium-lock-overlay" class="absolute inset-0 flex flex-col justify-end bg-gradient-to-b from-transparent via-white/70 to-white/95 backdrop-blur-sm">
+                <div class="p-4 space-y-3">
+                  <p class="text-xs text-slate-600">
+                    This section contains the exact positioning, wedge, and product moves we’d recommend for you.
+                  </p>
+                  <button
+                    id="unlock-btn"
+                    type="button"
+                    class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors"
+                  >
+                    Unlock report
+                  </button>
+                  <p id="credits-inline" class="hidden text-[10px] text-slate-500"></p>
+                  <p class="text-[10px] text-slate-500">
+                    No credits? You can buy a one-off unlock or a pack of credits on the pricing page.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="premium-full" class="hidden rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-800 whitespace-pre-line">
+            </div>
+          </div>
+        </section>
+
+        <!-- Full analyzer-style report (shown after unlock) – exact copy of app.html dashboard -->
+        <div id="full-report-section" class="hidden border-t border-slate-200 pt-6 space-y-8">
+        <div id="results-dashboard" class="space-y-8">
+          <!-- TL;DR + actions -->
+          <section id="dashboard-tldr" class="rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-900/5 p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">TL;DR</span>
+                <span id="tldr-sentiment" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">—</span>
+                <span id="tldr-opportunity" class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Opp: —/10</span>
+                <span id="tldr-difficulty" class="inline-flex items-center rounded-full bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-700">Difficulty: —</span>
+              </div>
+              <div class="flex flex-wrap gap-2 justify-end">
+                <button type="button" id="export-pdf" class="text-[11px] text-slate-600 hover:text-[#5e62ee]">Export PDF</button>
+                <button type="button" id="copy-all" class="text-[11px] text-[#5e62ee] hover:underline">Copy full report</button>
+              </div>
+            </div>
+            <div class="space-y-1.5 text-sm text-slate-800">
+              <p id="tldr-strength">What they do well: —</p>
+              <p id="tldr-weakness">Where they lose: —</p>
+              <p id="tldr-wedge" class="font-medium">Best wedge for you: —</p>
+            </div>
+          </section>
+
+          <!-- 1) Executive Summary -->
+          <section id="dashboard-executive" class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 overflow-hidden">
+            <div class="p-6 sm:p-8">
+              <h2 class="text-lg font-semibold text-slate-900 mb-4">Executive Summary</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Overall Sentiment</span>
+                  <span id="exec-sentiment-badge" class="inline-flex w-fit rounded-full px-3 py-1 text-sm font-medium">—</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Biggest Opportunity</span>
+                  <p id="exec-opportunity" class="text-sm text-slate-800">—</p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">What this competitor does best</span>
+                  <p id="exec-strength" class="text-sm text-slate-800">—</p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Confidence</span>
+                  <span id="exec-confidence" class="text-sm text-slate-800">—</span>
+                </div>
+              </div>
+              <p id="exec-headline" class="mt-4 text-sm text-slate-600 hidden"></p>
+            </div>
+          </section>
+
+          <!-- 2) Opportunity Scoreboard -->
+          <section id="dashboard-opportunities" class="hidden">
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <h2 class="text-xl font-semibold text-slate-900">Top Opportunities to Win</h2>
+            </div>
+            <div id="opportunities-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+          </section>
+
+          <!-- 3) Strengths vs Weaknesses -->
+          <section id="dashboard-strengths-weaknesses" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">What They Do Well</h3>
+              <ul id="strengths-list" class="space-y-2 text-sm text-slate-700"></ul>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-rose-50/30 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">Where They Fall Short</h3>
+              <ul id="weaknesses-list" class="space-y-2 text-sm text-slate-700"></ul>
+            </div>
+          </section>
+
+          <!-- 4) Real Customer Voice -->
+          <section id="dashboard-quotes" class="hidden">
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">What Customers Actually Say</h2>
+            <div id="quotes-grid" class="grid gap-4 sm:grid-cols-2"></div>
+          </section>
+
+          <!-- 5) Feature Requests -->
+          <section id="dashboard-feature-requests" class="hidden">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Feature Requests / Unmet Needs</h2>
+            </div>
+            <ul id="feature-requests-list" class="space-y-2 text-sm text-slate-700"></ul>
+          </section>
+
+          <!-- 6) How to Beat Them -->
+          <section id="dashboard-how-to-beat" class="hidden rounded-xl border border-[#5e62ee]/20 bg-[#5e62ee]/5 p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">How to Outperform This Competitor</h2>
+            </div>
+            <ul id="how-to-beat-list" class="space-y-2 text-sm text-slate-700"></ul>
+          </section>
+
+          <!-- 7) Recommended Positioning for YOU -->
+          <section id="dashboard-tailored" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Recommended Positioning for YOU</h2>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Positioning angle</h3>
+                <p id="tailored-angle" class="text-sm text-slate-800">—</p>
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500 mt-3">ICP</h3>
+                <p id="tailored-icp" class="text-sm text-slate-800">—</p>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Key differentiators</h3>
+                <ul id="tailored-diffs" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Homepage headlines</h3>
+                <ul id="tailored-headlines" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Homepage subheadlines</h3>
+                <ul id="tailored-subheadlines" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Objections &amp; rebuttals</h3>
+              <ul id="tailored-objections" class="space-y-1.5 text-sm text-slate-800"></ul>
+            </div>
+          </section>
+
+          <!-- 8) Underserved Segments -->
+          <section id="dashboard-segments" class="hidden rounded-2xl border border-slate-200 bg-white p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Underserved Segments</h2>
+            </div>
+            <div id="segments-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 9) Switch Triggers -->
+          <section id="dashboard-switch-triggers" class="hidden rounded-2xl border border-slate-200 bg-white p-6">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-lg font-semibold text-slate-900">Likely Switching Moments</h2>
+            </div>
+            <div id="switch-triggers-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 10) Messaging & Angles -->
+          <section id="dashboard-messaging" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Messaging &amp; Angles</h2>
+              <div class="flex flex-wrap gap-2 items-center">
+                <div class="flex items-center gap-1 text-[11px] text-slate-500">
+                  <span class="mr-1">Use on:</span>
+                  <button type="button" data-message-filter="all" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600 bg-slate-50">All</button>
+                  <button type="button" data-message-filter="hero" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Hero</button>
+                  <button type="button" data-message-filter="ads" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Ads</button>
+                  <button type="button" data-message-filter="cold email" class="px-2 py-0.5 rounded-full border border-slate-200 text-xs text-slate-600">Cold email</button>
+                </div>
+                <button type="button" id="regen-messaging" class="text-xs text-[#5e62ee] hover:underline">Generate variants</button>
+              </div>
+            </div>
+            <div id="messaging-themes" class="grid gap-4 sm:grid-cols-2"></div>
+          </section>
+
+          <!-- 11) Feature Gap Map -->
+          <section id="dashboard-gap-map" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Feature Gap Map</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-left text-xs text-slate-700">
+                <thead class="text-[11px] uppercase text-slate-500 border-b">
+                  <tr>
+                    <th class="py-2 pr-4">Feature Area</th>
+                    <th class="py-2 pr-4">Competitor Weakness</th>
+                    <th class="py-2 pr-4">Opportunity</th>
+                    <th class="py-2 pr-4">Build vs Market</th>
+                    <th class="py-2 pr-4">Severity</th>
+                    <th class="py-2 pr-2">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody id="gap-map-rows" class="align-top"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 12) Blind Spots -->
+          <section id="dashboard-blind-spots" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Blind Spots</h2>
+            </div>
+            <ul id="blind-spots-list" class="space-y-2 text-sm text-slate-800"></ul>
+            <button type="button" id="add-sources" class="inline-flex items-center rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:border-[#5e62ee] hover:text-[#5e62ee]">
+              Add sources to expand scan
+            </button>
+          </section>
+
+          <!-- 13) Strategic Options -->
+          <section id="dashboard-strategic-options" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Paths to Win</h2>
+            </div>
+            <div id="strategic-options-list" class="space-y-3 text-sm text-slate-800"></div>
+          </section>
+
+          <!-- 14) Compare Mode -->
+          <section id="dashboard-compare" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-lg font-semibold text-slate-900">Compare Mode</h2>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Overlap strengths</h3>
+                <ul id="compare-overlap" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Unique advantages</h3>
+                <ul id="compare-uniques" class="space-y-1.5 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Biggest narrative wedge</h3>
+              <p id="compare-wedge" class="text-sm text-slate-800">—</p>
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">Battlecard summary</h3>
+              <pre id="compare-battlecard" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-3 text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap"></pre>
+            </div>
+          </section>
+        </div>
+
+        <!-- Fallback: raw report (same as app.html) -->
+        <section id="results-fallback" class="hidden border-t border-slate-200 pt-6 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-sm font-semibold text-slate-800">Full report</h2>
+          </div>
+          <pre id="results-raw" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-4 text-sm leading-relaxed overflow-y-auto max-h-[50vh] whitespace-pre-wrap"></pre>
+        </section>
+        </div>
+
+        <div id="error-banner" class="hidden rounded-xl border border-rose-500/60 bg-rose-50 text-xs text-rose-700 px-4 py-2">
+          Unable to load this scan. Please try running a new one from the home page.
+        </div>
+      </div>
+    </main>
+
+    <!-- Auth modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+      <div class="w-full max-w-sm rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">Sign in to unlock</h2>
+            <p class="text-[11px] text-slate-500 mt-1">
+              Create a free account or sign in to view the full premium analysis.
+            </p>
+          </div>
+          <button id="auth-close" class="text-slate-400 hover:text-slate-600 text-xs">
+            ✕
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <a
+            href="/auth/google/login"
+            class="w-full inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors"
+          >
+            Continue with Google
+          </a>
+
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-slate-800"></div>
+            </div>
+            <div class="relative flex justify-center text-[10px]">
+              <span class="bg-slate-950 px-2 text-slate-500">or use email</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <input
+              id="auth-email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+            />
+            <input
+              id="auth-password"
+              type="password"
+              placeholder="Password"
+              autocomplete="current-password"
+              class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+            />
+          </div>
+
+          <button
+            id="auth-continue"
+            type="button"
+            class="w-full inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-3 py-2 text-xs font-semibold text-white hover:bg-[#4a4ed8] transition-colors"
+          >
+            Continue
+          </button>
+
+          <p class="text-[10px] text-slate-500">
+            New here? We’ll create an account for you automatically.
+          </p>
+
+          <div id="auth-error" class="min-h-[1rem] text-[11px] text-rose-500"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <div class="h-6 w-6 rounded-full bg-[#5e62ee] flex items-center justify-center text-[10px] font-bold text-white">
+              GD
+            </div>
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Injected from server for paywall (configurable in .env / settings)
+    window.GD_STRIPE_PAYMENT_LINK = "{{ stripe_payment_link_url | default('', true) | e }}";
+    window.GD_SUCCESS_URL_BASE = "{{ success_url_base | default('http://localhost:8000', true) | e }}";
+    // Shared auth helpers
+    function gdGetStoredAuth() {
+      try {
+        var raw = window.localStorage.getItem('gd_auth');
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function gdSaveAuth(payload) {
+      window.localStorage.setItem('gd_auth', JSON.stringify(payload));
+    }
+
+    (function initHeaderAuth() {
+      var loginLink = document.getElementById('header-login');
+      var avatarBtn = document.getElementById('header-avatar');
+      var avatarInitial = document.getElementById('header-avatar-initial');
+      var avatarMenu = document.getElementById('avatar-menu');
+      var avatarSignout = document.getElementById('avatar-signout');
+      var navNewScan = document.getElementById('nav-new-scan');
+      var navReports = document.getElementById('nav-reports');
+
+      async function loadHeaderCredits(stored) {
+        var creditsEl = document.getElementById('avatar-credits');
+        if (!stored || !stored.accessToken || !creditsEl) return;
+        try {
+          var res = await fetch('/me/credits', {
+            headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+          });
+          if (!res.ok) return;
+          var data = await res.json();
+          var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+          creditsEl.textContent = val != null ? String(val) : '0';
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      function applyHeaderAuthState() {
+        var stored = gdGetStoredAuth();
+        var isAuthed = stored && stored.accessToken;
+        if (loginLink) {
+          if (isAuthed) loginLink.classList.add('hidden');
+          else loginLink.classList.remove('hidden');
+        }
+        if (avatarBtn) {
+          if (isAuthed && stored.email) {
+            var email = String(stored.email);
+            var initial = email.trim().charAt(0).toUpperCase() || 'G';
+            if (avatarInitial) avatarInitial.textContent = initial;
+            avatarBtn.classList.remove('hidden');
+            avatarBtn.classList.add('flex');
+          } else {
+            avatarBtn.classList.add('hidden');
+            avatarBtn.classList.remove('flex');
+          }
+        }
+        if (navNewScan) {
+          if (isAuthed) navNewScan.classList.remove('hidden');
+          else navNewScan.classList.add('hidden');
+        }
+        if (navReports) {
+          if (isAuthed) navReports.classList.remove('hidden');
+          else navReports.classList.add('hidden');
+        }
+        if (isAuthed) {
+          loadHeaderCredits(stored);
+        }
+      }
+
+      function closeAvatarMenu() {
+        if (avatarMenu) avatarMenu.classList.add('hidden');
+      }
+
+      applyHeaderAuthState();
+
+      if (avatarBtn && avatarMenu) {
+        avatarBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          avatarMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function () {
+          closeAvatarMenu();
+        });
+      }
+
+      if (avatarSignout) {
+        avatarSignout.addEventListener('click', function (e) {
+          e.preventDefault();
+          try {
+            window.localStorage.removeItem('gd_auth');
+          } catch (err) {}
+          closeAvatarMenu();
+          applyHeaderAuthState();
+          window.location.href = '/';
+        });
+      }
+    })();
+
+    (function initReport() {
+      var params = new URLSearchParams(window.location.search || '');
+      var scanId = params.get('scan_id');
+      var paid = params.get('paid') === '1';
+      var sessionId = params.get('session_id');
+      var errorBanner = document.getElementById('error-banner');
+      var summaryEl = document.getElementById('summary');
+      var companyTitle = document.getElementById('company-title');
+      var biggestWeaknessEl = document.getElementById('biggest-weakness');
+      var complaintsList = document.getElementById('key-complaints');
+      var oppsList = document.getElementById('missed-opportunities');
+      var premiumPreviewEl = document.getElementById('premium-preview');
+      var premiumLockOverlay = document.getElementById('premium-lock-overlay');
+      var premiumFullEl = document.getElementById('premium-full');
+      var teaserLayout = document.getElementById('teaser-layout');
+      var fullReportSection = document.getElementById('full-report-section');
+      var unlockBtn = document.getElementById('unlock-btn');
+
+      var authModal = document.getElementById('auth-modal');
+      var authClose = document.getElementById('auth-close');
+      var authEmail = document.getElementById('auth-email');
+      var authPassword = document.getElementById('auth-password');
+      var authContinue = document.getElementById('auth-continue');
+      var authError = document.getElementById('auth-error');
+
+      var PENDING_UNLOCK_KEY = 'gd_pending_unlock_scan_id';
+
+      // paid=1 with no scan_id: fallback only (e.g. old Payment Link redirect or different tab). Try localStorage; if missing, show message.
+      if (paid && !scanId) {
+        var pendingId = null;
+        try {
+          pendingId = window.localStorage.getItem(PENDING_UNLOCK_KEY);
+        } catch (e) {}
+        if (pendingId) {
+          (async function () {
+            try {
+              var res = await fetch('/scan/' + encodeURIComponent(pendingId) + '/unlock?paid=1', { method: 'POST' });
+              if (res.ok) {
+                try { window.localStorage.removeItem(PENDING_UNLOCK_KEY); } catch (e2) {}
+                window.location.replace('/report?scan_id=' + encodeURIComponent(pendingId) + '&paid=1');
+                return;
+              }
+            } catch (e) {}
+            window.location.replace('/report?scan_id=' + encodeURIComponent(pendingId));
+          })();
+          return;
+        }
+        if (errorBanner) {
+          errorBanner.classList.remove('hidden');
+          errorBanner.textContent = 'Payment received, but we couldn’t identify which report to unlock. Open the report from the same device/tab where you clicked Unlock, or run a new scan.';
+        }
+        return;
+      }
+
+      if (!scanId) {
+        if (errorBanner) {
+          errorBanner.classList.remove('hidden');
+          errorBanner.textContent = 'Missing scan_id in URL. Start from the home page or run a new scan.';
+        }
+        return;
+      }
+
+      function showError(msg) {
+        if (errorBanner) {
+          errorBanner.textContent = msg || 'Something went wrong loading this report.';
+          errorBanner.classList.remove('hidden');
+        }
+      }
+
+      function hideError() {
+        if (errorBanner) errorBanner.classList.add('hidden');
+      }
+
+      // —— Same helpers as app.html for dashboard render ——
+      function stripMd(s) {
+        if (!s) return '';
+        var out = String(s);
+        out = out.replace(/\*\*/g, '');
+        out = out.replace(/#+\s*/g, '');
+        return out;
+      }
+      function bulletsFromSection(text) {
+        if (!text || !text.trim()) return [];
+        if (Array.isArray(text)) return text.map(function (s) { return stripMd(String(s).trim()); }).filter(Boolean);
+        return text.split(/\n/).map(function (line) {
+          var s = line.replace(/^[-*]\s*/, '').trim();
+          s = stripMd(s);
+          s = s.replace(/^\d+\.\s*/, '');
+          if (!s || /^[-–—]+$/.test(s) || /^\d+\.?$/.test(s)) return '';
+          return s;
+        }).filter(function (s) { return s && s.length > 0; });
+      }
+      function escapeHtml(s) {
+        if (!s) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+      function sentimentBadgeClass(sentiment) {
+        if (sentiment === 'Positive') return 'bg-emerald-100 text-emerald-800';
+        if (sentiment === 'Negative') return 'bg-rose-100 text-rose-800';
+        return 'bg-amber-100 text-amber-800';
+      }
+      function getSection(sections, keys) {
+        if (!sections || typeof sections !== 'object') return '';
+        for (var i = 0; i < keys.length; i++) {
+          var v = sections[keys[i]];
+          if (v && typeof v === 'string' && v.trim()) return v;
+        }
+        return '';
+      }
+
+      // Build app-style data from scan response so renderDashboard populates the same UI
+      function mapScanToDashboardData(data) {
+        var complaints = data.key_complaints || [];
+        var opps = data.missed_opportunities || [];
+        var weakText = complaints.join('\n');
+        var oppText = opps.join('\n');
+        var strText = (data.summary || '').trim();
+        var sections = {
+          'Key Weaknesses': weakText,
+          'Common Complaints': weakText,
+          'Opportunities': oppText,
+          'Opportunities for a New Competitor': oppText,
+          'Key Strengths': strText,
+          'Strengths': strText
+        };
+        return {
+          sections: sections,
+          sentiment_badge: 'Mixed',
+          biggest_opportunity: opps[0] || '',
+          biggest_strength: strText ? strText.split('.')[0] + (strText.indexOf('.') !== -1 ? '.' : '') : '—',
+          biggest_weakness: data.biggest_weakness || '—',
+          confidence: '—',
+          opportunity_score: null,
+          difficulty_score: null,
+          report: data.premium_analysis || '',
+          sources: [],
+          quotes: [],
+          tailoredStrategy: null,
+          underservedSegments: [],
+          switchTriggers: [],
+          messagingAngles: {},
+          featureGapMap: [],
+          blindSpots: [],
+          strategicOptions: [],
+          compareResults: null
+        };
+      }
+
+      // Exact same renderDashboard as app.html (uses getElementById for results-raw / results-fallback)
+      function renderDashboard(data) {
+        var sections = data.sections || {};
+        var sources = Array.isArray(data.sources) ? data.sources : [];
+        var quotes = Array.isArray(data.quotes) ? data.quotes : [];
+        var opportunityScore = typeof data.opportunity_score === 'number' ? data.opportunity_score : null;
+        var difficultyScore = typeof data.difficulty_score === 'number' ? data.difficulty_score : null;
+        var difficultyLabel = difficultyScore == null ? '—' : (difficultyScore >= 8 ? 'High' : difficultyScore >= 4 ? 'Medium' : 'Low');
+
+        var tldrSent = document.getElementById('tldr-sentiment');
+        var tldrOpp = document.getElementById('tldr-opportunity');
+        var tldrDiff = document.getElementById('tldr-difficulty');
+        if (tldrSent) tldrSent.textContent = 'Customer sentiment: ' + (data.sentiment_badge || 'Mixed').trim();
+        if (tldrOpp) tldrOpp.textContent = 'Opportunity for you: ' + (opportunityScore != null ? opportunityScore : '—') + '/10';
+        if (tldrDiff) tldrDiff.textContent = 'Win difficulty: ' + difficultyLabel;
+
+        var oppText = getSection(sections, ['Opportunities for a New Competitor', 'Opportunities for New Competitors', 'Opportunities']) || '';
+        var oppBullets = bulletsFromSection(oppText);
+        var strText = getSection(sections, ['Key Strengths', 'Strengths', 'What customers like']) || '';
+        var weakText = (getSection(sections, ['Key Weaknesses', 'Weaknesses', 'What customers dislike']) || '') + '\n' + (getSection(sections, ['Common Complaints', 'Complaints']) || '');
+        var strBullets = bulletsFromSection(strText);
+        var weakBullets = bulletsFromSection(weakText);
+
+        var sent = (data.sentiment_badge || 'Mixed').trim();
+        var execBadge = document.getElementById('exec-sentiment-badge');
+        if (execBadge) { execBadge.textContent = sent; execBadge.className = 'inline-flex w-fit rounded-full px-3 py-1 text-sm font-medium ' + sentimentBadgeClass(sent); }
+        var execOpp = document.getElementById('exec-opportunity');
+        if (execOpp) execOpp.textContent = stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+        var strengthText = stripMd(data.biggest_strength || (strBullets[0] || '—')).replace(/competitors? in this space.*$/i, '').trim();
+        var execStr = document.getElementById('exec-strength');
+        if (execStr) execStr.textContent = strengthText || '—';
+        var execConf = document.getElementById('exec-confidence');
+        if (execConf) execConf.textContent = data.confidence || '—';
+
+        var oppSection = document.getElementById('dashboard-opportunities');
+        var oppList = document.getElementById('opportunities-list');
+        if (oppList) oppList.innerHTML = '';
+        if (oppBullets.length > 0 && oppSection && oppList) {
+          oppSection.classList.remove('hidden');
+          oppBullets.forEach(function (text, i) {
+            var card = document.createElement('div');
+            card.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+            card.innerHTML = '<div class="flex items-start gap-2"><span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span><div><p class="text-sm font-medium text-slate-800">' + escapeHtml(stripMd(text)) + '</p><div class="mt-2 flex gap-2"><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Demand: Medium</span><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Impact: High</span></div></div></div>';
+            oppList.appendChild(card);
+          });
+        }
+
+        var swSection = document.getElementById('dashboard-strengths-weaknesses');
+        var strList = document.getElementById('strengths-list');
+        var weakList = document.getElementById('weaknesses-list');
+        if (strList) strList.innerHTML = '';
+        if (weakList) weakList.innerHTML = '';
+        if ((strBullets.length > 0 || weakBullets.length > 0) && swSection) {
+          swSection.classList.remove('hidden');
+          strBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-emerald-500 mt-0.5">✓</span><span>' + escapeHtml(stripMd(s)) + '</span>'; strList.appendChild(li); });
+          weakBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-rose-500 mt-0.5">✕</span><span>' + escapeHtml(stripMd(s)) + '</span>'; weakList.appendChild(li); });
+        }
+
+        var tldrStrengthEl = document.getElementById('tldr-strength');
+        var tldrWeaknessEl = document.getElementById('tldr-weakness');
+        var tldrWedgeEl = document.getElementById('tldr-wedge');
+        if (tldrStrengthEl) tldrStrengthEl.textContent = 'What they do well: ' + (strBullets[0] || (sections['Key Strengths'] || '').split('\n')[0] || '—');
+        if (tldrWeaknessEl) tldrWeaknessEl.textContent = 'Where they lose: ' + (weakBullets[0] || (sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '—');
+        if (tldrWedgeEl) tldrWedgeEl.textContent = 'Best wedge for you: ' + stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+
+        var beatText = getSection(sections, ['How to Outperform This Competitor', 'How to Outperform', 'Opportunities for a New Competitor', 'Opportunities']) || '';
+        var beatBullets = bulletsFromSection(beatText);
+        var beatSection = document.getElementById('dashboard-how-to-beat');
+        var beatList = document.getElementById('how-to-beat-list');
+        if (beatList) beatList.innerHTML = '';
+        if (beatBullets.length > 0 && beatSection && beatList) {
+          beatSection.classList.remove('hidden');
+          beatBullets.forEach(function (s) { var li = document.createElement('li'); li.className = 'flex items-start gap-2'; li.innerHTML = '<span class="text-[#5e62ee] font-medium">→</span><span>' + escapeHtml(stripMd(s)) + '</span>'; beatList.appendChild(li); });
+        }
+
+        var resultsRaw = document.getElementById('results-raw');
+        var resultsFallback = document.getElementById('results-fallback');
+        if (data.report && resultsRaw && resultsFallback) {
+          resultsRaw.textContent = data.report;
+          resultsFallback.classList.remove('hidden');
+        } else if (resultsFallback) {
+          resultsFallback.classList.add('hidden');
+        }
+
+        var exportPdfBtn = document.getElementById('export-pdf');
+        if (exportPdfBtn) exportPdfBtn.onclick = function () { window.print(); };
+        var copyAllBtn = document.getElementById('copy-all');
+        if (copyAllBtn) copyAllBtn.onclick = function () {
+          var text = data.report ? stripMd(data.report) : '';
+          if (text && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
+        };
+      }
+
+      function renderTeaser(data) {
+        hideError();
+        if (companyTitle) companyTitle.textContent = data.company_name || 'Teaser report';
+        if (summaryEl) summaryEl.textContent = data.summary || '—';
+        if (biggestWeaknessEl) biggestWeaknessEl.textContent = data.biggest_weakness || '—';
+
+        complaintsList.innerHTML = '';
+        (data.key_complaints || []).slice(0, 3).forEach(function (c) {
+          var li = document.createElement('li');
+          li.className = 'flex gap-2';
+          li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-rose-400"></span><span>' + c + '</span>';
+          complaintsList.appendChild(li);
+        });
+
+        oppsList.innerHTML = '';
+        (data.missed_opportunities || []).slice(0, 2).forEach(function (o) {
+          var li = document.createElement('li');
+          li.className = 'flex gap-2';
+          li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>' + o + '</span>';
+          oppsList.appendChild(li);
+        });
+
+        // If locked and user is authenticated, show inline credits hint.
+        var creditsHint = document.getElementById('credits-inline');
+        var storedAuth = gdGetStoredAuth();
+        if (creditsHint && storedAuth && storedAuth.accessToken && data.locked) {
+          (async function () {
+            try {
+              var res = await fetch('/me/credits', {
+                headers: { 'Authorization': 'Bearer ' + storedAuth.accessToken }
+              });
+              if (!res.ok) return;
+              var c = await res.json();
+              var remaining = (c && typeof c.credits_remaining === 'number') ? c.credits_remaining : 0;
+              creditsHint.textContent = 'You have ' + remaining + ' credit' + (remaining === 1 ? '' : 's') + ' left. ';
+              creditsHint.textContent += 'Using this will unlock this report instantly. ';
+              creditsHint.textContent += 'Need more? ';
+              creditsHint.innerHTML = creditsHint.textContent + '<a href="/pricing" class="text-[#5e62ee] hover:underline">Buy more credits</a>.';
+              creditsHint.classList.remove('hidden');
+            } catch (e) {
+              // ignore
+            }
+          })();
+        }
+
+        if (premiumPreviewEl) {
+          premiumPreviewEl.textContent = data.premium_preview || 'Short preview of the deeper analysis will appear here.';
+        }
+        // If unlocked, show exact app.html dashboard: use full_dashboard from API when present (real analyzer ran).
+        if (data.locked === false) {
+          if (teaserLayout) teaserLayout.classList.add('hidden');
+          if (fullReportSection) fullReportSection.classList.remove('hidden');
+          if (data.full_dashboard) {
+            renderDashboard(data.full_dashboard);
+          } else {
+            var mappedData = mapScanToDashboardData(data);
+            renderDashboard(mappedData);
+          }
+        } else {
+          if (teaserLayout) teaserLayout.classList.remove('hidden');
+          if (fullReportSection) fullReportSection.classList.add('hidden');
+          if (premiumLockOverlay) premiumLockOverlay.classList.remove('hidden');
+          if (premiumFullEl) {
+            premiumFullEl.classList.add('hidden');
+          }
+        }
+      }
+
+      async function fetchScan() {
+        try {
+          var res = await fetch('/scan/' + encodeURIComponent(scanId));
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
+          if (!res.ok || !data) {
+            showError((data && (data.detail || data.error || data.message)) || 'Unable to load this scan.');
+            return;
+          }
+          renderTeaser(data);
+        } catch (e) {
+          console.error(e);
+          showError('Network error while loading this scan.');
+        }
+      }
+
+      // When returning from Stripe with paid=1&scan_id=..., persist unlock then load full report
+      async function ensureUnlockThenLoad() {
+        try {
+          var qs = '?paid=1';
+          if (sessionId) qs = '?session_id=' + encodeURIComponent(sessionId);
+          var res = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock' + qs, { method: 'POST' });
+          if (!res.ok) {
+            var data = null;
+            try { data = await res.json(); } catch (e) {}
+            showError((data && (data.detail || data.error || data.message)) || 'Unable to unlock this report.');
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+          showError('Network error while unlocking.');
+          return;
+        }
+        fetchScan();
+      }
+
+      function openAuthModal() {
+        if (authModal) authModal.classList.remove('hidden');
+        if (authEmail) authEmail.focus();
+      }
+
+      function closeAuthModal() {
+        if (authModal) authModal.classList.add('hidden');
+        if (authError) authError.textContent = '';
+      }
+
+      async function attemptUnlock() {
+        hideError();
+        var stored = gdGetStoredAuth();
+        var headers = { 'Content-Type': 'application/json' };
+        if (stored && stored.accessToken) {
+          headers['Authorization'] = 'Bearer ' + stored.accessToken;
+        }
+        try {
+          var res = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock', {
+            method: 'POST',
+            headers: headers,
+          });
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
+
+          if (res.status === 401) {
+            openAuthModal();
+            return;
+          }
+
+          if (!res.ok || !data) {
+            showError((data && (data.detail || data.error || data.message)) || 'Unable to unlock this report.');
+            return;
+          }
+
+          renderTeaser(data);
+        } catch (e) {
+          console.error(e);
+          showError('Network error while unlocking this report.');
+        }
+      }
+
+      async function callAuth(path, body, silent) {
+        if (!silent && authError) authError.textContent = '';
+        try {
+          var res = await fetch(path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body || {}),
+          });
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
+          if (!res.ok) {
+            if (!silent && authError) {
+              authError.textContent = (data && (data.detail || data.error || data.message)) || 'Request failed.';
+            }
+            return { ok: false, data: data };
+          }
+          return { ok: true, data: data };
+        } catch (e) {
+          console.error(e);
+          if (!silent && authError) authError.textContent = 'Network error. Please try again.';
+          return { ok: false, data: null };
+        }
+      }
+
+      async function handleInlineAuth() {
+        var email = (authEmail && authEmail.value || '').trim();
+        var password = (authPassword && authPassword.value || '').trim();
+        if (!email || !password) {
+          if (authError) authError.textContent = 'Enter email and password.';
+          return;
+        }
+
+        // 1) Try login first
+        var loginAttempt = await callAuth('/auth/login', { email: email, password: password }, true);
+        if (loginAttempt && loginAttempt.ok && loginAttempt.data) {
+          var tokens = loginAttempt.data;
+          gdSaveAuth({ email: email, accessToken: tokens.access_token, refreshToken: tokens.refresh_token });
+          closeAuthModal();
+          await attemptUnlock();
+          return;
+        }
+
+        // 2) Try register, then login
+        var registerAttempt = await callAuth('/auth/register', { email: email, password: password }, false);
+        if (!registerAttempt || !registerAttempt.ok) {
+          return;
+        }
+        var finalLogin = await callAuth('/auth/login', { email: email, password: password }, false);
+        if (!finalLogin || !finalLogin.ok || !finalLogin.data) {
+          return;
+        }
+        var tokens2 = finalLogin.data;
+        gdSaveAuth({ email: email, accessToken: tokens2.access_token, refreshToken: tokens2.refresh_token });
+        closeAuthModal();
+        await attemptUnlock();
+      }
+
+      if (unlockBtn) {
+        unlockBtn.addEventListener('click', function () {
+          if (!scanId) {
+            showError('Missing scan_id in URL. Start from the home page or run a new scan.');
+            return;
+          }
+          (async function () {
+            // 1) If logged in and have credits, try to unlock using a credit first.
+            var stored = gdGetStoredAuth();
+            if (stored && stored.accessToken) {
+              try {
+                var resCredit = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock-with-credit', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + stored.accessToken
+                  }
+                });
+                var dataCredit = null;
+                try { dataCredit = await resCredit.json(); } catch (e) {}
+                if (resCredit.ok && dataCredit) {
+                  renderTeaser(dataCredit);
+                  return;
+                }
+                // 401 = auth expired, 402 = no credits; fall through to checkout.
+              } catch (e) {
+                console.error(e);
+              }
+            }
+
+            // 2) No usable credit – send the user to pricing for this specific report.
+            var url = '/pricing';
+            if (scanId) {
+              url += '?scan_id=' + encodeURIComponent(scanId);
+            }
+            window.location.href = url;
+          })();
+        });
+      }
+
+      if (authClose) {
+        authClose.addEventListener('click', function () {
+          closeAuthModal();
+        });
+      }
+
+      if (authContinue) {
+        authContinue.addEventListener('click', function () {
+          handleInlineAuth();
+        });
+      }
+
+      if (paid) {
+        ensureUnlockThenLoad();
+      } else {
+        fetchScan();
+      }
+    })();
+  </script>
+</body>
+</html>
+
