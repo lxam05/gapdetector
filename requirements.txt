@@ -10,3 +10,7 @@ redis[hiredis]>=5.2.0
 google-play-scraper
 sqlalchemy
 asyncpg
+anthropic
+pydantic-settings
+python-jose[cryptography]
+passlib[bcrypt]
