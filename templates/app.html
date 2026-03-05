@@ -280,15 +280,15 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Account / Profile
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Billing
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Settings
-          </button>
+          </a>
           <div class="my-1 border-t border-slate-100"></div>
           <button
             id="avatar-signout"
@@ -317,7 +317,6 @@
         <div class="mb-6">
           <div class="inline-flex w-full sm:w-auto rounded-xl border border-slate-200 bg-slate-50/80 p-1 gap-0.5">
             <button type="button" data-mode="solo" id="mode-solo" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors bg-[#5e62ee] text-white">Competitor only</button>
-            <button type="button" data-mode="other" id="mode-other" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors text-slate-600 hover:bg-white hover:shadow-sm">Compare vs another company</button>
             <button type="button" data-mode="own" id="mode-own" class="compare-mode-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-xs font-medium transition-colors text-slate-600 hover:bg-white hover:shadow-sm">Compare vs my product</button>
           </div>
         </div>
@@ -348,16 +347,18 @@
           <!-- Micro-context -->
           <p class="text-[11px] text-slate-400">Scans reviews, forums, Reddit, and app stores</p>
 
-          <!-- Competitor field (shown when compare mode is other/own) -->
+          <!-- Product description field (shown when compare mode is own) -->
           <div id="competitor-field" class="space-y-2 hidden pt-2 border-t border-slate-100">
-            <input
-              id="competitor"
-              name="competitor"
-              type="text"
+            <label for="product-description" class="text-xs font-medium text-slate-600">
+              Describe your product
+            </label>
+            <textarea
+              id="product-description"
+              name="user_product_description"
+              rows="5"
               class="block w-full rounded-2xl border border-slate-200 px-5 py-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
-              placeholder="Company or product to compare against"
-              autocomplete="off"
-            />
+              placeholder="Describe your product, ideal customer, strengths, and where you feel weaker than competitors."
+            ></textarea>
             <p id="competitor-helper" class="text-xs text-slate-500"></p>
           </div>
 
@@ -469,6 +470,37 @@
               <h2 class="text-lg font-semibold text-slate-900">Feature Requests / Unmet Needs</h2>
             </div>
             <ul id="feature-requests-list" class="space-y-2 text-sm text-slate-700"></ul>
+          </section>
+
+          <section id="dashboard-user-wants" class="hidden rounded-2xl border border-slate-200 bg-amber-50/80 p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">What Users Are Actually Asking For</h2>
+            <ul id="users-want-list" class="space-y-2 text-sm text-slate-800"></ul>
+            <p class="text-sm text-slate-700"><strong>Core desire:</strong> <span id="users-core-desire">—</span></p>
+          </section>
+
+          <section id="dashboard-quick-wins" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">3 Fast Wins (Ship In 7 Days)</h2>
+            <ol id="quick-wins-list" class="space-y-2 text-sm text-slate-800 list-decimal pl-4"></ol>
+          </section>
+
+          <section id="dashboard-persona-fit" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Who Should Care About This</h2>
+            <ul id="persona-fit-list" class="space-y-2 text-sm text-slate-800"></ul>
+          </section>
+
+          <section id="dashboard-impact" class="hidden rounded-2xl border border-slate-200 bg-emerald-50/80 p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Potential Business Impact</h2>
+            <ul id="impact-list" class="space-y-2 text-sm text-slate-800"></ul>
+          </section>
+
+          <section id="dashboard-playbook" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">How To Execute This Opportunity</h2>
+            <ol id="playbook-list" class="space-y-2 text-sm text-slate-800 list-decimal pl-4"></ol>
+          </section>
+
+          <section id="dashboard-advantage-breakdown" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Competitor Advantage Breakdown</h2>
+            <ul id="advantage-breakdown-list" class="space-y-2"></ul>
           </section>
 
           <!-- 6) How to Beat Them -->
@@ -615,13 +647,6 @@
 
         </div>
 
-        <!-- Fallback: raw report if no structured data -->
-        <section id="results-fallback" class="hidden border-t border-slate-200 pt-6 space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <h2 class="text-sm font-semibold text-slate-800">Full report</h2>
-          </div>
-          <pre id="results-raw" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-4 text-sm leading-relaxed overflow-y-auto max-h-[50vh] whitespace-pre-wrap"></pre>
-        </section>
       </section>
     </main>
 
@@ -637,9 +662,9 @@
           <nav class="flex items-center gap-6 text-sm text-slate-500">
             <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
             <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="mailto:hello@gapdetector.com" class="hover:text-[#5e62ee] transition-colors">Contact</a>
           </nav>
         </div>
         <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
@@ -652,10 +677,9 @@
   <script>
     const form = document.getElementById('analyze-form');
     const queryInput = document.getElementById('query');
-    const competitorInput = document.getElementById('competitor');
+    const productDescriptionInput = document.getElementById('product-description');
     const competitorField = document.getElementById('competitor-field');
     const modeSoloBtn = document.getElementById('mode-solo');
-    const modeOtherBtn = document.getElementById('mode-other');
     const modeOwnBtn = document.getElementById('mode-own');
     const statusEl = document.getElementById('status');
     const errorEl = document.getElementById('error');
@@ -676,7 +700,7 @@
 
     let lastResult = null;
 
-    let compareMode = 'solo'; // 'solo' | 'other' | 'own'
+    let compareMode = 'solo'; // 'solo' | 'own'
 
     function getStoredAuth() {
       try {
@@ -696,6 +720,11 @@
         const res = await fetch('/me/credits', {
           headers: { 'Authorization': 'Bearer ' + stored.accessToken }
         });
+        if (res.status === 401) {
+          try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+          applyHeaderAuthState();
+          return;
+        }
         if (!res.ok) return;
         const data = await res.json();
         const val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -742,6 +771,15 @@
       }
     }
 
+    function stripAllReportsSection(md) {
+      if (!md) return md;
+      const s = String(md);
+      const re = /(^|\n)#{1,6}\s*All reports[^\n]*\n/i;
+      const m = s.match(re);
+      if (!m) return s;
+      return s.slice(0, m.index).trimEnd();
+    }
+
     // Initialize auth state for scans & header buttons.
     applyHeaderAuthState();
 
@@ -781,25 +819,21 @@
 
       if (mode === 'solo') {
         competitorField.classList.add('hidden');
-        if (competitorInput) competitorInput.value = '';
-      } else {
+        if (productDescriptionInput) productDescriptionInput.value = '';
+      } else if (mode === 'own') {
         competitorField.classList.remove('hidden');
         if (helper) {
-          if (mode === 'own') {
-            helper.textContent = "Paste your own product's website to compare against this competitor (e.g. yourapp.com).";
-          } else {
-            helper.textContent = 'Compare against another company (e.g. Notion vs Evernote).';
-          }
+          helper.textContent = 'This is used to generate a "what they do better than you" section with concrete improvements.';
         }
       }
 
       // Update button styles: selected = blue, others = muted with hover
-      if (modeSoloBtn && modeOtherBtn && modeOwnBtn) {
-        [modeSoloBtn, modeOtherBtn, modeOwnBtn].forEach(function (btn) {
+      if (modeSoloBtn && modeOwnBtn) {
+        [modeSoloBtn, modeOwnBtn].forEach(function (btn) {
           btn.classList.remove('bg-[#5e62ee]', 'text-white');
           btn.classList.add('text-slate-600', 'hover:bg-white', 'hover:shadow-sm');
         });
-        var selectedBtn = mode === 'solo' ? modeSoloBtn : mode === 'other' ? modeOtherBtn : modeOwnBtn;
+        var selectedBtn = mode === 'solo' ? modeSoloBtn : modeOwnBtn;
         if (selectedBtn) {
           selectedBtn.classList.remove('text-slate-600', 'hover:bg-white', 'hover:shadow-sm');
           selectedBtn.classList.add('bg-[#5e62ee]', 'text-white');
@@ -808,7 +842,6 @@
     }
 
     if (modeSoloBtn) modeSoloBtn.onclick = function () { setCompareMode('solo'); };
-    if (modeOtherBtn) modeOtherBtn.onclick = function () { setCompareMode('other'); };
     if (modeOwnBtn) modeOwnBtn.onclick = function () { setCompareMode('own'); };
     setCompareMode('solo');
 
@@ -954,11 +987,28 @@
       if (oppBullets.length > 0) {
         oppSection.classList.remove('hidden');
         oppBullets.forEach(function (text, i) {
+          let demandLabel = 'Medium';
+          let impactLabel = 'High';
+          if (Array.isArray(data.opportunity_meta) && data.opportunity_meta[i]) {
+            const meta = data.opportunity_meta[i];
+            if (meta && meta.demand) demandLabel = meta.demand;
+            if (meta && meta.impact) impactLabel = meta.impact;
+          }
           const card = document.createElement('div');
           card.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
           var clean = stripMd(text);
           var safe = escapeHtml(clean);
-          card.innerHTML = '<div class="flex items-start gap-2"><span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span><div><p class="text-sm font-medium text-slate-800">' + safe + '</p><div class="mt-2 flex gap-2"><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Demand: Medium</span><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Impact: High</span></div></div></div>';
+          card.innerHTML =
+            '<div class="flex items-start gap-2">' +
+              '<span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span>' +
+              '<div>' +
+                '<p class="text-sm font-medium text-slate-800">' + safe + '</p>' +
+                '<div class="mt-2 flex gap-2">' +
+                  '<span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Demand: ' + escapeHtml(demandLabel) + '</span>' +
+                  '<span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Impact: ' + escapeHtml(impactLabel) + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
           oppList.appendChild(card);
         });
       }
@@ -993,12 +1043,119 @@
       var tldrStrengthEl = document.getElementById('tldr-strength');
       var tldrWeaknessEl = document.getElementById('tldr-weakness');
       var tldrWedgeEl = document.getElementById('tldr-wedge');
-      var tldrStrength = 'What they do well: ' + (strBullets[0] || (sections['Key Strengths'] || '').split('\n')[0] || '—');
-      var tldrWeakness = 'Where they lose: ' + (weakBullets[0] || (sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '—');
-      var tldrWedge = 'Best wedge for you: ' + stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+      var tldrStrengthValue = strBullets[0] || stripMd(data.biggest_strength || '') || stripMd((sections['Key Strengths'] || '').split('\n')[0] || '');
+      var tldrWeaknessValue = weakBullets[0] || stripMd(data.biggest_weakness || '') || stripMd((sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '');
+      var wedgeObj = data.dominant_wedge || data.primary_wedge || {};
+      var tldrWedgeValue = stripMd(data.biggest_opportunity || wedgeObj.problem_to_attack || oppBullets[0] || '');
+      var tldrStrength = 'What they do well: ' + (tldrStrengthValue && tldrStrengthValue !== '—' ? tldrStrengthValue : 'Strong brand trust and broad market reach.');
+      var tldrWeakness = 'Where they lose: ' + (tldrWeaknessValue && tldrWeaknessValue !== '—' ? tldrWeaknessValue : 'Inconsistent customer experience at key usage moments.');
+      var tldrWedge = 'Best wedge for you: ' + (tldrWedgeValue && tldrWedgeValue !== '—' ? tldrWedgeValue : 'Build a narrow product promise around the top unresolved complaint cluster.');
       if (tldrStrengthEl) tldrStrengthEl.textContent = tldrStrength;
       if (tldrWeaknessEl) tldrWeaknessEl.textContent = tldrWeakness;
       if (tldrWedgeEl) tldrWedgeEl.textContent = tldrWedge;
+
+      // What Users Actually Want
+      var usersWantSection = document.getElementById('dashboard-user-wants');
+      var usersWantList = document.getElementById('users-want-list');
+      var usersCoreDesire = document.getElementById('users-core-desire');
+      if (usersWantSection && usersWantList && usersCoreDesire) {
+        usersWantSection.classList.add('hidden');
+        usersWantList.innerHTML = '';
+        var wantData = data.what_users_want || {};
+        var wants = Array.isArray(wantData.user_requests) ? wantData.user_requests : [];
+        wants.forEach(function (item) {
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-[#5e62ee] mt-0.5">•</span><span>' + escapeHtml(stripMd(item)) + '</span>';
+          usersWantList.appendChild(li);
+        });
+        usersCoreDesire.textContent = stripMd(wantData.core_desire || '—');
+        if (wants.length || (wantData.core_desire && String(wantData.core_desire).trim())) usersWantSection.classList.remove('hidden');
+      }
+
+      // Quick Wins (7 days)
+      var quickWinsSection = document.getElementById('dashboard-quick-wins');
+      var quickWinsList = document.getElementById('quick-wins-list');
+      if (quickWinsSection && quickWinsList) {
+        quickWinsSection.classList.add('hidden');
+        quickWinsList.innerHTML = '';
+        var quickWins = Array.isArray(data.quick_wins_7d) ? data.quick_wins_7d : [];
+        quickWins.forEach(function (step) {
+          var li = document.createElement('li');
+          li.textContent = stripMd(step || '—');
+          quickWinsList.appendChild(li);
+        });
+        if (quickWins.length) quickWinsSection.classList.remove('hidden');
+      }
+
+      // Persona fit
+      var personaSection = document.getElementById('dashboard-persona-fit');
+      var personaList = document.getElementById('persona-fit-list');
+      if (personaSection && personaList) {
+        personaSection.classList.add('hidden');
+        personaList.innerHTML = '';
+        var personas = Array.isArray(data.user_persona_fit) ? data.user_persona_fit : [];
+        personas.forEach(function (p) {
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-slate-500 mt-0.5">•</span><span>' + escapeHtml(stripMd(p)) + '</span>';
+          personaList.appendChild(li);
+        });
+        if (personas.length) personaSection.classList.remove('hidden');
+      }
+
+      // Business impact projection
+      var impactSection = document.getElementById('dashboard-impact');
+      var impactList = document.getElementById('impact-list');
+      if (impactSection && impactList) {
+        impactSection.classList.add('hidden');
+        impactList.innerHTML = '';
+        var impactLines = Array.isArray(data.business_impact_projection) ? data.business_impact_projection : [];
+        impactLines.forEach(function (line) {
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-emerald-600 mt-0.5">•</span><span>' + escapeHtml(stripMd(line)) + '</span>';
+          impactList.appendChild(li);
+        });
+        if (impactLines.length) impactSection.classList.remove('hidden');
+      }
+
+      // Tactical playbook
+      var playbookSection = document.getElementById('dashboard-playbook');
+      var playbookList = document.getElementById('playbook-list');
+      if (playbookSection && playbookList) {
+        playbookSection.classList.add('hidden');
+        playbookList.innerHTML = '';
+        var playbook = Array.isArray(data.tactical_playbook) ? data.tactical_playbook : [];
+        playbook.forEach(function (line) {
+          var li = document.createElement('li');
+          li.textContent = stripMd(line || '—');
+          playbookList.appendChild(li);
+        });
+        if (playbook.length) playbookSection.classList.remove('hidden');
+      }
+
+      // Competitor advantage breakdown
+      var advantageSection = document.getElementById('dashboard-advantage-breakdown');
+      var advantageList = document.getElementById('advantage-breakdown-list');
+      if (advantageSection && advantageList) {
+        advantageSection.classList.add('hidden');
+        advantageList.innerHTML = '';
+        var advantages = Array.isArray(data.competitor_advantage_breakdown) ? data.competitor_advantage_breakdown : [];
+        advantages.forEach(function (row) {
+          var adv = stripMd((row && row.advantage) || '');
+          if (!adv) return;
+          var impact = stripMd((row && row.impact_size) || 'Medium');
+          var why = stripMd((row && row.why_it_matters) || '');
+          var li = document.createElement('li');
+          li.className = 'rounded-lg border border-slate-200 bg-slate-50/60 p-3';
+          li.innerHTML = '<p class="text-sm font-medium text-slate-900">' + escapeHtml(adv) + '</p>' +
+            '<p class="text-xs text-slate-600 mt-1">Impact size: <span class="font-semibold">' + escapeHtml(impact) + '</span></p>' +
+            '<p class="text-xs text-slate-600 mt-1">' + escapeHtml(why || 'Key leverage point versus competitor baseline.') + '</p>';
+          advantageList.appendChild(li);
+        });
+        if (advantages.length) advantageSection.classList.remove('hidden');
+      }
 
       // Feature Requests
       const frText = getSection(sections, ['Feature Requests / Unmet Needs', 'Feature Requests and Unmet Needs', 'Feature Requests', 'Unmet Needs']) || '';
@@ -1251,10 +1408,11 @@
 
 
       // Fallback raw report (when backend returns plain text only)
-      if (data.report && Object.keys(sections).length === 0) {
-        resultsRaw.textContent = data.report;
+      if (data.report && Object.keys(sections).length === 0 && resultsRaw && resultsFallback) {
+        const cleanedMd = stripAllReportsSection(data.report);
+        resultsRaw.textContent = cleanedMd;
         resultsFallback.classList.remove('hidden');
-      } else {
+      } else if (resultsFallback) {
         resultsFallback.classList.add('hidden');
       }
 
@@ -1262,7 +1420,7 @@
       var copyMarkdownBtn = document.getElementById('copy-markdown');
       if (copyMarkdownBtn) {
         copyMarkdownBtn.onclick = function () {
-          var md = data.report || '';
+          var md = data.report ? stripAllReportsSection(data.report) : '';
           if (md && navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(md).then(function () {
               const original = copyMarkdownBtn.textContent;
@@ -1313,11 +1471,16 @@
       errorEl.textContent = '';
 
       var query = (queryInput.value || '').trim();
-      var competitor = (competitorInput.value || '').trim();
+      var productDescription = (productDescriptionInput && productDescriptionInput.value || '').trim();
 
       if (!query) {
         errorEl.textContent = 'Please enter a primary company or domain.';
         queryInput.focus();
+        return;
+      }
+      if (compareMode === 'own' && !productDescription) {
+        errorEl.textContent = 'Please describe your product to run compare mode.';
+        if (productDescriptionInput) productDescriptionInput.focus();
         return;
       }
 
@@ -1341,11 +1504,11 @@
         }, 2000);
       }
 
-      resultsDashboard.classList.add('hidden');
-      resultsFallback.classList.add('hidden');
-      resultsRaw.classList.add('hidden');
+      if (resultsDashboard) resultsDashboard.classList.add('hidden');
+      if (resultsFallback) resultsFallback.classList.add('hidden');
+      if (resultsRaw) resultsRaw.classList.add('hidden');
 
-      track('scan_started', { has_competitor: !!competitor, compare_mode: compareMode });
+      track('scan_started', { has_product_description: !!productDescription, compare_mode: compareMode });
 
       try {
         var headers = { 'Content-Type': 'application/json' };
@@ -1355,7 +1518,11 @@
         var response = await fetch('/scan', {
           method: 'POST',
           headers: headers,
-          body: JSON.stringify({ company_name: query })
+          body: JSON.stringify({
+            company_name: query,
+            compare_mode: compareMode,
+            user_product_description: compareMode === 'own' ? productDescription : null
+          })
         });
 
         var data = null;
@@ -1365,6 +1532,21 @@
           errorEl.textContent = (data && (data.detail || data.error || data.message)) || 'Unable to start scan.';
           resultsLoading.classList.add('hidden');
           return;
+        }
+
+        if (data && data.scan_id && compareMode === 'own' && productDescription) {
+          try {
+            localStorage.setItem(
+              'gd_compare_context_' + data.scan_id,
+              JSON.stringify({
+                compare_mode: 'own',
+                user_product_description: productDescription,
+                saved_at: Date.now()
+              })
+            );
+          } catch (e) {
+            console.debug('Failed to persist compare context', e);
+          }
         }
 
         // Redirect to dedicated report page

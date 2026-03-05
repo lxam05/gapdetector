@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings · Gap Detector</title>
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+    .hero-heading { letter-spacing: -0.04em; }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-7 w-7 rounded-lg">
+          <span class="text-sm font-semibold tracking-tight">Gap Detector</span>
+        </a>
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a id="nav-new-scan" href="/app" class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden">New scan</a>
+            <a id="nav-reports" href="/dashboard" class="text-slate-500 hover:text-[#5e62ee] transition-colors hidden">Dashboard</a>
+            <a id="nav-pricing" href="/pricing" class="text-slate-500 hover:text-[#5e62ee] transition-colors">Pricing</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a id="header-login" href="/auth" class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">Log in</a>
+            <button id="header-avatar" type="button" class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center" aria-label="Account">
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+        <div id="avatar-menu" class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1">
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Account / Profile</a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Billing</a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Settings</a>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button id="avatar-signout" type="button" class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <div class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+        <div class="space-y-3">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Settings
+          </p>
+          <h1 class="hero-heading text-3xl sm:text-4xl font-semibold text-slate-900">
+            Preferences
+          </h1>
+          <p class="text-sm text-slate-600 max-w-2xl">
+            Fine-tune how Gap Detector behaves on this device. These preferences are stored locally in your browser.
+          </p>
+        </div>
+
+        <section class="rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-5 sm:p-6 space-y-4">
+          <h2 class="text-sm font-semibold text-slate-900">Interface</h2>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm font-medium text-slate-800">Compact dashboard cards</p>
+              <p class="text-xs text-slate-500 mt-1">
+                Slightly reduces vertical spacing in opportunity cards on the dashboard.
+              </p>
+            </div>
+            <label class="inline-flex items-center cursor-pointer">
+              <input id="setting-compact-cards" type="checkbox" class="sr-only" />
+              <span class="relative inline-flex h-5 w-9 items-center rounded-full bg-slate-200 transition-colors">
+                <span class="dot inline-block h-4 w-4 rounded-full bg-white shadow transform translate-x-0 transition-transform"></span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-5 sm:p-6 space-y-4">
+          <h2 class="text-sm font-semibold text-slate-900">Notifications</h2>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm font-medium text-slate-800">Product update emails</p>
+              <p class="text-xs text-slate-500 mt-1">
+                Allow us to occasionally email you about major new features or changes.
+              </p>
+            </div>
+            <label class="inline-flex items-center cursor-pointer">
+              <input id="setting-product-emails" type="checkbox" class="sr-only" />
+              <span class="relative inline-flex h-5 w-9 items-center rounded-full bg-slate-200 transition-colors">
+                <span class="dot inline-block h-4 w-4 rounded-full bg-white shadow transform translate-x-0 transition-transform"></span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <p id="settings-status" class="text-[11px] text-slate-500 min-h-[1.25rem]"></p>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/dashboard" class="hover:text-[#5e62ee] transition-colors">Dashboard</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function initHeaderAuth() {
+      var loginLink = document.getElementById('header-login');
+      var avatarBtn = document.getElementById('header-avatar');
+      var avatarMenu = document.getElementById('avatar-menu');
+      var avatarSignout = document.getElementById('avatar-signout');
+      var avatarInitial = document.getElementById('header-avatar-initial');
+      var navNewScan = document.getElementById('nav-new-scan');
+      var navReports = document.getElementById('nav-reports');
+
+      function getStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) { return null; }
+      }
+
+      async function loadCredits(stored) {
+        var creditsEl = document.getElementById('avatar-credits');
+        if (!stored || !stored.accessToken || !creditsEl) return;
+        try {
+          var res = await fetch('/me/credits', {
+            headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+          });
+          if (!res.ok) return;
+          var data = await res.json();
+          var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+          creditsEl.textContent = val != null ? String(val) : '0';
+        } catch (e) {}
+      }
+
+      function applyHeaderAuthState() {
+        var stored = getStoredAuth();
+        var isAuthed = stored && stored.accessToken;
+        if (loginLink) {
+          if (isAuthed) loginLink.classList.add('hidden');
+          else loginLink.classList.remove('hidden');
+        }
+        if (avatarBtn) {
+          if (isAuthed && stored.email) {
+            var email = String(stored.email);
+            var initial = email.trim().charAt(0).toUpperCase() || 'G';
+            if (avatarInitial) avatarInitial.textContent = initial;
+            avatarBtn.classList.remove('hidden');
+            avatarBtn.classList.add('flex');
+          } else {
+            avatarBtn.classList.add('hidden');
+            avatarBtn.classList.remove('flex');
+          }
+        }
+        if (navNewScan) {
+          if (isAuthed) navNewScan.classList.remove('hidden');
+          else navNewScan.classList.add('hidden');
+        }
+        if (navReports) {
+          if (isAuthed) navReports.classList.remove('hidden');
+          else navReports.classList.add('hidden');
+        }
+        if (isAuthed) {
+          loadCredits(stored);
+        }
+      }
+
+      function closeAvatarMenu() {
+        if (avatarMenu) avatarMenu.classList.add('hidden');
+      }
+
+      applyHeaderAuthState();
+
+      if (avatarBtn && avatarMenu) {
+        avatarBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          avatarMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () { closeAvatarMenu(); });
+      }
+
+      if (avatarSignout) {
+        avatarSignout.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { window.localStorage.removeItem('gd_auth'); } catch (err) {}
+          closeAvatarMenu();
+          applyHeaderAuthState();
+          window.location.href = '/';
+        });
+      }
+    })();
+
+    (function initSettingsPage() {
+      var compactInput = document.getElementById('setting-compact-cards');
+      var emailsInput = document.getElementById('setting-product-emails');
+      var statusEl = document.getElementById('settings-status');
+
+      function load() {
+        try {
+          var raw = window.localStorage.getItem('gd_settings');
+          if (!raw) return {};
+          return JSON.parse(raw);
+        } catch (e) { return {}; }
+      }
+      function save(settings) {
+        window.localStorage.setItem('gd_settings', JSON.stringify(settings));
+        if (statusEl) {
+          statusEl.textContent = 'Settings saved for this browser.';
+          setTimeout(function () { statusEl.textContent = ''; }, 2000);
+        }
+      }
+
+      function applyToggleVisual(input) {
+        if (!input) return;
+        var track = input.nextElementSibling;
+        if (!track) return;
+        var dot = track.querySelector('.dot');
+        var on = !!input.checked;
+        track.classList.toggle('bg-slate-200', !on);
+        track.classList.toggle('bg-[#5e62ee]', on);
+        if (dot) {
+          dot.classList.toggle('translate-x-0', !on);
+          dot.classList.toggle('translate-x-4', on);
+        }
+      }
+
+      var current = load();
+      if (compactInput) compactInput.checked = !!current.compactCards;
+      if (emailsInput) emailsInput.checked = !!current.productEmails;
+      applyToggleVisual(compactInput);
+      applyToggleVisual(emailsInput);
+
+      function updateSetting(key, value) {
+        var s = load();
+        s[key] = value;
+        save(s);
+      }
+
+      if (compactInput) {
+        compactInput.addEventListener('change', function () {
+          updateSetting('compactCards', !!compactInput.checked);
+          applyToggleVisual(compactInput);
+        });
+      }
+      if (emailsInput) {
+        emailsInput.addEventListener('change', function () {
+          updateSetting('productEmails', !!emailsInput.checked);
+          applyToggleVisual(emailsInput);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
+

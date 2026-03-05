@@ -25,6 +25,7 @@ from app.api.routes.me import router as me_router
 from app.api.routes.checkout import router as checkout_router
 from app.api.routes.scan import router as scan_router
 from app.api.routes.stripe_webhook import router as stripe_webhook_router
+from app.api.routes.contact import router as contact_router
 from app.core.config import settings
 
 from playstore import (
@@ -40,7 +41,7 @@ from playstore import (
 # Load .env in local/dev environments. On Railway, env vars are injected directly.
 load_dotenv()
 
-SERPAPI_KEY = os.getenv("SERPAPI_KEY")
+SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-20250514")
 
@@ -73,6 +74,7 @@ app.include_router(me_router)
 app.include_router(checkout_router)
 app.include_router(scan_router)
 app.include_router(stripe_webhook_router)
+app.include_router(contact_router)
 
 
 # Catch DB connection timeouts/errors so we return a clean 503 and one log line instead of huge tracebacks
@@ -516,7 +518,7 @@ async def fetch_serp_urls(
   competitor: Optional[str] = None,
   max_urls: int = 6,
 ) -> List[str]:
-  """Use SerpAPI to collect a small, high-signal set of organic URLs."""
+  """Use Serper.dev to collect a small, high-signal set of organic URLs."""
   base = company.strip()
   search_queries: List[str] = [
     f"\"{base}\" reviews",
@@ -538,25 +540,26 @@ async def fetch_serp_urls(
       ]
     )
 
+  # To balance coverage and cost, only issue the first few queries.
+  # Using ~3 queries dramatically improves signal while staying cheap on Serper.
+  search_queries = search_queries[:3]
+
   candidates: List[str] = []
   seen_urls = set()
 
   async with httpx.AsyncClient(timeout=10.0) as client:
     for q in search_queries:
-      params = {
-        "engine": "google",
-        "q": q,
-        "api_key": api_key,
-      }
+      payload = {"q": q, "num": max(10, max_urls)}
+      headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
       try:
-        resp = await client.get("https://serpapi.com/search.json", params=params)
+        resp = await client.post("https://google.serper.dev/search", json=payload, headers=headers)
         resp.raise_for_status()
       except httpx.HTTPError as exc:
-        logger.warning("SerpAPI request failed for query %s: %s", q, exc)
+        logger.warning("Serper request failed for query %s: %s", q, exc)
         continue
 
       data = resp.json()
-      for result in data.get("organic_results", []):
+      for result in data.get("organic", []):
         url = result.get("link")
         if not url or url in seen_urls:
           continue
@@ -603,7 +606,7 @@ async def find_play_store_app(
   Try to discover a Google Play Store app package ID for the given company.
 
   Strategy:
-  - Use SerpAPI to search for a play.google.com app details URL
+  - Use Serper.dev to search for a play.google.com app details URL
   - Extract the first valid `id=` package string
   - Return None on any failure or if no app is found
   """
@@ -618,16 +621,17 @@ async def find_play_store_app(
 
   async with httpx.AsyncClient(timeout=10.0) as client:
     for q in queries:
-      params = {"engine": "google", "q": q, "api_key": api_key}
+      payload = {"q": q, "num": 10}
+      headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
       try:
-        resp = await client.get("https://serpapi.com/search.json", params=params)
+        resp = await client.post("https://google.serper.dev/search", json=payload, headers=headers)
         resp.raise_for_status()
       except httpx.HTTPError as exc:
-        logger.warning("SerpAPI Play Store discovery failed for %s: %s", q, exc)
+        logger.warning("Serper Play Store discovery failed for %s: %s", q, exc)
         continue
 
       data = resp.json()
-      for result in data.get("organic_results", []):
+      for result in data.get("organic", []):
         url = result.get("link") or ""
         if "play.google.com/store/apps/details" not in (url or ""):
           continue
@@ -641,6 +645,25 @@ async def find_play_store_app(
               return pkg
 
   return None
+
+
+def _is_likely_mobile_target_from_corpus(company_name: str, corpus: str) -> bool:
+  text = " ".join((corpus or "").split()).lower()
+  markers = (
+    "download on the app store",
+    "get it on google play",
+    "app store",
+    "google play",
+    "ios app",
+    "android app",
+    "mobile app",
+    "download the app",
+  )
+  if any(m in text for m in markers):
+    return True
+  seed = normalize_company_name(company_name)
+  obvious = {"nike", "spotify", "uber", "airbnb", "tiktok", "instagram", "snapchat", "duolingo"}
+  return seed in obvious
 
 
 async def fetch_page_html(url: str, client: httpx.AsyncClient) -> Optional[str]:
@@ -935,12 +958,12 @@ Important rules:
 async def analyze_company(primary: str, competitor: Optional[str] = None) -> AnalysisResult:
   """
   End-to-end pipeline:
-  SerpAPI search → URL filtering → fetch pages → extract text → LLM analysis.
+  Serper.dev search → URL filtering → fetch pages → extract text → LLM analysis.
   """
-  if not SERPAPI_KEY:
+  if not SERPER_API_KEY:
     raise RuntimeError(
-      "SERPAPI_KEY environment variable is missing. "
-      "Set it to a valid SerpAPI key and try again."
+      "SERPER_API_KEY environment variable is missing. "
+      "Set it to a valid Serper.dev key and try again."
     )
 
   primary_clean = primary.strip()
@@ -955,7 +978,7 @@ async def analyze_company(primary: str, competitor: Optional[str] = None) -> Ana
   if cache_key in _analysis_cache:
     return _analysis_cache[cache_key]
 
-  urls = await fetch_serp_urls(primary_clean, SERPAPI_KEY, competitor_clean)
+  urls = await fetch_serp_urls(primary_clean, SERPER_API_KEY, competitor_clean)
   if not urls or len(urls) < 2:
     # Low-signal case: be explicit and avoid hallucinating.
     msg = (
@@ -981,9 +1004,9 @@ async def analyze_company(primary: str, competitor: Optional[str] = None) -> Ana
   # Try to enrich with Play Store reviews (high-signal complaints and feature gaps).
   play_store_block = ""
   play_store_source: Optional[SourceInfo] = None
-  if PLAYSTORE_ENABLED:
+  if PLAYSTORE_ENABLED and _is_likely_mobile_target_from_corpus(primary_clean, corpus):
     try:
-      pkg = await find_play_store_app(primary_clean, SERPAPI_KEY)
+      pkg = await find_play_store_app(primary_clean, SERPER_API_KEY)
       if pkg:
         play_reviews = await fetch_play_store_reviews(pkg)
         play_store_block, play_src = build_play_store_corpus(pkg, play_reviews)
@@ -1183,7 +1206,10 @@ Rules:
 @app.get("/", response_class=HTMLResponse)
 async def get_root(request: Request) -> HTMLResponse:
   """Serve the main HTML page with the input form."""
-  return templates.TemplateResponse("index.html", {"request": request})
+  return templates.TemplateResponse("index.html", {
+    "request": request,
+    "turnstile_site_key": settings.TURNSTILE_SITE_KEY,
+  })
 
 
 @app.get("/app", response_class=HTMLResponse)
@@ -1206,6 +1232,36 @@ async def get_report_page(request: Request) -> HTMLResponse:
 async def get_pricing_page(request: Request) -> HTMLResponse:
   """Pricing page for credits and subscriptions."""
   return templates.TemplateResponse("pricing.html", {"request": request})
+
+
+@app.get("/account", response_class=HTMLResponse)
+async def get_account_page(request: Request) -> HTMLResponse:
+  """Account / profile page."""
+  return templates.TemplateResponse("account.html", {"request": request})
+
+
+@app.get("/billing", response_class=HTMLResponse)
+async def get_billing_page(request: Request) -> HTMLResponse:
+  """Billing & credits page."""
+  return templates.TemplateResponse("billing.html", {"request": request})
+
+
+@app.get("/settings", response_class=HTMLResponse)
+async def get_settings_page(request: Request) -> HTMLResponse:
+  """User-level settings page (local preferences)."""
+  return templates.TemplateResponse("settings.html", {"request": request})
+
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def get_privacy_page(request: Request) -> HTMLResponse:
+  """Public privacy policy."""
+  return templates.TemplateResponse("privacy.html", {"request": request})
+
+
+@app.get("/terms", response_class=HTMLResponse)
+async def get_terms_page(request: Request) -> HTMLResponse:
+  """Public terms of service."""
+  return templates.TemplateResponse("terms.html", {"request": request})
 
 
 @app.get("/post-purchase", response_class=HTMLResponse)

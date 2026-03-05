@@ -7,7 +7,7 @@ from alembic import context
 
 from app.core.config import settings
 from app.db.base import Base
-from app.models import entitlement, scan, user  # noqa: F401  # ensure models are imported for autogenerate
+from app.models import api_usage_log, entitlement, full_scan, preview_scan, scan, user, user_scan  # noqa: F401  # ensure models are imported for autogenerate
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

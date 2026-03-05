@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Literal, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -7,6 +7,14 @@ from pydantic import BaseModel
 
 class ScanCreate(BaseModel):
   company_name: str
+  turnstile_token: Optional[str] = None
+  compare_mode: Optional[Literal["solo", "own"]] = None
+  user_product_description: Optional[str] = None
+
+
+class ScanUnlockContext(BaseModel):
+  compare_mode: Optional[Literal["solo", "own"]] = None
+  user_product_description: Optional[str] = None
 
 
 class ScanListItem(BaseModel):
@@ -24,9 +32,14 @@ class ScanBaseOut(BaseModel):
   scan_id: UUID
   company_name: str
   summary: str
-  biggest_weakness: str
+  sentiment_score: int
+  opportunity_score: int
+  negative_percent_estimate: int
+  positive_percent_estimate: int
   key_complaints: List[str]
-  missed_opportunities: List[str]
+  top_strengths: List[str]
+  recurring_feature_requests_hidden: int
+  unlock_reviews_count: int
   locked: bool
 
 

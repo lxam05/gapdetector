@@ -70,15 +70,15 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Account / Profile
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Billing
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Settings
-          </button>
+          </a>
           <div class="my-1 border-t border-slate-100"></div>
           <button
             id="avatar-signout"
@@ -286,6 +286,10 @@
               var res = await fetch('/me/credits', {
                 headers: { 'Authorization': 'Bearer ' + stored.accessToken }
               });
+              if (res.status === 401) {
+                try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+                return;
+              }
               if (!res.ok) return;
               var data = await res.json();
               var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -332,6 +336,19 @@
       var buttons = Array.prototype.slice.call(document.querySelectorAll('button[data-plan]') || []);
       var params = new URLSearchParams(window.location.search || '');
       var scanId = params.get('scan_id');
+      var autoBuy = params.get('autobuy') === '1';
+      var autoPlan = (params.get('plan') || '').toLowerCase();
+      var checkoutInProgress = false;
+
+      function gdGetStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) {
+          return null;
+        }
+      }
 
       function showError(msg) {
         if (!errorBox) return;
@@ -339,41 +356,85 @@
         errorBox.classList.remove('hidden');
       }
 
+      function buildAuthRedirect(plan) {
+        var nextParams = new URLSearchParams(window.location.search || '');
+        nextParams.set('autobuy', '1');
+        nextParams.set('plan', plan);
+        var nextUrl = '/pricing?' + nextParams.toString();
+        return '/auth?next=' + encodeURIComponent(nextUrl);
+      }
+
+      async function startCheckout(plan) {
+        if (checkoutInProgress) return;
+        checkoutInProgress = true;
+        try {
+          var stored = gdGetStoredAuth();
+          var token = stored && stored.accessToken;
+          if (!token) {
+            if (scanId) {
+              try { window.localStorage.setItem('gd_pending_unlock_scan_id', scanId); } catch (e) {}
+            }
+            window.location.href = buildAuthRedirect(plan);
+            return;
+          }
+
+          var res, data;
+          var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          };
+
+          // If we arrived here from a specific report and the user picks the single-report plan,
+          // start a scan-specific checkout so that report auto-unlocks after payment.
+          if (plan === 'single' && scanId) {
+            res = await fetch('/scan/' + encodeURIComponent(scanId) + '/checkout', {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify({ plan: 'single' })
+            });
+          } else {
+            // Remember originating scan so post-purchase can auto-unlock it
+            // after generic credit purchases (bundle/subscription).
+            if (scanId) {
+              try { window.localStorage.setItem('gd_pending_unlock_scan_id', scanId); } catch (e) {}
+            }
+            // Otherwise, generic credit / subscription purchase.
+            res = await fetch('/checkout', {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify({ plan: plan })
+            });
+          }
+          try { data = await res.json(); } catch (e) { data = null; }
+          if (res.ok && data && data.url) {
+            window.location.href = data.url;
+            return;
+          }
+          if (res.status === 401) {
+            try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+            window.location.href = buildAuthRedirect(plan);
+            return;
+          }
+          showError((data && (data.detail || data.error || data.message)) || 'Unable to start checkout.');
+        } catch (e) {
+          console.error(e);
+          showError('Network error. Please try again.');
+        } finally {
+          checkoutInProgress = false;
+        }
+      }
+
       buttons.forEach(function (btn) {
         btn.addEventListener('click', function () {
           var plan = (btn.getAttribute('data-plan') || 'single').toLowerCase();
-          (async function () {
-            try {
-              var res, data;
-              // If we arrived here from a specific report and the user picks the single-report plan,
-              // start a scan-specific checkout so that report auto-unlocks after payment.
-              if (plan === 'single' && scanId) {
-                res = await fetch('/scan/' + encodeURIComponent(scanId) + '/checkout', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ plan: 'single' })
-                });
-              } else {
-                // Otherwise, generic credit / subscription purchase.
-                res = await fetch('/checkout', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ plan: plan })
-                });
-              }
-              try { data = await res.json(); } catch (e) { data = null; }
-              if (res.ok && data && data.url) {
-                window.location.href = data.url;
-                return;
-              }
-              showError((data && (data.detail || data.error || data.message)) || 'Unable to start checkout.');
-            } catch (e) {
-              console.error(e);
-              showError('Network error. Please try again.');
-            }
-          })();
+          startCheckout(plan);
         });
       });
+
+      // After successful auth redirect, continue checkout automatically.
+      if (autoBuy && (autoPlan === 'single' || autoPlan === 'bundle' || autoPlan === 'subscription')) {
+        startCheckout(autoPlan);
+      }
     })();
   </script>
 </body>

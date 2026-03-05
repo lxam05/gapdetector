@@ -18,6 +18,11 @@
       font-family: "Axiforma Semi Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-weight: 600;
     }
+    .report-card[data-selected="true"] {
+      border-color: rgb(244 63 94);
+      background-color: rgb(255 241 242);
+      box-shadow: 0 0 0 2px rgb(244 63 94);
+    }
   </style>
 </head>
 <body class="text-slate-900">
@@ -46,9 +51,9 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Account / Profile</button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Billing</button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">Settings</button>
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Account / Profile</a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Billing</a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Settings</a>
           <div class="my-1 border-t border-slate-100"></div>
           <button id="avatar-signout" type="button" class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50">Sign out</button>
         </div>
@@ -104,6 +109,18 @@
         <!-- Filled by JS -->
       </div>
 
+      <div id="reports-actions" class="hidden mt-4 flex items-center justify-between gap-4">
+        <button type="button" id="reports-delete-btn" class="text-sm font-medium text-slate-500 hover:text-rose-600 transition-colors">
+          Delete reports
+        </button>
+        <div id="reports-selection-actions" class="hidden flex items-center gap-3">
+          <button type="button" id="reports-cancel-btn" class="text-sm font-medium text-slate-600 hover:text-slate-900">Cancel</button>
+          <button type="button" id="reports-confirm-delete-btn" class="text-sm font-semibold text-rose-600 hover:text-rose-700">
+            Delete <span id="reports-selected-count">0</span> selected
+          </button>
+        </div>
+      </div>
+
       <div id="reports-empty" class="hidden rounded-2xl border border-slate-200 bg-white p-8 text-center">
         <p class="text-sm text-slate-600">You haven't done any scans yet.</p>
         <a href="/app" class="mt-3 inline-block text-sm font-medium text-[#5e62ee] hover:underline">Run your first scan</a>
@@ -115,6 +132,11 @@
       </div>
     </main>
 
+    <div id="undo-toast" class="hidden fixed bottom-6 right-6 z-50 rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 px-4 py-3 flex items-center gap-3">
+      <span id="undo-toast-message" class="text-sm text-slate-700">Report removed.</span>
+      <button type="button" id="undo-toast-btn" class="text-sm font-semibold text-[#5e62ee] hover:text-[#4a4ed8] whitespace-nowrap">Undo</button>
+    </div>
+
     <footer class="border-t border-slate-200 bg-white/90 mt-auto">
       <div class="max-w-6xl mx-auto px-6 py-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -125,9 +147,9 @@
           <nav class="flex items-center gap-6 text-sm text-slate-500">
             <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
             <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="mailto:hello@gapdetector.com" class="hover:text-[#5e62ee] transition-colors">Contact</a>
           </nav>
         </div>
         <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">© 2026 Gap Detector. All rights reserved.</p>
@@ -159,6 +181,10 @@
           var res = await fetch('/me/credits', {
             headers: { 'Authorization': 'Bearer ' + stored.accessToken }
           });
+          if (res.status === 401) {
+            try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+            return;
+          }
           if (!res.ok) return;
           var data = await res.json();
           var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -313,6 +339,7 @@
           });
 
         if (res.status === 401) {
+          try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
           hideAll();
           show(sessionExpiredEl);
           if (summaryEl) summaryEl.classList.add('hidden');
@@ -341,26 +368,145 @@
           listEl.innerHTML = '';
 
           scans.forEach(function (s) {
-            var card = document.createElement('a');
-            card.href = '/report?scan_id=' + encodeURIComponent(s.scan_id);
-            card.className = 'block rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-4 sm:p-5 hover:border-[#5e62ee]/50 hover:shadow-md transition-all';
+            var scanId = s.scan_id;
+            var card = document.createElement('div');
+            card.className = 'report-card rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-4 sm:p-5 hover:border-[#5e62ee]/50 transition-all flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 cursor-pointer';
+            card.dataset.scanId = scanId;
+            card.dataset.selected = 'false';
             var dateStr = formatDate(s.created_at);
             var badge = s.is_unlocked
               ? '<span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Unlocked</span>'
               : '<span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">Teaser</span>';
+            var linkHref = '/report?scan_id=' + encodeURIComponent(scanId);
             card.innerHTML =
-              '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">' +
-                '<div class="min-w-0">' +
+              '<div class="min-w-0 flex-1">' +
+                '<a href="' + linkHref + '" class="report-card-link block">' +
                   '<h2 class="text-sm font-semibold text-slate-900 truncate">' + (s.company_name || 'Untitled') + '</h2>' +
                   '<p class="text-xs text-slate-500 mt-0.5">' + dateStr + '</p>' +
-                '</div>' +
-                '<div class="flex items-center gap-2 flex-shrink-0">' +
-                  badge +
-                  '<span class="text-xs font-medium text-[#5e62ee]">View report →</span>' +
-                '</div>' +
+                '</a>' +
+              '</div>' +
+              '<div class="flex items-center gap-2 flex-shrink-0">' +
+                badge +
+                '<a href="' + linkHref + '" class="report-card-link text-xs font-medium text-[#5e62ee]">View report →</a>' +
               '</div>';
             listEl.appendChild(card);
           });
+
+          var actionsEl = document.getElementById('reports-actions');
+          var deleteBtn = document.getElementById('reports-delete-btn');
+          var selectionActionsEl = document.getElementById('reports-selection-actions');
+          var cancelBtn = document.getElementById('reports-cancel-btn');
+          var confirmDeleteBtn = document.getElementById('reports-confirm-delete-btn');
+          var selectedCountEl = document.getElementById('reports-selected-count');
+
+          if (actionsEl) actionsEl.classList.remove('hidden');
+
+          function getToken() {
+            try {
+              var raw = window.localStorage.getItem('gd_auth');
+              var auth = raw ? JSON.parse(raw) : null;
+              return (auth && (auth.accessToken || auth.access_token)) || '';
+            } catch (err) { return ''; }
+          }
+
+          function commitDeletes(ids) {
+            ids.forEach(function (id) {
+              fetch('/scan/' + encodeURIComponent(id), {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + getToken() },
+              }).catch(function () {});
+            });
+          }
+
+          function showEmptyIfNeeded() {
+            if (listEl.children.length === 0) {
+              hideAll();
+              show(emptyEl);
+              var emptyP = emptyEl && emptyEl.querySelector('p');
+              if (emptyP) emptyP.textContent = "You haven't done any scans yet.";
+              if (actionsEl) actionsEl.classList.add('hidden');
+            }
+          }
+
+          function getSelectedCards() {
+            return Array.prototype.slice.call(listEl.querySelectorAll('.report-card[data-selected="true"]'));
+          }
+
+          function updateSelectedCount() {
+            var n = getSelectedCards().length;
+            if (selectedCountEl) selectedCountEl.textContent = n;
+            if (confirmDeleteBtn) confirmDeleteBtn.style.display = n > 0 ? '' : 'none';
+          }
+
+          function exitSelectionMode() {
+            listEl.classList.remove('reports-selection-mode');
+            listEl.querySelectorAll('.report-card').forEach(function (c) {
+              c.dataset.selected = 'false';
+            });
+            if (selectionActionsEl) selectionActionsEl.classList.add('hidden');
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+            updateSelectedCount();
+          }
+
+          function enterSelectionMode() {
+            listEl.classList.add('reports-selection-mode');
+            if (selectionActionsEl) selectionActionsEl.classList.remove('hidden');
+            if (deleteBtn) deleteBtn.classList.add('hidden');
+            updateSelectedCount();
+          }
+
+          if (cancelBtn) {
+            cancelBtn.addEventListener('click', function () {
+              exitSelectionMode();
+            });
+          }
+
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', function () {
+              enterSelectionMode();
+            });
+          }
+
+          listEl.querySelectorAll('.report-card').forEach(function (card) {
+            card.addEventListener('click', function (e) {
+              if (!listEl.classList.contains('reports-selection-mode')) return;
+              e.preventDefault();
+              e.stopPropagation();
+              if (e.target.closest('a')) return;
+              var sel = card.dataset.selected !== 'true';
+              card.dataset.selected = sel ? 'true' : 'false';
+              updateSelectedCount();
+            });
+            var link = card.querySelector('.report-card-link');
+            if (link) {
+              link.addEventListener('click', function (e) {
+                if (listEl.classList.contains('reports-selection-mode')) {
+                  e.preventDefault();
+                  var sel = card.dataset.selected !== 'true';
+                  card.dataset.selected = sel ? 'true' : 'false';
+                  updateSelectedCount();
+                }
+              });
+            }
+          });
+
+          if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function () {
+              var selected = getSelectedCards();
+              if (selected.length === 0) return;
+
+              var cards = selected;
+              var ids = cards.map(function (c) { return c.getAttribute('data-scan-id'); }).filter(Boolean);
+
+              // Update UI immediately
+              cards.forEach(function (c) { c.remove(); });
+              exitSelectionMode();
+              showEmptyIfNeeded();
+
+              // Persist deletions on the backend right away
+              commitDeletes(ids);
+            });
+          }
         } catch (e) {
           console.error(e);
           hideAll();

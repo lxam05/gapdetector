@@ -70,15 +70,15 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Account / Profile
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Billing
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Settings
-          </button>
+          </a>
           <div class="my-1 border-t border-slate-100"></div>
           <button
             id="avatar-signout"
@@ -128,6 +128,19 @@
   </div>
 
   <script>
+    async function gdConfirmCheckoutIfPresent() {
+      var params = new URLSearchParams(window.location.search || '');
+      var sessionId = params.get('session_id');
+      if (!sessionId) return;
+      try {
+        await fetch('/checkout/confirm?session_id=' + encodeURIComponent(sessionId), {
+          method: 'POST'
+        });
+      } catch (e) {
+        console.error('Checkout confirmation failed', e);
+      }
+    }
+
     (function () {
       function gdGetStoredAuth() {
         try {
@@ -154,6 +167,10 @@
           var res = await fetch('/me/credits', {
             headers: { 'Authorization': 'Bearer ' + stored.accessToken }
           });
+          if (res.status === 401) {
+            try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+            return;
+          }
           if (!res.ok) return;
           var data = await res.json();
           var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -218,6 +235,54 @@
           window.location.href = '/';
         });
       }
+    })();
+
+    // After a generic credit purchase, if the user came here from an "Unlock"
+    // flow and we remember a pending scan_id, try to unlock it automatically
+    // using one of the new credits and send them back to that report.
+    (async function autoUnlockPendingScan() {
+      await gdConfirmCheckoutIfPresent();
+
+      var PENDING_UNLOCK_KEY = 'gd_pending_unlock_scan_id';
+      var stored = (function () {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      })();
+      if (!stored || !stored.accessToken) {
+        return;
+      }
+      var pendingId = null;
+      try {
+        pendingId = window.localStorage.getItem(PENDING_UNLOCK_KEY);
+      } catch (e) {}
+      if (!pendingId) return;
+
+      // Remove pending id before attempting unlock so refreshes do not
+      // trigger duplicate unlock attempts that could consume extra credits.
+      try { window.localStorage.removeItem(PENDING_UNLOCK_KEY); } catch (e3) {}
+      (async function () {
+        try {
+          var res = await fetch('/scan/' + encodeURIComponent(pendingId) + '/unlock-with-credit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + stored.accessToken
+            }
+          });
+          if (res.ok) {
+            window.location.href = '/report?scan_id=' + encodeURIComponent(pendingId);
+            return;
+          }
+          // Restore pending id if unlock failed so the user can retry.
+          try { window.localStorage.setItem(PENDING_UNLOCK_KEY, pendingId); } catch (e4) {}
+        } catch (e) {
+          // If unlock fails, just leave the user on this page with their credits.
+          try { window.localStorage.setItem(PENDING_UNLOCK_KEY, pendingId); } catch (e5) {}
+          console.error('Auto-unlock after purchase failed', e);
+        }
+      })();
     })();
   </script>
 </body>

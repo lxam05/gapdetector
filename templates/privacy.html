@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy · Gap Detector</title>
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+    .hero-heading {
+      letter-spacing: -0.04em;
+    }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-7 w-7 rounded-lg">
+          <span class="text-sm font-semibold tracking-tight">Gap Detector</span>
+        </a>
+        <nav class="flex items-center gap-4 text-sm text-slate-600">
+          <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+          <a href="/reports" class="hover:text-[#5e62ee] transition-colors hidden sm:inline">Reports</a>
+          <a href="/pricing" class="hover:text-[#5e62ee] transition-colors hidden sm:inline">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <div class="max-w-3xl mx-auto px-6 py-12 sm:py-16 space-y-10">
+        <div class="space-y-3">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Privacy
+          </p>
+          <h1 class="hero-heading text-3xl sm:text-4xl font-semibold text-slate-900">
+            Privacy Policy
+          </h1>
+          <p class="text-sm text-slate-600 max-w-2xl">
+            How Gap Detector collects, uses, and protects information when you use the analyzer,
+            view reports, or interact with our site.
+          </p>
+        </div>
+
+        <div class="prose prose-sm sm:prose-base prose-slate max-w-none">
+          <p class="text-xs text-slate-500">
+            Last updated: <span>{{ privacy_last_updated | default("February 2026") }}</span>
+          </p>
+
+          <h2>1. What we collect</h2>
+          <p>
+            We collect the minimum information needed to run scans and keep your account working:
+          </p>
+          <ul>
+            <li><strong>Account details</strong> – email address and basic profile so you can sign in and manage reports.</li>
+            <li><strong>Scan inputs</strong> – companies, products, or URLs you ask us to analyze.</li>
+            <li><strong>Usage data</strong> – high level analytics (pages visited, buttons clicked) to understand how the product is used.</li>
+          </ul>
+
+          <h2>2. How we use your data</h2>
+          <p>We use your data to:</p>
+          <ul>
+            <li>Run the analyzer and generate reports you request.</li>
+            <li>Maintain your workspace and history of scans.</li>
+            <li>Improve product quality, reliability, and user experience.</li>
+          </ul>
+          <p>
+            We do <strong>not</strong> sell your data to third parties or use your reports for generic ad targeting.
+          </p>
+
+          <h2>3. Data retention</h2>
+          <p>
+            Reports and scan inputs are stored so you can revisit and compare them over time. You can delete individual
+            reports from the dashboard; this permanently removes the report content from your account storage.
+          </p>
+
+          <h2>4. Third‑party services</h2>
+          <p>
+            We rely on infrastructure providers (e.g. cloud hosting, logging, payments) to run Gap Detector. These
+            vendors only process data on our behalf and under contractual obligations to protect it.
+          </p>
+
+          <h2>5. Security</h2>
+          <p>
+            We use industry‑standard security practices such as TLS encryption in transit and restricted access to
+            production systems. No system is perfectly secure, but we treat your reports as sensitive and design the
+            product accordingly.
+          </p>
+
+          <h2>6. Your choices</h2>
+          <ul>
+            <li>Delete reports you no longer want stored.</li>
+            <li>Contact us to request deletion of your account.</li>
+            <li>Opt out of non‑essential product emails.</li>
+          </ul>
+
+          <h2>7. Contact</h2>
+          <p>
+            If you have questions about this policy or how your data is handled, you can reach us at
+            <a href="mailto:privacy@gapdetector.com">privacy@gapdetector.com</a>.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="mailto:hello@gapdetector.com" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
+

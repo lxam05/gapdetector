@@ -130,8 +130,24 @@
       window.gdAccessToken = payload.accessToken;
     }
 
+    function getNextTargetFromQuery() {
+      try {
+        var params = new URLSearchParams(window.location.search || '');
+        var next = (params.get('next') || '').trim();
+        if (!next) return null;
+        // Only allow same-origin relative paths.
+        if (!next.startsWith('/')) return null;
+        if (next.startsWith('//')) return null;
+        var url = new URL(next, window.location.origin);
+        if (url.pathname === '/auth') return '/dashboard';
+        return url.pathname + url.search + url.hash;
+      } catch (e) {
+        return null;
+      }
+    }
+
     function redirectBack() {
-      let target = document.referrer || '/dashboard';
+      let target = getNextTargetFromQuery() || document.referrer || '/dashboard';
       try {
         const url = new URL(target, window.location.origin);
         if (url.pathname === '/auth') {
@@ -231,7 +247,7 @@
     (function redirectIfAlreadyAuthed() {
       const stored = loadAuth();
       if (stored && (stored.accessToken || stored.access_token)) {
-        var target = document.referrer || '/dashboard';
+        var target = getNextTargetFromQuery() || document.referrer || '/dashboard';
         try {
           var url = new URL(target, window.location.origin);
           if (url.pathname === '/auth') target = '/dashboard';

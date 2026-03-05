@@ -2,17 +2,52 @@ import logging
 import smtplib
 from email.message import EmailMessage
 
+import httpx
+
 from app.core.config import settings
 
 
 logger = logging.getLogger(__name__)
 
 
-def send_email(to: str, subject: str, html_body: str) -> None:
-  """Send an email or log it in local/dev environments.
-
-  For Railway, configure SMTP_* environment variables.
+def _send_via_mailersend(to: str, subject: str, html_body: str) -> bool:
   """
+  Try to send an email using MailerSend. Returns True on success.
+  """
+  api_key = getattr(settings, "MAILERSEND_API_KEY", None)
+  from_email = getattr(settings, "MAILERSEND_FROM_EMAIL", None) or getattr(settings, "EMAIL_FROM", None)
+  if not api_key or not from_email:
+    return False
+
+  data = {
+    "from": {"email": from_email, "name": "Gap Detector"},
+    "to": [{"email": to}],
+    "subject": subject,
+    "text": html_body,
+    "html": html_body,
+  }
+  headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json",
+  }
+  try:
+    with httpx.Client(timeout=10.0) as client:
+      resp = client.post("https://api.mailersend.com/v1/email", json=data, headers=headers)
+    if resp.status_code >= 300:
+      logger.warning("MailerSend email failed (%s): %s", resp.status_code, resp.text)
+      return False
+    return True
+  except Exception as exc:  # pragma: no cover - defensive
+    logger.exception("MailerSend email error: %s", exc)
+    return False
+
+
+def send_email(to: str, subject: str, html_body: str) -> None:
+  """Send an email via MailerSend or SMTP, or log it in dev."""
+  # Prefer MailerSend when configured.
+  if _send_via_mailersend(to, subject, html_body):
+    return
+
   msg = EmailMessage()
   msg["From"] = settings.EMAIL_FROM
   msg["To"] = to

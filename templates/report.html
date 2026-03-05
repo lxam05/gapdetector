@@ -82,15 +82,15 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Account / Profile
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Billing
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Settings
-          </button>
+          </a>
           <div class="my-1 border-t border-slate-100"></div>
           <button
             id="avatar-signout"
@@ -124,34 +124,49 @@
           <div class="space-y-4">
             <div class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 p-6 sm:p-7 space-y-4">
               <div>
-                <h2 class="text-sm font-semibold text-slate-900">What the market is saying</h2>
+                <h2 class="text-sm font-semibold text-slate-900">Data-driven preview</h2>
                 <p id="summary" class="mt-2 text-sm text-slate-600">
                   Loading summary…
                 </p>
               </div>
 
-              <div class="border border-rose-100 rounded-xl bg-rose-50 p-4 space-y-2">
-                <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-rose-500">
-                  Biggest weakness
-                </p>
-                <p id="biggest-weakness" class="text-sm text-rose-700">
-                  —
-                </p>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p class="text-[10px] font-semibold tracking-[0.14em] uppercase text-slate-500">Sentiment score</p>
+                  <p id="sentiment-score" class="mt-1 text-xl font-semibold text-slate-900">—</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p class="text-[10px] font-semibold tracking-[0.14em] uppercase text-slate-500">Opportunity score</p>
+                  <p id="opportunity-score" class="mt-1 text-xl font-semibold text-slate-900">—</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p class="text-[10px] font-semibold tracking-[0.14em] uppercase text-slate-500">% Negative</p>
+                  <p id="negative-percent" class="mt-1 text-xl font-semibold text-rose-600">—</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p class="text-[10px] font-semibold tracking-[0.14em] uppercase text-slate-500">% Positive</p>
+                  <p id="positive-percent" class="mt-1 text-xl font-semibold text-emerald-600">—</p>
+                </div>
               </div>
 
               <div class="grid sm:grid-cols-2 gap-4">
                 <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
                   <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">
-                    3 key complaints
+                    Top 3 pain points
                   </h3>
                   <ul id="key-complaints" class="space-y-2 text-sm text-slate-700"></ul>
                 </div>
                 <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
                   <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">
-                    2 missed opportunities
+                    Top 2 strengths
                   </h3>
-                  <ul id="missed-opportunities" class="space-y-2 text-sm text-slate-700"></ul>
+                  <ul id="top-strengths" class="space-y-2 text-sm text-slate-700"></ul>
                 </div>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                <p id="hidden-requests" class="text-sm text-slate-700">Loading hidden recurring feature requests…</p>
+                <p id="unlock-hint" class="mt-1 text-xs text-slate-500">Unlock to see the full breakdown from a deeper evidence scan.</p>
               </div>
             </div>
 
@@ -202,27 +217,6 @@
         <!-- Full analyzer-style report (shown after unlock) – exact copy of app.html dashboard -->
         <div id="full-report-section" class="hidden border-t border-slate-200 pt-6 space-y-8">
         <div id="results-dashboard" class="space-y-8">
-          <!-- TL;DR + actions -->
-          <section id="dashboard-tldr" class="rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-900/5 p-4 sm:p-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">TL;DR</span>
-                <span id="tldr-sentiment" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">—</span>
-                <span id="tldr-opportunity" class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Opp: —/10</span>
-                <span id="tldr-difficulty" class="inline-flex items-center rounded-full bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-700">Difficulty: —</span>
-              </div>
-              <div class="flex flex-wrap gap-2 justify-end">
-                <button type="button" id="export-pdf" class="text-[11px] text-slate-600 hover:text-[#5e62ee]">Export PDF</button>
-                <button type="button" id="copy-all" class="text-[11px] text-[#5e62ee] hover:underline">Copy full report</button>
-              </div>
-            </div>
-            <div class="space-y-1.5 text-sm text-slate-800">
-              <p id="tldr-strength">What they do well: —</p>
-              <p id="tldr-weakness">Where they lose: —</p>
-              <p id="tldr-wedge" class="font-medium">Best wedge for you: —</p>
-            </div>
-          </section>
-
           <!-- 1) Executive Summary -->
           <section id="dashboard-executive" class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 overflow-hidden">
             <div class="p-6 sm:p-8">
@@ -249,12 +243,81 @@
             </div>
           </section>
 
-          <!-- 2) Opportunity Scoreboard -->
-          <section id="dashboard-opportunities" class="hidden">
-            <div class="flex items-center justify-between gap-2 mb-4">
-              <h2 class="text-xl font-semibold text-slate-900">Top Opportunities to Win</h2>
+          <section id="dashboard-better-than-you" class="hidden rounded-2xl border border-indigo-100 bg-indigo-50/40 p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">What they do better than you</h2>
+            <p class="text-xs text-slate-600">AI comparison based on your product description and this competitor's market signals.</p>
+            <ul id="better-than-you-list" class="space-y-2 text-sm text-slate-800"></ul>
+          </section>
+
+          <section id="dashboard-dominant-wedge" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">The #1 Strategic Move</h2>
+            <div class="space-y-2 text-sm text-slate-800">
+              <p><strong>Problem to attack:</strong> <span id="wedge-problem">—</span></p>
+              <p><strong>Who it targets:</strong> <span id="wedge-target-user">—</span></p>
+              <p><strong>First Feature To Ship:</strong> <span id="wedge-first-feature">—</span></p>
+              <p><strong>Why This Wins:</strong> <span id="wedge-why-wins">—</span></p>
+              <p><strong>What To Ignore Initially:</strong> <span id="wedge-ignore">—</span></p>
             </div>
-            <div id="opportunities-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+          </section>
+
+          <section id="dashboard-strategic-gaps" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+            <h2 class="text-lg font-semibold text-slate-900">Supporting Strategic Gaps</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">Positioning Weaknesses</h3>
+                <ul id="positioning-weaknesses-list" class="space-y-2 text-sm text-slate-800"></ul>
+              </div>
+              <div>
+                <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">Feature Gaps</h3>
+                <ul id="feature-gaps-list" class="space-y-2 text-sm text-slate-800"></ul>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">Pricing Weaknesses</h3>
+                <ul id="pricing-weaknesses-list" class="space-y-2 text-sm text-slate-800"></ul>
+              </div>
+              <div>
+                <h3 class="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-2">Top Complaint Cluster</h3>
+                <div id="top-complaint-cluster" class="text-sm text-slate-800">—</div>
+              </div>
+            </div>
+          </section>
+
+          <section id="dashboard-user-wants" class="hidden rounded-2xl border border-slate-200 bg-amber-50/80 p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">What Users Are Actually Asking For</h2>
+            <ul id="users-want-list" class="space-y-2 text-sm text-slate-800"></ul>
+            <p class="text-sm text-slate-700"><strong>Core desire:</strong> <span id="users-core-desire">—</span></p>
+          </section>
+
+          <section id="dashboard-quick-wins" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">3 Fast Wins (Ship In 7 Days)</h2>
+            <ol id="quick-wins-list" class="space-y-2 text-sm text-slate-800 list-decimal pl-4"></ol>
+          </section>
+
+          <section id="dashboard-persona-fit" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Who Should Care About This</h2>
+            <ul id="persona-fit-list" class="space-y-2 text-sm text-slate-800"></ul>
+          </section>
+
+          <section id="dashboard-impact" class="hidden rounded-2xl border border-slate-200 bg-emerald-50/80 p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Potential Business Impact</h2>
+            <ul id="impact-list" class="space-y-2 text-sm text-slate-800"></ul>
+          </section>
+
+          <section id="dashboard-playbook" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">How To Execute This Opportunity</h2>
+            <ol id="playbook-list" class="space-y-2 text-sm text-slate-800 list-decimal pl-4"></ol>
+          </section>
+
+          <section id="dashboard-advantage-breakdown" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">Competitor Advantage Breakdown</h2>
+            <ul id="advantage-breakdown-list" class="space-y-2"></ul>
+          </section>
+
+          <section id="dashboard-build-plan" class="hidden rounded-2xl border border-slate-200 bg-white p-6 space-y-3">
+            <h2 class="text-lg font-semibold text-slate-900">30-Day Build Plan</h2>
+            <ol id="build-plan-list" class="space-y-2 text-sm text-slate-800 list-decimal pl-4"></ol>
           </section>
 
           <!-- 3) Strengths vs Weaknesses -->
@@ -425,13 +488,6 @@
           </section>
         </div>
 
-        <!-- Fallback: raw report (same as app.html) -->
-        <section id="results-fallback" class="hidden border-t border-slate-200 pt-6 space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <h2 class="text-sm font-semibold text-slate-800">Full report</h2>
-          </div>
-          <pre id="results-raw" class="bg-slate-950 text-slate-50 rounded-xl px-4 py-4 text-sm leading-relaxed overflow-y-auto max-h-[50vh] whitespace-pre-wrap"></pre>
-        </section>
         </div>
 
         <div id="error-banner" class="hidden rounded-xl border border-rose-500/60 bg-rose-50 text-xs text-rose-700 px-4 py-2">
@@ -518,9 +574,9 @@
           <nav class="flex items-center gap-6 text-sm text-slate-500">
             <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
             <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="mailto:hello@gapdetector.com" class="hover:text-[#5e62ee] transition-colors">Contact</a>
           </nav>
         </div>
         <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
@@ -565,6 +621,11 @@
           var res = await fetch('/me/credits', {
             headers: { 'Authorization': 'Bearer ' + stored.accessToken }
           });
+          if (res.status === 401) {
+            try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+            applyHeaderAuthState();
+            return;
+          }
           if (!res.ok) return;
           var data = await res.json();
           var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -638,15 +699,21 @@
 
     (function initReport() {
       var params = new URLSearchParams(window.location.search || '');
+      var demo = (params.get('demo') || '').toLowerCase();
       var scanId = params.get('scan_id');
       var paid = params.get('paid') === '1';
       var sessionId = params.get('session_id');
       var errorBanner = document.getElementById('error-banner');
       var summaryEl = document.getElementById('summary');
       var companyTitle = document.getElementById('company-title');
-      var biggestWeaknessEl = document.getElementById('biggest-weakness');
+      var sentimentScoreEl = document.getElementById('sentiment-score');
+      var opportunityScoreEl = document.getElementById('opportunity-score');
+      var negativePercentEl = document.getElementById('negative-percent');
+      var positivePercentEl = document.getElementById('positive-percent');
       var complaintsList = document.getElementById('key-complaints');
-      var oppsList = document.getElementById('missed-opportunities');
+      var strengthsList = document.getElementById('top-strengths');
+      var hiddenRequestsEl = document.getElementById('hidden-requests');
+      var unlockHintEl = document.getElementById('unlock-hint');
       var premiumPreviewEl = document.getElementById('premium-preview');
       var premiumLockOverlay = document.getElementById('premium-lock-overlay');
       var premiumFullEl = document.getElementById('premium-full');
@@ -664,7 +731,7 @@
       var PENDING_UNLOCK_KEY = 'gd_pending_unlock_scan_id';
 
       // paid=1 with no scan_id: fallback only (e.g. old Payment Link redirect or different tab). Try localStorage; if missing, show message.
-      if (paid && !scanId) {
+      if (paid && !scanId && !demo) {
         var pendingId = null;
         try {
           pendingId = window.localStorage.getItem(PENDING_UNLOCK_KEY);
@@ -672,7 +739,22 @@
         if (pendingId) {
           (async function () {
             try {
-              var res = await fetch('/scan/' + encodeURIComponent(pendingId) + '/unlock?paid=1', { method: 'POST' });
+              var pendingCompare = null;
+              try {
+                var pendingRaw = window.localStorage.getItem('gd_compare_context_' + pendingId);
+                pendingCompare = pendingRaw ? JSON.parse(pendingRaw) : null;
+              } catch (e3) {}
+              var pendingBody = (pendingCompare && pendingCompare.compare_mode === 'own' && String(pendingCompare.user_product_description || '').trim())
+                ? {
+                    compare_mode: 'own',
+                    user_product_description: String(pendingCompare.user_product_description || '').trim()
+                  }
+                : {};
+              var res = await fetch('/scan/' + encodeURIComponent(pendingId) + '/unlock?paid=1', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pendingBody)
+              });
               if (res.ok) {
                 try { window.localStorage.removeItem(PENDING_UNLOCK_KEY); } catch (e2) {}
                 window.location.replace('/report?scan_id=' + encodeURIComponent(pendingId) + '&paid=1');
@@ -690,7 +772,7 @@
         return;
       }
 
-      if (!scanId) {
+      if (!scanId && !demo) {
         if (errorBanner) {
           errorBanner.classList.remove('hidden');
           errorBanner.textContent = 'Missing scan_id in URL. Start from the home page or run a new scan.';
@@ -709,6 +791,30 @@
         if (errorBanner) errorBanner.classList.add('hidden');
       }
 
+      function getStoredCompareContext() {
+        if (!scanId) return null;
+        try {
+          var raw = window.localStorage.getItem('gd_compare_context_' + scanId);
+          if (!raw) return null;
+          var parsed = JSON.parse(raw);
+          if (!parsed || parsed.compare_mode !== 'own') return null;
+          var description = String(parsed.user_product_description || '').trim();
+          if (!description) return null;
+          return {
+            compare_mode: 'own',
+            user_product_description: description
+          };
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function buildUnlockBody() {
+        var compare = getStoredCompareContext();
+        if (!compare) return {};
+        return compare;
+      }
+
       // —— Same helpers as app.html for dashboard render ——
       function stripMd(s) {
         if (!s) return '';
@@ -716,6 +822,14 @@
         out = out.replace(/\*\*/g, '');
         out = out.replace(/#+\s*/g, '');
         return out;
+      }
+      function stripAllReportsSection(md) {
+        if (!md) return md;
+        var s = String(md);
+        var re = /(^|\n)#{1,6}\s*All reports[^\n]*\n/i;
+        var m = s.match(re);
+        if (!m) return s;
+        return s.slice(0, m.index).trimEnd();
       }
       function bulletsFromSection(text) {
         if (!text || !text.trim()) return [];
@@ -751,9 +865,10 @@
       // Build app-style data from scan response so renderDashboard populates the same UI
       function mapScanToDashboardData(data) {
         var complaints = data.key_complaints || [];
-        var opps = data.missed_opportunities || [];
+        var strengths = data.top_strengths || [];
+        var opps = complaints.slice();
         var weakText = complaints.join('\n');
-        var oppText = opps.join('\n');
+        var oppText = complaints.join('\n');
         var strText = (data.summary || '').trim();
         var sections = {
           'Key Weaknesses': weakText,
@@ -768,11 +883,159 @@
           sentiment_badge: 'Mixed',
           biggest_opportunity: opps[0] || '',
           biggest_strength: strText ? strText.split('.')[0] + (strText.indexOf('.') !== -1 ? '.' : '') : '—',
-          biggest_weakness: data.biggest_weakness || '—',
+          biggest_weakness: complaints[0] || '—',
           confidence: '—',
           opportunity_score: null,
           difficulty_score: null,
           report: data.premium_analysis || '',
+          sources: [],
+          quotes: [],
+          tailoredStrategy: null,
+          underservedSegments: [],
+          switchTriggers: [],
+          messagingAngles: {},
+          featureGapMap: [],
+          blindSpots: [],
+          strategicOptions: [],
+          compareResults: null
+        };
+      }
+
+      // Static demo payload for /report?demo=stripe – uses the same
+      // structured sections as a real scan, but with fixed text.
+      function buildStripeDemoDashboard() {
+        var topOpps =
+          '1.\n' +
+          'Human-First Support & Escalation Path\n\n' +
+          '2.\n' +
+          '- Opportunity: Build a payment processor with guaranteed human escalation within 24–48 hours for account disputes, fund holds, or risk flags.\n\n' +
+          '3.\n' +
+          '- Why it matters: Users repeatedly cite the absence of human contact as the primary pain point. A competitor offering a dedicated account manager or escalation hotline for merchants would directly address this gap.\n\n' +
+          '4.\n' +
+          '- Implementation: Tiered support with human review for any account suspension, fund hold, or risk flag before action is taken.\n\n' +
+          '5.\n' +
+          'Transparent Risk Assessment & Remediation\n\n' +
+          '6.\n' +
+          '- Opportunity: Provide merchants with clear, itemized explanations of why they were flagged, specific metrics they\'re being evaluated on, and a documented path to remediation.\n\n' +
+          '7.\n' +
+          '- Why it matters: Users feel trapped by \"black box\" algorithms. One merchant stated they had \"provided valid tracking numbers and official delivery confirmations\" but received only automated denials.\n\n' +
+          '8.\n' +
+          '- Implementation: Dashboard showing risk score breakdown, chargeback rate, dispute patterns, and explicit remediation steps (e.g., \"reduce chargebacks to <0.3%\" or \"provide tracking for 100% of orders\").\n\n' +
+          '9.\n' +
+          'Proportional Fund Hold Policies\n\n' +
+          '10.\n' +
+          '- Opportunity: Offer configurable, proportional fund hold policies (e.g., hold 10–20% of rolling 7-day volume) rather than 100% freezes, and cap hold periods at 30 days with automatic release unless new risk signals emerge.\n\n' +
+          '11.\n' +
+          '- Why it matters: Users describe 6-month holds as \"destroying cash flow\" and making it \"impossible to operate.\" A competitor offering faster, partial releases would be attractive to small-to-medium merchants.\n\n' +
+          '12.\n' +
+          '- Implementation: Risk-based hold tiers: low-risk merchants get 7-day holds; medium-risk get 14-day holds; high-risk get 30-day holds with mandatory human review at day 15.\n\n' +
+          '13.\n' +
+          'Merchant Communication Control\n\n' +
+          '14.\n' +
+          '- Opportunity: Let merchants set communication frequency preferences (daily, weekly, or on-demand) and consolidate status updates into single digests rather than multiple emails per day.\n\n' +
+          '15.\n' +
+          '- Why it matters: One user explicitly stated excessive emails drove them to switch providers: \"I\'m looking for another payment source.\" — ie.trustpilot.com\n\n' +
+          '16.\n' +
+          '- Implementation: Notification preferences in dashboard; weekly digest option; real-time status page instead of email spam.\n\n' +
+          '17.\n' +
+          'Faster Onboarding Verification & Lower Friction for Legitimate Businesses\n\n' +
+          '18.\n' +
+          '- Opportunity: Streamline verification for low-risk business models (e.g., made-to-order, dropshipping, SaaS subscriptions) with pre-approved categories and faster approval timelines.\n\n' +
+          '19.\n' +
+          '- Why it matters: Users report being flagged despite legitimate business models and low chargeback rates. A competitor offering faster, category-based approval would reduce friction.\n\n' +
+          '20.\n' +
+          '- Implementation: Business model templates with pre-approved risk profiles; instant approval for SaaS/subscriptions under $50k/month; 48-hour approval for other categories with documentation.\n\n' +
+          '21.\n' +
+          'Regulatory Compliance & Audit Trail\n\n' +
+          '22.\n' +
+          '- Opportunity: Provide detailed audit trails, compliance documentation, and regulatory reporting to help merchants defend themselves in disputes or regulatory inquiries.\n\n' +
+          '23.\n' +
+          '- Why it matters: Users\n';
+
+        var sections = {
+          'Overall Sentiment':
+            'Positive\n\n' +
+            '- **Highly polarized**: The dataset shows stark contrasts between satisfied enterprise/SaaS users and deeply frustrated small‑to‑medium businesses experiencing account closures and fund holds.\n' +
+            '- **Trust erosion among affected merchants**: Users who have experienced account suspensions report feeling powerless and describe Stripe as operating with \"opacity and detachment.\" One user stated they \"would never build a business on Stripe again\" due to operational risk.\n' +
+            '- **Positive for technical integrations**: Developers and SaaS platforms using Stripe for payment infrastructure report reliable, well‑documented APIs and good integration support.\n' +
+            '- **Critical gap in support responsiveness**: Multiple users report automated responses, lack of human escalation, and communication breakdowns when disputes arise—a major pain point that undermines confidence in the platform.\n',
+          'Top Opportunities to Win': topOpps,
+          // Also map into the generic opportunities key so the
+          // "Top Opportunities to Win" cards render correctly.
+          'Opportunities for a New Competitor': topOpps,
+          'Key Strengths':
+            'Developer‑friendly API and documentation: "The APIs are well documented, flexible, and suitable for complex, multi‑tenant SaaS use cases, including subscriptions, invoicing, and webhook‑based event handling." — ca.trustpilot.com\n' +
+            'Reliable infrastructure for scaling SaaS: "Stripe provides a reliable, secure, and scalable payment infrastructure that integrates well with our platform architecture" and "has enabled us to confidently manage payments as we scale." — ca.trustpilot.com\n' +
+            'Responsive crisis management (in some cases): "take the drama out of a difficult situation always a pleasure to deal with Stripe. they take the panic out of what could be difficult situations." — www.trustpilot.com\n' +
+            'Security and compliance posture: Users value "Strong security and compliance posture" and "Clear API documentation and developer tooling." — ca.trustpilot.com\n',
+          'Key Weaknesses':
+            'Account suspension without warning or due process: "They closed my payment processing account recently at around 3am, with no prior warning whatsoever" and "They shut down our checkout without warning, without explanation, and without any meaningful attempt at communication." — nz.trustpilot.com\n' +
+            'Prolonged fund holds with minimal transparency: "Stripe is now holding our funds for six months while providing little more than automated responses and vague statements" and "they will keep your money without any proper explanations." — ca.trustpilot.com\n' +
+            'No meaningful human support escalation: "There is no real support structure, no escalation path that leads to a human conversation, and no sense of urgency from a company controlling other people\'s money." — nz.trustpilot.com\n' +
+            'Automated decision‑making with no recourse: "decisions are automated and you\'re left dealing with generic emails rather than a real, accountable process." — nz.trustpilot.com\n' +
+            'Disproportionate risk flagging: Users report being flagged as "High Risk" despite legitimate business models and low chargeback rates (e.g., "less than 0.5% chargebacks"). — nz.trustpilot.com\n' +
+            'Account closures and fund freezes: Multiple merchants report sudden account terminations with funds held for 3–6 months, often with minimal explanation or path to resolution.\n' +
+            'Lack of human support and bot‑loop responses: Users describe receiving only "generic emails," "scripted bot replies," and "automated responses" when attempting to resolve disputes. One user noted: "Every single one has been met with a scripted bot reply or no reply at all." — ca.trustpilot.com\n' +
+            'Opacity in risk assessment: Merchants feel the risk flagging system is a "black box" with no transparency into why they were flagged or how to remediate. One user stated: "Stripe flagged our account over \'Item Not Received\' disputes, yet I have provided valid tracking numbers and official delivery confirmations." — ie.trustpilot.com\n' +
+            'Cash flow destruction: "When Stripe\'s risk systems trigger, they can take away your cash flow and hold a large amount of money making it impossible to operate." — nz.trustpilot.com\n' +
+            'Over‑communication on minor issues: One user complained: "They have a lot of help because I get emails every other day regarding any issue that comes up...every other day is very annoying, that I\'m looking for another payment source." — ie.trustpilot.com\n' +
+            'Failed transfers and incomplete customer service responses: "I transferred 50€ of my total credit to check if it was legit or not, before trying to transfer a larger amount, it never arrived. I contacted costumer service and they told me they\'d have a lo..." (response cut off). — nz.trustpilot.com, ie.trustpilot.com, ca.trustpilot.com\n',
+          'How to Outperform This Competitor':
+            'Human‑First Support & Escalation Path\n' +
+            '- Opportunity: Build a payment processor with guaranteed human escalation within 24–48 hours for account disputes, fund holds, or risk flags.\n' +
+            '- Why it matters: Users repeatedly cite the absence of human contact as the primary pain point. A competitor offering a dedicated account manager or escalation hotline for merchants would directly address this gap.\n' +
+            '- Implementation: Tiered support with human review for any account suspension, fund hold, or risk flag before action is taken.\n\n' +
+            'Transparent Risk Assessment & Remediation\n' +
+            '- Opportunity: Provide merchants with clear, itemized explanations of why they were flagged, specific metrics they\'re being evaluated on, and a documented path to remediation.\n' +
+            '- Why it matters: Users feel trapped by "black box" algorithms.\n' +
+            '- Implementation: Dashboard showing risk score breakdown, chargeback rate, dispute patterns, and explicit remediation steps.\n\n' +
+            'Proportional Fund Hold Policies\n' +
+            '- Opportunity: Offer configurable, proportional fund hold policies instead of 100% freezes, with capped hold periods and automatic review.\n\n' +
+            'Merchant Communication Control\n' +
+            '- Opportunity: Let merchants set communication frequency preferences and consolidate updates into single digests.\n\n' +
+            'Faster Onboarding Verification & Lower Friction for Legitimate Businesses\n' +
+            '- Opportunity: Streamline verification for low‑risk business models with category‑based, faster approvals.\n\n' +
+            'Regulatory Compliance & Audit Trail\n' +
+            '- Opportunity: Provide detailed audit trails, compliance documentation, and regulatory reporting to support merchants in disputes and audits.\n'
+        };
+
+        return {
+          sections: sections,
+          sentiment_badge: 'Positive',
+          biggest_opportunity: 'Human‑First Support & Escalation Path',
+          biggest_strength:
+            'Developer‑friendly API and documentation for complex, multi‑tenant SaaS use cases.',
+          biggest_weakness:
+            'Account suspension, fund holds, and risk decisions feel opaque and difficult to challenge.',
+          confidence: 'Medium',
+          opportunity_score: 6,
+          difficulty_score: 3,
+          report: '',
+          opportunity_meta: [
+            { demand: 'High', impact: 'High' },   // Human-First Support & Escalation Path
+            { demand: 'High', impact: 'High' },   // Opportunity: build human escalation
+            { demand: 'High', impact: 'High' },   // Why it matters
+            { demand: 'High', impact: 'High' },   // Implementation
+            { demand: 'High', impact: 'High' },   // Transparent Risk Assessment & Remediation
+            { demand: 'High', impact: 'High' },   // Opportunity: clear, itemised explanations
+            { demand: 'High', impact: 'High' },   // Why it matters
+            { demand: 'High', impact: 'High' },   // Implementation
+            { demand: 'High', impact: 'High' },   // Proportional Fund Hold Policies
+            { demand: 'High', impact: 'High' },   // Opportunity: proportional holds
+            { demand: 'High', impact: 'High' },   // Why it matters
+            { demand: 'High', impact: 'High' },   // Implementation
+            { demand: 'Medium', impact: 'Medium' }, // Merchant Communication Control
+            { demand: 'Medium', impact: 'Medium' }, // Opportunity: communication prefs
+            { demand: 'Medium', impact: 'Medium' }, // Why it matters
+            { demand: 'Medium', impact: 'Medium' }, // Implementation
+            { demand: 'Medium', impact: 'High' },   // Faster Onboarding Verification
+            { demand: 'Medium', impact: 'High' },   // Opportunity: streamline verification
+            { demand: 'Medium', impact: 'High' },   // Why it matters
+            { demand: 'Medium', impact: 'High' },   // Implementation
+            { demand: 'Medium', impact: 'Medium' }, // Regulatory Compliance & Audit Trail
+            { demand: 'Medium', impact: 'Medium' }, // Opportunity: audit trails
+            { demand: 'Medium', impact: 'Medium' }, // Why it matters
+          ],
           sources: [],
           quotes: [],
           tailoredStrategy: null,
@@ -820,17 +1083,361 @@
         var execConf = document.getElementById('exec-confidence');
         if (execConf) execConf.textContent = data.confidence || '—';
 
+        var betterSection = document.getElementById('dashboard-better-than-you');
+        var betterList = document.getElementById('better-than-you-list');
+        if (betterSection && betterList) {
+          betterSection.classList.add('hidden');
+          betterList.innerHTML = '';
+          var betterFromArray = Array.isArray(data.competitor_better_than_you) ? data.competitor_better_than_you : [];
+          var betterFromSections = bulletsFromSection(getSection(sections, ['What They Do Better Than You']));
+          var betterPoints = betterFromArray.length ? betterFromArray : betterFromSections;
+          var isCompareOwn = String(data.compare_mode || '').toLowerCase() === 'own';
+          if (isCompareOwn && betterPoints.length) {
+            betterPoints.slice(0, 10).forEach(function (point) {
+              var li = document.createElement('li');
+              li.className = 'flex items-start gap-2';
+              li.innerHTML = '<span class="text-indigo-500 mt-0.5">•</span><span>' + escapeHtml(stripMd(String(point || ''))) + '</span>';
+              betterList.appendChild(li);
+            });
+            if (betterList.children.length > 0) {
+              betterSection.classList.remove('hidden');
+            }
+          }
+        }
+
+        var lowSignal = data && data.low_signal === true;
+        if (lowSignal) {
+          var lowMsg = (data && data.message) ? String(data.message) : 'Insufficient evidence signal.';
+          var execHeadline = document.getElementById('exec-headline');
+          if (execHeadline) {
+            execHeadline.classList.remove('hidden');
+            execHeadline.textContent = lowMsg;
+          }
+          return;
+        }
+
+        var dominantWedgeSection = document.getElementById('dashboard-dominant-wedge');
+        var wedgeProblem = document.getElementById('wedge-problem');
+        var wedgeTarget = document.getElementById('wedge-target-user');
+        var wedgeFeature = document.getElementById('wedge-first-feature');
+        var wedgeWins = document.getElementById('wedge-why-wins');
+        var wedgeIgnore = document.getElementById('wedge-ignore');
+        var wedge = data.dominant_wedge || data.primary_wedge || null;
+        if (wedge && dominantWedgeSection) {
+          dominantWedgeSection.classList.remove('hidden');
+          if (wedgeProblem) wedgeProblem.textContent = String(wedge.problem_to_attack || wedge.problem_statement || '—');
+          if (wedgeTarget) wedgeTarget.textContent = String(wedge.who_to_target || wedge.who_it_targets || '—');
+          if (wedgeFeature) wedgeFeature.textContent = String(wedge.what_to_build_first || wedge.first_feature_to_build || '—');
+          if (wedgeWins) wedgeWins.textContent = String(wedge.why_this_is_high_leverage || wedge.why_this_wins || '—');
+          if (wedgeIgnore) wedgeIgnore.textContent = Array.isArray(wedge.what_to_ignore_initially) ? wedge.what_to_ignore_initially.join(', ') : '—';
+        }
+
+        var strategicSection = document.getElementById('dashboard-strategic-gaps');
+        var positioningWeakList = document.getElementById('positioning-weaknesses-list');
+        var featureGapsList = document.getElementById('feature-gaps-list');
+        var pricingWeakList = document.getElementById('pricing-weaknesses-list');
+        var topComplaintEl = document.getElementById('top-complaint-cluster');
+        if (positioningWeakList) positioningWeakList.innerHTML = '';
+        if (featureGapsList) featureGapsList.innerHTML = '';
+        if (pricingWeakList) pricingWeakList.innerHTML = '';
+        if (topComplaintEl) topComplaintEl.innerHTML = '—';
+
+        var positioning = data.positioning_analysis || {};
+        var featureAnalysis = data.feature_gap_analysis || {};
+        var pricing = data.pricing_analysis || {};
+        var topComplaint = data.top_complaint_cluster || (Array.isArray(data.complaint_clusters) && data.complaint_clusters.length ? data.complaint_clusters[0] : null);
+
+        var hasStrategicSignals = false;
+        (Array.isArray(positioning.positioning_weaknesses) ? positioning.positioning_weaknesses : []).slice(0, 3).forEach(function (item) {
+          hasStrategicSignals = true;
+          if (!positioningWeakList) return;
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-rose-500 mt-0.5">•</span><span>' + escapeHtml(String(item || '—')) + '</span>';
+          positioningWeakList.appendChild(li);
+        });
+        (Array.isArray(featureAnalysis.inferred_missing_features) ? featureAnalysis.inferred_missing_features : []).slice(0, 3).forEach(function (item) {
+          hasStrategicSignals = true;
+          if (!featureGapsList) return;
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-[#5e62ee] mt-0.5">•</span><span>' + escapeHtml(String(item || '—')) + '</span>';
+          featureGapsList.appendChild(li);
+        });
+        (Array.isArray(pricing.monetization_weaknesses) ? pricing.monetization_weaknesses : []).slice(0, 3).forEach(function (item) {
+          hasStrategicSignals = true;
+          if (!pricingWeakList) return;
+          var li = document.createElement('li');
+          li.className = 'flex items-start gap-2';
+          li.innerHTML = '<span class="text-amber-500 mt-0.5">•</span><span>' + escapeHtml(String(item || '—')) + '</span>';
+          pricingWeakList.appendChild(li);
+        });
+        if (topComplaintEl && topComplaint) {
+          hasStrategicSignals = true;
+          var quotes = Array.isArray(topComplaint.example_quotes) ? topComplaint.example_quotes.slice(0, 2) : [];
+          topComplaintEl.innerHTML =
+            '<p class="font-medium text-slate-900">' + escapeHtml(String(topComplaint.cluster_name || '—')) + '</p>' +
+            '<p class="mt-1 text-slate-700">' + escapeHtml(String(topComplaint.description || '—')) + '</p>' +
+            '<p class="mt-1 text-xs text-slate-500">"' + escapeHtml(String(quotes[0] || '')) + '"</p>';
+        } else if (topComplaintEl) {
+          topComplaintEl.textContent = 'No dense complaint cluster detected; wedge inferred from positioning, feature surface, and pricing signals.';
+        }
+        if (strategicSection && hasStrategicSignals) strategicSection.classList.remove('hidden');
+
+        var planSection = document.getElementById('dashboard-build-plan');
+        var planList = document.getElementById('build-plan-list');
+        if (planList) planList.innerHTML = '';
+        var plan = Array.isArray(data.execution_plan_30_days) ? data.execution_plan_30_days : (Array.isArray(data.execution_plan) ? data.execution_plan : []);
+        if (planSection && planList && plan.length > 0) {
+          planSection.classList.remove('hidden');
+          plan.forEach(function (step) {
+            var li = document.createElement('li');
+            li.textContent = String(step || '—');
+            planList.appendChild(li);
+          });
+        }
+
+        var usersWantSection = document.getElementById('dashboard-user-wants');
+        var usersWantList = document.getElementById('users-want-list');
+        var usersCoreDesire = document.getElementById('users-core-desire');
+        if (usersWantSection && usersWantList && usersCoreDesire) {
+          usersWantSection.classList.add('hidden');
+          usersWantList.innerHTML = '';
+          var wantData = data.what_users_want || {};
+          var wants = Array.isArray(wantData.user_requests) ? wantData.user_requests : [];
+          wants.forEach(function (item) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-[#5e62ee] mt-0.5">•</span><span>' + escapeHtml(stripMd(item)) + '</span>';
+            usersWantList.appendChild(li);
+          });
+          usersCoreDesire.textContent = stripMd(wantData.core_desire || '—');
+          if (wants.length || (wantData.core_desire && String(wantData.core_desire).trim())) usersWantSection.classList.remove('hidden');
+        }
+
+        var quickWinsSection = document.getElementById('dashboard-quick-wins');
+        var quickWinsList = document.getElementById('quick-wins-list');
+        if (quickWinsSection && quickWinsList) {
+          quickWinsSection.classList.add('hidden');
+          quickWinsList.innerHTML = '';
+          var quickWins = Array.isArray(data.quick_wins_7d) ? data.quick_wins_7d : [];
+          quickWins.forEach(function (step) {
+            var li = document.createElement('li');
+            li.textContent = stripMd(step || '—');
+            quickWinsList.appendChild(li);
+          });
+          if (quickWins.length) quickWinsSection.classList.remove('hidden');
+        }
+
+        var personaSection = document.getElementById('dashboard-persona-fit');
+        var personaList = document.getElementById('persona-fit-list');
+        if (personaSection && personaList) {
+          personaSection.classList.add('hidden');
+          personaList.innerHTML = '';
+          var personas = Array.isArray(data.user_persona_fit) ? data.user_persona_fit : [];
+          personas.forEach(function (p) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-slate-500 mt-0.5">•</span><span>' + escapeHtml(stripMd(p)) + '</span>';
+            personaList.appendChild(li);
+          });
+          if (personas.length) personaSection.classList.remove('hidden');
+        }
+
+        var impactSection = document.getElementById('dashboard-impact');
+        var impactList = document.getElementById('impact-list');
+        if (impactSection && impactList) {
+          impactSection.classList.add('hidden');
+          impactList.innerHTML = '';
+          var impactLines = Array.isArray(data.business_impact_projection) ? data.business_impact_projection : [];
+          impactLines.forEach(function (line) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-emerald-600 mt-0.5">•</span><span>' + escapeHtml(stripMd(line)) + '</span>';
+            impactList.appendChild(li);
+          });
+          if (impactLines.length) impactSection.classList.remove('hidden');
+        }
+
+        var playbookSection = document.getElementById('dashboard-playbook');
+        var playbookList = document.getElementById('playbook-list');
+        if (playbookSection && playbookList) {
+          playbookSection.classList.add('hidden');
+          playbookList.innerHTML = '';
+          var playbook = Array.isArray(data.tactical_playbook) ? data.tactical_playbook : [];
+          playbook.forEach(function (line) {
+            var li = document.createElement('li');
+            li.textContent = stripMd(line || '—');
+            playbookList.appendChild(li);
+          });
+          if (playbook.length) playbookSection.classList.remove('hidden');
+        }
+
+        var advantageSection = document.getElementById('dashboard-advantage-breakdown');
+        var advantageList = document.getElementById('advantage-breakdown-list');
+        if (advantageSection && advantageList) {
+          advantageSection.classList.add('hidden');
+          advantageList.innerHTML = '';
+          var advantages = Array.isArray(data.competitor_advantage_breakdown) ? data.competitor_advantage_breakdown : [];
+          advantages.forEach(function (row) {
+            var adv = stripMd((row && row.advantage) || '');
+            if (!adv) return;
+            var impact = stripMd((row && row.impact_size) || 'Medium');
+            var why = stripMd((row && row.why_it_matters) || '');
+            var li = document.createElement('li');
+            li.className = 'rounded-lg border border-slate-200 bg-slate-50/60 p-3';
+            li.innerHTML = '<p class="text-sm font-medium text-slate-900">' + escapeHtml(adv) + '</p>' +
+              '<p class="text-xs text-slate-600 mt-1">Impact size: <span class="font-semibold">' + escapeHtml(impact) + '</span></p>' +
+              '<p class="text-xs text-slate-600 mt-1">' + escapeHtml(why || 'Key leverage point versus competitor baseline.') + '</p>';
+            advantageList.appendChild(li);
+          });
+          if (advantages.length) advantageSection.classList.remove('hidden');
+        }
+
+        // Founder decision engine mode: stop here and skip legacy generic sections.
+        return;
+
         var oppSection = document.getElementById('dashboard-opportunities');
         var oppList = document.getElementById('opportunities-list');
         if (oppList) oppList.innerHTML = '';
         if (oppBullets.length > 0 && oppSection && oppList) {
           oppSection.classList.remove('hidden');
           oppBullets.forEach(function (text, i) {
+            var pct = null;
+            var severity = null;
+            var priority = null;
+            if (Array.isArray(data.opportunity_breakdown) && data.opportunity_breakdown[i]) {
+              var row = data.opportunity_breakdown[i];
+              pct = row.negative_mentions_percent;
+              severity = row.severity_score;
+              priority = row.priority;
+            }
+
             var card = document.createElement('div');
             card.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
-            card.innerHTML = '<div class="flex items-start gap-2"><span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span><div><p class="text-sm font-medium text-slate-800">' + escapeHtml(stripMd(text)) + '</p><div class="mt-2 flex gap-2"><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Demand: Medium</span><span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Impact: High</span></div></div></div>';
+            card.innerHTML =
+              '<div class="flex items-start gap-2">' +
+                '<span class="text-[#5e62ee] font-medium">' + (i + 1) + '.</span>' +
+                '<div>' +
+                  '<p class="text-sm font-medium text-slate-800">' + escapeHtml(stripMd(text)) + '</p>' +
+                  '<div class="mt-2 flex gap-2">' +
+                    '<span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">% negative: ' + escapeHtml(String(pct != null ? pct : '—')) + '</span>' +
+                    '<span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Severity: ' + escapeHtml(String(severity != null ? severity : '—')) + '</span>' +
+                    '<span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600">Priority: ' + escapeHtml(String(priority || '—')) + '</span>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
             oppList.appendChild(card);
           });
+        }
+
+        var gapSection = document.getElementById('dashboard-gap-breakdown');
+        var gapRows = document.getElementById('gap-breakdown-rows');
+        if (gapRows) gapRows.innerHTML = '';
+        if (Array.isArray(data.opportunity_breakdown) && data.opportunity_breakdown.length > 0 && gapSection && gapRows) {
+          gapSection.classList.remove('hidden');
+          data.opportunity_breakdown.forEach(function (row) {
+            var tr = document.createElement('tr');
+            tr.className = 'border-b last:border-0';
+            tr.innerHTML =
+              '<td class="py-2 pr-4">' + escapeHtml(String(row.opportunity || '—')) + '</td>' +
+              '<td class="py-2 pr-4">' + escapeHtml(String(row.negative_mentions_percent != null ? row.negative_mentions_percent : '—')) + '%</td>' +
+              '<td class="py-2 pr-4">' + escapeHtml(String(row.severity_score != null ? row.severity_score : '—')) + '/10</td>' +
+              '<td class="py-2 pr-4">' + escapeHtml(String(row.build_complexity || '—')) + '</td>' +
+              '<td class="py-2 pr-4">' + escapeHtml(String(row.revenue_potential || '—')) + '</td>' +
+              '<td class="py-2 pr-2">' + escapeHtml(String(row.priority || '—')) + '</td>';
+            gapRows.appendChild(tr);
+          });
+        }
+
+        var demandSection = document.getElementById('dashboard-demand-frequency');
+        var demandList = document.getElementById('demand-frequency-list');
+        if (demandList) demandList.innerHTML = '';
+        if (Array.isArray(data.feature_demand_frequency) && data.feature_demand_frequency.length > 0 && demandSection && demandList) {
+          demandSection.classList.remove('hidden');
+          data.feature_demand_frequency.forEach(function (row) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-[#5e62ee] font-semibold">🔥</span><span>' + escapeHtml(String(row.feature || '—')) + ' — ' + escapeHtml(String(row.percent != null ? row.percent : '—')) + '%</span>';
+            demandList.appendChild(li);
+          });
+        }
+
+        var wedgeSection = document.getElementById('dashboard-wedge');
+        var wedgeContent = document.getElementById('wedge-content');
+        if (wedgeContent) wedgeContent.innerHTML = '';
+        if (data.wedge_strategy && wedgeSection && wedgeContent) {
+          wedgeSection.classList.remove('hidden');
+          var ws = data.wedge_strategy;
+          wedgeContent.innerHTML =
+            '<p><strong>ICP:</strong> ' + escapeHtml(String(ws.icp || '—')) + '</p>' +
+            '<p><strong>Initial feature set:</strong> ' + escapeHtml(String((ws.initial_feature_set || []).join(', ') || '—')) + '</p>' +
+            '<p><strong>Why this wedge:</strong> ' + escapeHtml(String(ws.why_wedge_works || '—')) + '</p>' +
+            '<p><strong>Ignore initially:</strong> ' + escapeHtml(String((ws.ignore_initially || []).join(', ') || '—')) + '</p>';
+        }
+
+        var msgSection = document.getElementById('dashboard-messaging-angle');
+        var msgList = document.getElementById('messaging-angle-list');
+        if (msgList) msgList.innerHTML = '';
+        if (Array.isArray(data.messaging_angles) && data.messaging_angles.length > 0 && msgSection && msgList) {
+          msgSection.classList.remove('hidden');
+          data.messaging_angles.forEach(function (m) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-[#5e62ee] mt-0.5">→</span><span>' + escapeHtml(String(m)) + '</span>';
+            msgList.appendChild(li);
+          });
+        }
+
+        var moatSection = document.getElementById('dashboard-moat');
+        var moatList = document.getElementById('moat-list');
+        if (moatList) moatList.innerHTML = '';
+        if (Array.isArray(data.moat_analysis) && data.moat_analysis.length > 0 && moatSection && moatList) {
+          moatSection.classList.remove('hidden');
+          data.moat_analysis.forEach(function (m) {
+            var li = document.createElement('li');
+            li.className = 'flex items-start gap-2';
+            li.innerHTML = '<span class="text-slate-500 mt-0.5">•</span><span>' + escapeHtml(String(m)) + '</span>';
+            moatList.appendChild(li);
+          });
+        }
+
+        var validationSection = document.getElementById('dashboard-validation');
+        var validationList = document.getElementById('validation-list');
+        if (validationList) validationList.innerHTML = '';
+        if (Array.isArray(data.validation_plan_7d) && data.validation_plan_7d.length > 0 && validationSection && validationList) {
+          validationSection.classList.remove('hidden');
+          data.validation_plan_7d.forEach(function (step) {
+            var li = document.createElement('li');
+            li.innerHTML = escapeHtml(String(step));
+            validationList.appendChild(li);
+          });
+        }
+
+        var revSection = document.getElementById('dashboard-revenue');
+        var revContent = document.getElementById('revenue-content');
+        if (revContent) revContent.innerHTML = '';
+        if (data.revenue_angle && revSection && revContent) {
+          revSection.classList.remove('hidden');
+          var ra = data.revenue_angle;
+          revContent.innerHTML =
+            '<p><strong>Who pays:</strong> ' + escapeHtml(String(ra.who_pays || '—')) + '</p>' +
+            '<p><strong>Pricing model:</strong> ' + escapeHtml(String(ra.pricing_model || '—')) + '</p>' +
+            '<p><strong>Price range:</strong> ' + escapeHtml(String(ra.price_range || '—')) + '</p>' +
+            '<p><strong>Upsell path:</strong> ' + escapeHtml(String(ra.upsell_path || '—')) + '</p>';
+        }
+
+        var riskSection = document.getElementById('dashboard-risk');
+        var riskContent = document.getElementById('risk-content');
+        if (riskContent) riskContent.innerHTML = '';
+        if (data.competitive_risk_score && riskSection && riskContent) {
+          riskSection.classList.remove('hidden');
+          var cr = data.competitive_risk_score;
+          riskContent.innerHTML =
+            '<p><strong>Replication risk:</strong> ' + escapeHtml(String(cr.replication_risk_percent != null ? cr.replication_risk_percent : '—')) + '%</p>' +
+            '<p><strong>Estimated reaction speed:</strong> ' + escapeHtml(String(cr.estimated_reaction_speed || '—')) + '</p>' +
+            '<p><strong>Defensive ability:</strong> ' + escapeHtml(String(cr.defensive_ability || '—')) + '</p>' +
+            '<p><strong>Overall risk:</strong> ' + escapeHtml(String(cr.overall_risk || '—')) + '</p>';
         }
 
         var swSection = document.getElementById('dashboard-strengths-weaknesses');
@@ -847,9 +1454,13 @@
         var tldrStrengthEl = document.getElementById('tldr-strength');
         var tldrWeaknessEl = document.getElementById('tldr-weakness');
         var tldrWedgeEl = document.getElementById('tldr-wedge');
-        if (tldrStrengthEl) tldrStrengthEl.textContent = 'What they do well: ' + (strBullets[0] || (sections['Key Strengths'] || '').split('\n')[0] || '—');
-        if (tldrWeaknessEl) tldrWeaknessEl.textContent = 'Where they lose: ' + (weakBullets[0] || (sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '—');
-        if (tldrWedgeEl) tldrWedgeEl.textContent = 'Best wedge for you: ' + stripMd(data.biggest_opportunity || oppBullets[0] || '—');
+        var tldrStrengthValue = strBullets[0] || stripMd(data.biggest_strength || '') || stripMd((sections['Key Strengths'] || '').split('\n')[0] || '');
+        var tldrWeaknessValue = weakBullets[0] || stripMd(data.biggest_weakness || '') || stripMd((sections['Key Weaknesses'] || sections['Common Complaints'] || '').split('\n')[0] || '');
+        var wedgeObj = data.dominant_wedge || data.primary_wedge || {};
+        var tldrWedgeValue = stripMd(data.biggest_opportunity || wedgeObj.problem_to_attack || oppBullets[0] || '');
+        if (tldrStrengthEl) tldrStrengthEl.textContent = 'What they do well: ' + (tldrStrengthValue && tldrStrengthValue !== '—' ? tldrStrengthValue : 'Strong brand trust and broad market reach.');
+        if (tldrWeaknessEl) tldrWeaknessEl.textContent = 'Where they lose: ' + (tldrWeaknessValue && tldrWeaknessValue !== '—' ? tldrWeaknessValue : 'Inconsistent customer experience at key usage moments.');
+        if (tldrWedgeEl) tldrWedgeEl.textContent = 'Best wedge for you: ' + (tldrWedgeValue && tldrWedgeValue !== '—' ? tldrWedgeValue : 'Build a narrow product promise around the top unresolved complaint cluster.');
 
         var beatText = getSection(sections, ['How to Outperform This Competitor', 'How to Outperform', 'Opportunities for a New Competitor', 'Opportunities']) || '';
         var beatBullets = bulletsFromSection(beatText);
@@ -864,7 +1475,8 @@
         var resultsRaw = document.getElementById('results-raw');
         var resultsFallback = document.getElementById('results-fallback');
         if (data.report && resultsRaw && resultsFallback) {
-          resultsRaw.textContent = data.report;
+          var cleanedMd = stripAllReportsSection(data.report);
+          resultsRaw.textContent = cleanedMd;
           resultsFallback.classList.remove('hidden');
         } else if (resultsFallback) {
           resultsFallback.classList.add('hidden');
@@ -874,7 +1486,8 @@
         if (exportPdfBtn) exportPdfBtn.onclick = function () { window.print(); };
         var copyAllBtn = document.getElementById('copy-all');
         if (copyAllBtn) copyAllBtn.onclick = function () {
-          var text = data.report ? stripMd(data.report) : '';
+          var md = data.report ? stripAllReportsSection(data.report) : '';
+          var text = md ? stripMd(md) : '';
           if (text && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
         };
       }
@@ -883,7 +1496,10 @@
         hideError();
         if (companyTitle) companyTitle.textContent = data.company_name || 'Teaser report';
         if (summaryEl) summaryEl.textContent = data.summary || '—';
-        if (biggestWeaknessEl) biggestWeaknessEl.textContent = data.biggest_weakness || '—';
+        if (sentimentScoreEl) sentimentScoreEl.textContent = String(data.sentiment_score || 0) + '/100';
+        if (opportunityScoreEl) opportunityScoreEl.textContent = String(data.opportunity_score || 0) + '/100';
+        if (negativePercentEl) negativePercentEl.textContent = String(data.negative_percent_estimate || 0) + '%';
+        if (positivePercentEl) positivePercentEl.textContent = String(data.positive_percent_estimate || 0) + '%';
 
         complaintsList.innerHTML = '';
         (data.key_complaints || []).slice(0, 3).forEach(function (c) {
@@ -893,13 +1509,19 @@
           complaintsList.appendChild(li);
         });
 
-        oppsList.innerHTML = '';
-        (data.missed_opportunities || []).slice(0, 2).forEach(function (o) {
+        strengthsList.innerHTML = '';
+        (data.top_strengths || []).slice(0, 2).forEach(function (o) {
           var li = document.createElement('li');
           li.className = 'flex gap-2';
           li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>' + o + '</span>';
-          oppsList.appendChild(li);
+          strengthsList.appendChild(li);
         });
+        if (hiddenRequestsEl) {
+          hiddenRequestsEl.textContent = String(data.recurring_feature_requests_hidden || 0) + ' recurring feature requests hidden';
+        }
+        if (unlockHintEl) {
+          unlockHintEl.textContent = 'Unlock to see full breakdown across ' + String(data.unlock_reviews_count || 0) + ' evidence snippets';
+        }
 
         // If locked and user is authenticated, show inline credits hint.
         var creditsHint = document.getElementById('credits-inline');
@@ -963,24 +1585,30 @@
         }
       }
 
-      // When returning from Stripe with paid=1&scan_id=..., persist unlock then load full report
+      // When returning from Stripe with paid=1&scan_id=...&session_id=..., call unlock with session_id so backend can verify payment without login.
       async function ensureUnlockThenLoad() {
+        hideError();
+        var qs = '';
+        if (sessionId) {
+          qs = '?session_id=' + encodeURIComponent(sessionId);
+        }
         try {
-          var qs = '?paid=1';
-          if (sessionId) qs = '?session_id=' + encodeURIComponent(sessionId);
-          var res = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock' + qs, { method: 'POST' });
+          var res = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock' + qs, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(buildUnlockBody())
+          });
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
           if (!res.ok) {
-            var data = null;
-            try { data = await res.json(); } catch (e) {}
             showError((data && (data.detail || data.error || data.message)) || 'Unable to unlock this report.');
             return;
           }
+          renderTeaser(data);
         } catch (e) {
           console.error(e);
           showError('Network error while unlocking.');
-          return;
         }
-        fetchScan();
       }
 
       function openAuthModal() {
@@ -1004,6 +1632,7 @@
           var res = await fetch('/scan/' + encodeURIComponent(scanId) + '/unlock', {
             method: 'POST',
             headers: headers,
+            body: JSON.stringify(buildUnlockBody())
           });
           var data = null;
           try { data = await res.json(); } catch (e) {}
@@ -1098,7 +1727,8 @@
                   headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + stored.accessToken
-                  }
+                  },
+                  body: JSON.stringify(buildUnlockBody())
                 });
                 var dataCredit = null;
                 try { dataCredit = await resCredit.json(); } catch (e) {}
@@ -1112,7 +1742,10 @@
               }
             }
 
-            // 2) No usable credit – send the user to pricing for this specific report.
+            // 2) No usable credit – remember this scan and send the user to pricing.
+            try {
+              window.localStorage.setItem(PENDING_UNLOCK_KEY, scanId);
+            } catch (e) {}
             var url = '/pricing';
             if (scanId) {
               url += '?scan_id=' + encodeURIComponent(scanId);
@@ -1132,6 +1765,51 @@
         authContinue.addEventListener('click', function () {
           handleInlineAuth();
         });
+      }
+
+      if (demo === 'stripe') {
+        // Hard-coded demo that shows a fully structured Stripe report
+        // without requiring a real scan_id or auth.
+        hideError();
+        if (companyTitle) companyTitle.textContent = 'Stripe';
+        if (summaryEl) {
+          summaryEl.textContent =
+            'We’re turning noisy customer feedback into a structured opportunity map you can actually act on.';
+        }
+        if (sentimentScoreEl) sentimentScoreEl.textContent = '58/100';
+        if (opportunityScoreEl) opportunityScoreEl.textContent = '73/100';
+        if (negativePercentEl) negativePercentEl.textContent = '54%';
+        if (positivePercentEl) positivePercentEl.textContent = '46%';
+        // Simple teaser bullets to match the dashboard content.
+        if (complaintsList) {
+          complaintsList.innerHTML = '';
+          ['Account suspensions and fund holds feel sudden and opaque.', 'Limited human support or escalation when money is at risk.', 'Merchants worry about cash‑flow shocks from long fund holds.'].forEach(function (c) {
+            var li = document.createElement('li');
+            li.className = 'flex gap-2';
+            li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-rose-400"></span><span>' + c + '</span>';
+            complaintsList.appendChild(li);
+          });
+        }
+        if (strengthsList) {
+          strengthsList.innerHTML = '';
+          ['Human‑first support and escalation.', 'Transparent risk assessment and remediation.'].forEach(function (o) {
+            var li = document.createElement('li');
+            li.className = 'flex gap-2';
+            li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>' + o + '</span>';
+            strengthsList.appendChild(li);
+          });
+        }
+        if (hiddenRequestsEl) hiddenRequestsEl.textContent = '9 recurring feature requests hidden';
+        if (unlockHintEl) unlockHintEl.textContent = 'Unlock to see full breakdown across 112 reviews';
+        if (premiumPreviewEl) {
+          premiumPreviewEl.textContent =
+            'Customer sentiment is positive on Stripe’s technical capabilities, but there is a clear wedge around human‑first support, transparent risk decisions, and fairer fund‑hold policies.';
+        }
+        if (teaserLayout) teaserLayout.classList.add('hidden');
+        if (fullReportSection) fullReportSection.classList.remove('hidden');
+        var demoDashboard = buildStripeDemoDashboard();
+        renderDashboard(demoDashboard);
+        return;
       }
 
       if (paid) {

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service · Gap Detector</title>
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+    .hero-heading {
+      letter-spacing: -0.04em;
+    }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-7 w-7 rounded-lg">
+          <span class="text-sm font-semibold tracking-tight">Gap Detector</span>
+        </a>
+        <nav class="flex items-center gap-4 text-sm text-slate-600">
+          <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+          <a href="/reports" class="hover:text-[#5e62ee] transition-colors hidden sm:inline">Reports</a>
+          <a href="/pricing" class="hover:text-[#5e62ee] transition-colors hidden sm:inline">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <div class="max-w-3xl mx-auto px-6 py-12 sm:py-16 space-y-10">
+        <div class="space-y-3">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Terms
+          </p>
+          <h1 class="hero-heading text-3xl sm:text-4xl font-semibold text-slate-900">
+            Terms of Service
+          </h1>
+          <p class="text-sm text-slate-600 max-w-2xl">
+            The ground rules for using Gap Detector. Please read these carefully before running scans or purchasing access.
+          </p>
+        </div>
+
+        <div class="prose prose-sm sm:prose-base prose-slate max-w-none">
+          <p class="text-xs text-slate-500">
+            Last updated: <span>{{ terms_last_updated | default("February 2026") }}</span>
+          </p>
+
+          <h2>1. Using Gap Detector</h2>
+          <p>
+            Gap Detector helps you analyze public feedback and generate positioning ideas. You’re responsible for how
+            you apply those ideas in your own business.
+          </p>
+          <ul>
+            <li>You must be at least 18 years old to use the product.</li>
+            <li>You agree not to use Gap Detector for illegal, harmful, or abusive purposes.</li>
+            <li>You’re responsible for keeping your account secure and for activity under your login.</li>
+          </ul>
+
+          <h2>2. Content and reports</h2>
+          <p>
+            Reports are generated using a combination of public data sources and AI models. We work hard to produce
+            high‑quality output, but:
+          </p>
+          <ul>
+            <li>Reports may contain inaccuracies, and should not be treated as legal, financial, or compliance advice.</li>
+            <li>You are responsible for reviewing outputs before using them in campaigns, sales materials, or product decisions.</li>
+          </ul>
+
+          <h2>3. Subscriptions, credits, and payments</h2>
+          <p>
+            If you purchase credits or a subscription, billing is handled securely by Stripe. By subscribing you agree
+            to Stripe’s terms and any plan‑specific limits shown in the app or on the pricing page.
+          </p>
+
+          <h2>4. Availability and changes</h2>
+          <p>
+            We aim for high uptime, but Gap Detector is provided on an “as is” and “as available” basis. We may update
+            or change features over time, including adding limits or changing how scans work.
+          </p>
+
+          <h2>5. Liability</h2>
+          <p>
+            To the maximum extent permitted by law, Gap Detector and its creators are not liable for lost profits,
+            lost revenue, or indirect damages arising from use of the product. Our total liability is limited to the
+            amount you paid for the service in the 3 months before a claim.
+          </p>
+
+          <h2>6. Termination</h2>
+          <p>
+            You can stop using Gap Detector at any time. We may suspend or terminate access if you violate these terms
+            or abuse the service.
+          </p>
+
+          <h2>7. Changes to these terms</h2>
+          <p>
+            We may update these terms from time to time. When we do, we’ll update the “Last updated” date at the top
+            of this page. Continued use of Gap Detector after changes take effect means you accept the new terms.
+          </p>
+
+          <h2>8. Contact</h2>
+          <p>
+            Questions about these terms? Email us at
+            <a href="mailto:legal@gapdetector.com">legal@gapdetector.com</a>.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/" class="hover:text-[#5e62ee] transition-colors">Home</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <a href="mailto:hello@gapdetector.com" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
+

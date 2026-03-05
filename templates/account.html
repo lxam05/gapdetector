@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account · Gap Detector</title>
+  <link rel="icon" type="image/png" href="/images/gapdetector.png">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+    .hero-heading { letter-spacing: -0.04em; }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-900">
+  <div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center relative">
+        <a href="/" class="flex items-center gap-2">
+          <img src="/images/gapdetector.png" alt="Gap Detector" class="h-7 w-7 rounded-lg">
+          <span class="text-sm font-semibold tracking-tight">Gap Detector</span>
+        </a>
+        <div class="ml-auto flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-5 text-xs text-slate-500">
+            <a id="nav-new-scan" href="/app" class="text-slate-600 hover:text-[#5e62ee] transition-colors hidden">New scan</a>
+            <a id="nav-reports" href="/dashboard" class="text-slate-500 hover:text-[#5e62ee] transition-colors hidden">Dashboard</a>
+            <a id="nav-pricing" href="/pricing" class="text-slate-500 hover:text-[#5e62ee] transition-colors">Pricing</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a id="header-login" href="/auth" class="inline-flex items-center rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">Log in</a>
+            <button id="header-avatar" type="button" class="hidden h-8 w-8 rounded-full border border-slate-300 bg-slate-900 text-[11px] font-semibold text-white items-center justify-center" aria-label="Account">
+              <span id="header-avatar-initial" class="text-[10px] font-semibold">G</span>
+            </button>
+          </div>
+        </div>
+        <div id="avatar-menu" class="hidden absolute right-0 top-12 w-44 rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 text-xs text-slate-700 py-1">
+          <div class="px-3 py-2 text-left text-[11px] text-slate-500 flex items-center justify-between">
+            <span>Credits</span>
+            <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
+          </div>
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Account / Profile</a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Billing</a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">Settings</a>
+          <div class="my-1 border-t border-slate-100"></div>
+          <button id="avatar-signout" type="button" class="w-full px-3 py-2 text-left text-rose-600 hover:bg-rose-50">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <div class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+        <div class="space-y-3">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-slate-500">
+            Account
+          </p>
+          <h1 class="hero-heading text-3xl sm:text-4xl font-semibold text-slate-900">
+            Account &amp; profile
+          </h1>
+          <p class="text-sm text-slate-600 max-w-2xl">
+            Manage your login, see which email your credits are attached to, and request a secure password reset.
+          </p>
+        </div>
+
+        <div id="account-needs-login" class="hidden rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-700">
+          <p class="mb-3">
+            You’re not signed in. Log in to see account details and manage your profile.
+          </p>
+          <a href="/auth" class="inline-flex items-center rounded-full bg-[#5e62ee] px-4 py-2 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/40 hover:bg-[#4a4ed8] transition-colors">
+            Log in
+          </a>
+        </div>
+
+        <div id="account-content" class="space-y-6 hidden">
+          <section class="rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-5 sm:p-6">
+            <h2 class="text-sm font-semibold text-slate-900 mb-3">Profile</h2>
+            <dl class="space-y-2 text-sm text-slate-700">
+              <div class="flex items-center justify-between gap-4">
+                <dt class="text-slate-500">Email</dt>
+                <dd id="account-email" class="font-medium text-slate-900">—</dd>
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <dt class="text-slate-500">Member since</dt>
+                <dd id="account-created" class="text-slate-800">—</dd>
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <dt class="text-slate-500">User ID</dt>
+                <dd id="account-id" class="text-slate-800 text-xs break-all">—</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5 p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-sm font-semibold text-slate-900">Password &amp; sign-in</h2>
+                <p class="text-xs text-slate-500 mt-1">
+                  Send yourself a secure reset link if you ever lose access to your password.
+                </p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <button id="account-reset-btn" type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
+                Email me a password reset link
+              </button>
+              <p id="account-reset-status" class="text-[11px] text-slate-500 min-h-[1.25rem]"></p>
+            </div>
+          </section>
+
+          <section class="rounded-2xl border border-rose-200/80 bg-rose-50/60 shadow-sm shadow-rose-900/5 p-5 sm:p-6 space-y-3">
+            <h2 class="text-sm font-semibold text-rose-700">Sign out</h2>
+            <p class="text-xs text-rose-700">
+              This only signs you out on this device. Your reports and credits stay attached to your email.
+            </p>
+            <button id="account-signout" type="button" class="inline-flex items-center justify-center rounded-full bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-rose-600/40 hover:bg-rose-700 transition-colors">
+              Sign out of Gap Detector
+            </button>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white/90 mt-auto">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
+            <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
+          </div>
+          <nav class="flex items-center gap-6 text-sm text-slate-500">
+            <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
+            <a href="/dashboard" class="hover:text-[#5e62ee] transition-colors">Dashboard</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+          </nav>
+        </div>
+        <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
+          © 2026 Gap Detector. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function initHeaderAuth() {
+      var loginLink = document.getElementById('header-login');
+      var avatarBtn = document.getElementById('header-avatar');
+      var avatarMenu = document.getElementById('avatar-menu');
+      var avatarSignout = document.getElementById('avatar-signout');
+      var avatarInitial = document.getElementById('header-avatar-initial');
+      var navNewScan = document.getElementById('nav-new-scan');
+      var navReports = document.getElementById('nav-reports');
+
+      function getStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) { return null; }
+      }
+
+      async function loadCredits(stored) {
+        var creditsEl = document.getElementById('avatar-credits');
+        if (!stored || !stored.accessToken || !creditsEl) return;
+        try {
+          var res = await fetch('/me/credits', {
+            headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+          });
+          if (!res.ok) return;
+          var data = await res.json();
+          var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
+          creditsEl.textContent = val != null ? String(val) : '0';
+        } catch (e) {}
+      }
+
+      function applyHeaderAuthState() {
+        var stored = getStoredAuth();
+        var isAuthed = stored && stored.accessToken;
+        if (loginLink) {
+          if (isAuthed) loginLink.classList.add('hidden');
+          else loginLink.classList.remove('hidden');
+        }
+        if (avatarBtn) {
+          if (isAuthed && stored.email) {
+            var email = String(stored.email);
+            var initial = email.trim().charAt(0).toUpperCase() || 'G';
+            if (avatarInitial) avatarInitial.textContent = initial;
+            avatarBtn.classList.remove('hidden');
+            avatarBtn.classList.add('flex');
+          } else {
+            avatarBtn.classList.add('hidden');
+            avatarBtn.classList.remove('flex');
+          }
+        }
+        if (navNewScan) {
+          if (isAuthed) navNewScan.classList.remove('hidden');
+          else navNewScan.classList.add('hidden');
+        }
+        if (navReports) {
+          if (isAuthed) navReports.classList.remove('hidden');
+          else navReports.classList.add('hidden');
+        }
+        if (isAuthed) {
+          loadCredits(stored);
+        }
+      }
+
+      function closeAvatarMenu() {
+        if (avatarMenu) avatarMenu.classList.add('hidden');
+      }
+
+      applyHeaderAuthState();
+
+      if (avatarBtn && avatarMenu) {
+        avatarBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          avatarMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () { closeAvatarMenu(); });
+      }
+
+      if (avatarSignout) {
+        avatarSignout.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { window.localStorage.removeItem('gd_auth'); } catch (err) {}
+          closeAvatarMenu();
+          applyHeaderAuthState();
+          window.location.href = '/';
+        });
+      }
+    })();
+
+    (function initAccountPage() {
+      var needsLogin = document.getElementById('account-needs-login');
+      var content = document.getElementById('account-content');
+      var emailEl = document.getElementById('account-email');
+      var createdEl = document.getElementById('account-created');
+      var idEl = document.getElementById('account-id');
+      var resetBtn = document.getElementById('account-reset-btn');
+      var resetStatus = document.getElementById('account-reset-status');
+      var signoutBtn = document.getElementById('account-signout');
+
+      function getStoredAuth() {
+        try {
+          var raw = window.localStorage.getItem('gd_auth');
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (e) { return null; }
+      }
+
+      function showNeedsLogin() {
+        if (needsLogin) needsLogin.classList.remove('hidden');
+      }
+      function showContent() {
+        if (content) content.classList.remove('hidden');
+      }
+
+      async function loadAccount() {
+        var stored = getStoredAuth();
+        if (!stored || !stored.accessToken) {
+          showNeedsLogin();
+          return;
+        }
+        try {
+          var res = await fetch('/auth/me', {
+            headers: { 'Authorization': 'Bearer ' + stored.accessToken }
+          });
+          if (!res.ok) {
+            showNeedsLogin();
+            return;
+          }
+          var data = await res.json();
+          if (emailEl) emailEl.textContent = data.email || stored.email || '—';
+          if (createdEl && data.created_at) {
+            try {
+              var d = new Date(data.created_at);
+              createdEl.textContent = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            } catch (e) {
+              createdEl.textContent = data.created_at;
+            }
+          }
+          if (idEl && data.id) idEl.textContent = data.id;
+          showContent();
+        } catch (e) {
+          showNeedsLogin();
+        }
+      }
+
+      async function requestReset() {
+        var stored = getStoredAuth();
+        var email = (stored && stored.email) || (emailEl && emailEl.textContent) || '';
+        email = (email || '').trim();
+        if (!email) {
+          if (resetStatus) resetStatus.textContent = 'We could not detect your email. Contact support instead.';
+          return;
+        }
+        if (resetStatus) resetStatus.textContent = 'Sending reset link…';
+        try {
+          var res = await fetch('/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+          });
+          if (!res.ok) {
+            resetStatus.textContent = 'Unable to send reset email right now. Please try again later.';
+            return;
+          }
+          resetStatus.textContent = 'If that email exists, a reset link has been sent.';
+        } catch (e) {
+          if (resetStatus) resetStatus.textContent = 'Network error. Please try again.';
+        }
+      }
+
+      function signOut() {
+        try {
+          window.localStorage.removeItem('gd_auth');
+        } catch (e) {}
+        window.location.href = '/';
+      }
+
+      if (resetBtn) resetBtn.addEventListener('click', requestReset);
+      if (signoutBtn) signoutBtn.addEventListener('click', signOut);
+      loadAccount();
+    })();
+  </script>
+</body>
+</html>
+

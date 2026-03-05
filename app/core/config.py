@@ -35,9 +35,29 @@ class Settings(BaseSettings):
   CORS_ORIGINS: str = "*"  # comma-separated list; tune in production
 
   # Existing analyzer integration (optional, but present in env)
-  SERPAPI_KEY: str | None = None
+  SERPER_API_KEY: str | None = None
   ANTHROPIC_API_KEY: str | None = None
   ANTHROPIC_MODEL: str | None = None
+  OPENAI_API_KEY: str | None = None
+  OPENAI_PREVIEW_MODEL: str = "gpt-4o-mini"
+
+  # Preview protection
+  TURNSTILE_SECRET_KEY: str | None = None
+  TURNSTILE_SITE_KEY: str | None = None
+  REDIS_URL: str | None = None
+
+  # Cost and throughput guardrails
+  PREVIEW_IP_PER_DAY_LIMIT: int = 2
+  PREVIEW_IP_PER_5M_LIMIT: int = 1
+  PREVIEW_DOMAIN_REPEAT_BLOCK_SECONDS: int = 600
+  PREVIEW_GLOBAL_DAILY_LIMIT: int = 20
+  FULL_GLOBAL_DAILY_LIMIT: int = 10
+  MAX_MONTHLY_API_CALLS: int = 3000
+
+  # MailerSend (contact form)
+  MAILERSEND_API_KEY: str | None = None
+  MAILERSEND_FROM_EMAIL: str | None = None
+  MAILERSEND_TO_EMAIL: str | None = None
 
   # Stripe paywall: dynamic Checkout Session (success_url includes scan_id)
   STRIPE_SECRET_KEY: str | None = None

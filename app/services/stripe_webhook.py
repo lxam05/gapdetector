@@ -84,6 +84,19 @@ async def apply_checkout_session_completed(db: AsyncSession, session: Any) -> No
   for production add a processed_events table or check Stripe idempotency).
   For true idempotency you'd store stripe_checkout_session_id and skip if already applied.
   """
+  session_id = getattr(session, "id", None)
+  metadata = getattr(session, "metadata", None) or {}
+  metadata_applied = None
+  if isinstance(metadata, dict):
+    metadata_applied = metadata.get("gd_applied")
+  elif hasattr(metadata, "get"):
+    metadata_applied = metadata.get("gd_applied")
+  else:
+    metadata_applied = getattr(metadata, "gd_applied", None)
+  if str(metadata_applied or "").strip() == "1":
+    logger.info("Skipping already-applied checkout session id=%s", session_id)
+    return
+
   customer_email = getattr(session, "customer_email", None) or getattr(session, "customer_details", None)
   if customer_email and hasattr(customer_email, "email"):
     customer_email = customer_email.email
@@ -166,6 +179,16 @@ async def apply_checkout_session_completed(db: AsyncSession, session: Any) -> No
       pass
 
   await db.commit()
+
+  # Best-effort idempotency marker on the Stripe Checkout Session metadata.
+  # This helps prevent double-crediting when both webhook and post-purchase
+  # confirmation try to process the same session.
+  if session_id and settings.STRIPE_SECRET_KEY:
+    try:
+      stripe.api_key = settings.STRIPE_SECRET_KEY
+      stripe.checkout.Session.modify(session_id, metadata={"gd_applied": "1"})
+    except Exception as e:
+      logger.warning("Could not mark checkout session id=%s as applied: %s", session_id, e)
 
 
 async def apply_invoice_paid(db: AsyncSession, invoice: Any) -> None:

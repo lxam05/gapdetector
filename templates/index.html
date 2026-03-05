@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/images/gapdetector.png">
   <script src="https://cdn.tailwindcss.com"></script>
+  {% if turnstile_site_key %}
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
   <style>
     body {
       background-color: #ffffff;
@@ -25,6 +28,11 @@
       animation: marquee 28s linear infinite;
     }
 
+    .marquee-track-reviews {
+      display: inline-flex;
+      animation: marquee 45s linear infinite;
+    }
+
     @keyframes marquee {
       0% {
         transform: translateX(0);
@@ -33,6 +41,7 @@
         transform: translateX(-50%);
       }
     }
+
   </style>
 </head>
 <body class="text-slate-900">
@@ -96,15 +105,15 @@
             <span>Credits</span>
             <span id="avatar-credits" class="text-slate-900 font-semibold">—</span>
           </div>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          <a href="/account" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Account / Profile
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/billing" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Billing
-          </button>
-          <button type="button" class="w-full px-3 py-2 text-left hover:bg-slate-50">
+          </a>
+          <a href="/settings" class="block w-full px-3 py-2 text-left hover:bg-slate-50">
             Settings
-          </button>
+          </a>
           <div class="my-1 border-t border-slate-100"></div>
           <button
             id="avatar-signout"
@@ -154,58 +163,147 @@
                 id="site"
                 name="company_name"
                 type="text"
-                class="w-full rounded-3xl border border-slate-200 px-6 pr-32 py-5 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
-                placeholder="Enter a company or SaaS product"
+                class="w-full rounded-3xl border border-slate-200 bg-white disabled:bg-white px-6 pr-32 py-5 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]"
+                placeholder="Enter a domain (e.g. notion.so)"
                 autocomplete="off"
               />
               <button
                 id="landing-submit"
                 type="submit"
-                class="absolute inset-y-1.5 right-1.5 inline-flex items-center justify-center rounded-2xl bg-[#5e62ee] px-4 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] transition-colors"
+                class="absolute inset-y-1.5 right-1.5 inline-flex items-center justify-center rounded-2xl bg-[#5e62ee] px-4 text-xs font-semibold text-white shadow-md shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] transition-colors disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-[#5e62ee]"
               >
                 Analyze free
               </button>
             </div>
+            <div class="mt-2 min-h-[1.25rem] text-[11px] text-slate-500 text-center" id="landing-status"></div>
+            {% if turnstile_site_key %}
+            <div class="mt-2 flex justify-center">
+              <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+            </div>
+            {% endif %}
           </form>
 
-          <div class="mt-1 flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500">
-            <span class="mr-1">Try an example:</span>
-            <button type="button" data-example="Notion" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
-              Analyze Notion
-            </button>
-            <button type="button" data-example="Slack" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
-              Analyze Slack
-            </button>
-            <button type="button" data-example="Stripe" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
-              Analyze Stripe
-            </button>
-          </div>
-
-          <div class="mt-2 min-h-[1.25rem] text-[11px] text-slate-500" id="landing-status"></div>
-
-          <div class="mt-3 flex items-center justify-center gap-2 text-[11px] text-slate-500">
-            <div class="flex text-amber-400 text-sm">
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
-              <span>★</span>
+          <div class="space-y-2 mt-10">
+            <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500">
+              <span class="mr-1">Try an example:</span>
+              <button type="button" data-example="Notion" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
+                Analyze Notion
+              </button>
+              <button type="button" data-example="Slack" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
+                Analyze Slack
+              </button>
+              <button type="button" data-example="Stripe" class="px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:border-[#5e62ee] hover:text-[#5e62ee] transition-colors">
+                Analyze Stripe
+              </button>
             </div>
-            <span>50+ customers satisfied</span>
-          </div>
 
-          <div id="proof" class="space-y-3 pt-2">
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 text-[11px] text-slate-500">
+            <div class="flex items-center justify-center gap-2 text-[11px] text-slate-500">
+              <div class="flex text-amber-400 text-sm">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <span>50+ customers satisfied</span>
+            </div>
+
+            <div id="proof" class="flex flex-col sm:flex-row items-center justify-center gap-3 text-[11px] text-slate-500 pt-0">
               <div class="flex -space-x-2">
-                <div class="h-6 w-6 rounded-full bg-slate-200 border border-white"></div>
-                <div class="h-6 w-6 rounded-full bg-slate-300 border border-white"></div>
-                <div class="h-6 w-6 rounded-full bg-slate-400 border border-white"></div>
+                <img src="/images/person1.jpeg" alt="" class="h-6 w-6 rounded-full object-cover object-[center_28%] border border-white shrink-0" />
+                <img src="/images/person2.jpeg" alt="" class="h-6 w-6 rounded-full object-cover object-[center_28%] border border-white shrink-0" />
+                <img src="/images/person3.jpeg" alt="" class="h-6 w-6 rounded-full object-cover object-[center_28%] border border-white shrink-0" />
               </div>
               <span>Product, marketing & founder teams using Gap Detector to guide roadmap and positioning.</span>
             </div>
           </div>
 
         </div>
+
+        <!-- Hero video below social proof -->
+        <div class="mt-24 max-w-5xl mx-auto px-6">
+          <video
+            src="/images/herovid.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            class="w-full mx-auto rounded-3xl border border-slate-200 shadow-xl shadow-slate-900/10"
+          ></video>
+        </div>
+
+        <!-- Scan preview -->
+        <section class="w-full max-w-5xl mx-auto px-6 mt-28">
+          <div class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-stretch">
+            <!-- Left: preview of a Stripe scan -->
+            <div class="rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5 p-6 sm:p-7 space-y-4">
+              <div class="flex items-center gap-2 text-xs font-semibold tracking-[0.16em] uppercase text-slate-500">
+                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                  Example scan
+                </span>
+                <span>Stripe</span>
+              </div>
+              <div class="space-y-2">
+                <h2 class="text-sm sm:text-base font-semibold text-slate-900">
+                  What Gap Detector surfaces for Stripe
+                </h2>
+                <p class="text-sm text-slate-600">
+                  This is a real-style scan preview showing how we turn scattered reviews and comparison pages
+                  into an opportunity map you can act on in a few minutes.
+                </p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4 space-y-2">
+                  <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-rose-500">
+                    Biggest weakness
+                  </p>
+                  <p class="text-sm text-rose-700">
+                    Teams feel Stripe is powerful but overwhelming — pricing, add‑ons, and setup steps make it hard
+                    to choose and launch the right plan.
+                  </p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                  <h3 class="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">
+                    3 key complaints we’d highlight
+                  </h3>
+                  <ul class="space-y-1.5 text-sm text-slate-700 list-disc list-inside">
+                    <li>“Too many moving parts to get a basic checkout live.”</li>
+                    <li>“Hard to know what’s included vs extra add‑ons.”</li>
+                    <li>“Docs are great, but we still worry about making an expensive mistake.”</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: CTA to see full Stripe scan -->
+            <aside class="rounded-2xl border border-slate-900/10 bg-slate-900 text-slate-50 shadow-xl shadow-slate-900/40 p-6 sm:p-7 flex flex-col justify-between gap-4">
+              <div class="space-y-3">
+                <p class="text-[11px] font-semibold tracking-[0.18em] uppercase text-emerald-300">
+                  See it in action
+                </p>
+                <h3 class="text-lg font-semibold">
+                  Walk through the full Stripe scan
+                </h3>
+                <p class="text-sm text-slate-200">
+                  Open a complete Gap Detector report for Stripe to see the full breakdown of complaints,
+                  missed opportunities, and positioning moves you can steal for your own product.
+                </p>
+              </div>
+              <div class="space-y-2">
+                <a
+                  href="/report?demo=stripe"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-900 shadow-md shadow-slate-900/40 hover:bg-slate-100 transition-colors"
+                >
+                  View full Stripe scan
+                </a>
+                <p class="text-[10px] text-slate-300">
+                  Opens a full, read-only example report so you can see exactly what you get.
+                </p>
+              </div>
+            </aside>
+          </div>
+        </section>
 
         <!-- Trusted agencies marquee -->
         <div class="w-full bg-white border-y border-slate-200 mt-28">
@@ -238,26 +336,26 @@
           </div>
         </div>
 
-        <section id="difference" class="text-left px-6" style="margin-top: 18rem;">
-            <div class="space-y-4 mb-10 text-center">
+        <section id="difference" class="text-left px-6 mt-24 sm:mt-32 mb-24 sm:mb-32">
+            <div class="space-y-4 mb-10 text-center max-w-4xl mx-auto">
               <div class="inline-flex items-center justify-center">
-                <span class="inline-flex items-center rounded-full border border-slate-400 bg-white/70 px-4 py-2 text-sm font-medium tracking-[0.16em] uppercase text-slate-500">
+                <span class="inline-flex items-center rounded-full border border-slate-400 bg-white/70 px-3 py-1.5 text-xs font-medium tracking-[0.14em] uppercase text-slate-500">
                   The Difference
                 </span>
               </div>
-              <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-slate-900 hero-heading">
+              <h2 class="text-3xl sm:text-4xl font-semibold text-slate-900 hero-heading">
                 What Changes When You Stop Guessing.
               </h2>
             </div>
 
-            <div class="mx-auto w-full max-w-5xl rounded-[2rem] border-2 border-slate-100 bg-white/80 shadow-xl shadow-slate-900/5 overflow-hidden">
+            <div class="mx-auto w-full max-w-4xl rounded-2xl border-2 border-slate-100 bg-white/80 shadow-xl shadow-slate-900/5 overflow-hidden">
               <div class="grid md:grid-cols-2">
                 <!-- Without -->
-                <div class="bg-white/90 px-8 sm:px-12 py-10 sm:py-14 text-slate-700">
-                  <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 mb-5">
-                    Without GapDetector
+                <div class="bg-white/90 px-6 sm:px-10 py-8 sm:py-10 text-slate-700">
+                  <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 mb-4">
+                    Without Gap Detector
                   </h3>
-                  <ul class="space-y-3.5 text-lg">
+                  <ul class="space-y-3 text-base">
                     <li class="flex items-start gap-3">
                       <span class="mt-1 text-rose-500 text-base shrink-0">✕</span>
                       <span>Building features customers never asked for</span>
@@ -286,11 +384,11 @@
                 </div>
 
                 <!-- With -->
-                <div class="bg-slate-950 px-8 sm:px-12 py-10 sm:py-14 text-slate-100">
-                  <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-[#5e62ee] mb-5">
-                    With GapDetector
+                <div class="bg-slate-950 px-6 sm:px-10 py-8 sm:py-10 text-slate-100">
+                  <h3 class="text-sm font-semibold uppercase tracking-[0.16em] text-[#5e62ee] mb-4">
+                    With Gap Detector
                   </h3>
-                  <ul class="space-y-3.5 text-lg">
+                  <ul class="space-y-3 text-base">
                     <li class="flex items-start gap-3">
                       <span class="mt-1 text-[#5e62ee] text-base shrink-0">✓</span>
                       <span>You know exactly where competitors fall short</span>
@@ -324,20 +422,163 @@
       </section>
     </main>
 
+    <!-- Reviews marquee -->
+    <section class="w-full py-10 overflow-hidden mb-24 sm:mb-32" aria-label="Customer reviews">
+      <div class="w-full text-center text-xs sm:text-sm font-bold text-slate-400 tracking-[0.18em] uppercase mb-6">
+        What customers say
+      </div>
+      <div class="relative overflow-hidden">
+        <div class="marquee-track-reviews flex">
+          <div class="flex gap-6 shrink-0 pr-6">
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"Finally stopped guessing what our competitors were missing. Roadmap is now driven by real gaps."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Head of Product, B2B SaaS</p>
+            </div>
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"Positioning improved in days, not months. The comparison insights are exactly what we needed."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Marketing Lead, Series A</p>
+            </div>
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"We use it before every launch. No more building features nobody asked for."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Founder, Startup</p>
+            </div>
+          </div>
+          <div class="flex gap-6 shrink-0 pr-6">
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"Finally stopped guessing what our competitors were missing. Roadmap is now driven by real gaps."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Head of Product, B2B SaaS</p>
+            </div>
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"Positioning improved in days, not months. The comparison insights are exactly what we needed."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Marketing Lead, Series A</p>
+            </div>
+            <div class="shrink-0 w-[320px] sm:w-[380px] rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <div class="flex text-amber-400 text-sm mb-2"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+              <p class="text-sm text-slate-700 leading-snug">"We use it before every launch. No more building features nobody asked for."</p>
+              <p class="mt-2 text-[11px] font-medium text-slate-500">— Founder, Startup</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats / What you waste vs what Gap Detector fixes -->
+    <section class="w-full max-w-6xl mx-auto px-6 py-12 sm:py-16 mb-16" aria-label="Costs without Gap Detector">
+      <h2 class="text-center text-2xl sm:text-3xl font-semibold text-slate-900 mb-10">Stop wasting time. Start closing gaps.</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">100+ hrs</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Building features nobody wants</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">Gap Detector surfaces what customers actually ask for in reviews and forums, so you can prioritise real demand instead of guesswork and stop shipping features that don't move the needle.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">40+ hrs</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Manual review and forum scraping</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">We aggregate and structure feedback from multiple sources in minutes, so you get a single report with gaps, themes, and opportunities instead of days of copy-pasting and note-taking.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">3+ weeks</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Research that still misses pain points</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">Real customer quotes and ranked opportunities show you exactly where competitors fall short and what users complain about, so your roadmap is grounded in evidence, not assumptions.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">Lost revenue</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Money wasted not having features users want</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">Prioritise from real demand and close the gaps that win customers. See which missing features and pain points show up most in feedback so you can invest where it pays off.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">50+ hrs</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Competing on price, no clear edge</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">See where competitors fall short and differentiate on real gaps. Position on what customers actually care about instead of racing to the bottom on price.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-7 min-h-[160px] shadow-sm flex flex-col">
+          <p class="text-2xl font-bold text-rose-500">Launch risk</p>
+          <p class="text-sm font-medium text-slate-800 mt-1">Finding out too late what users wanted</p>
+          <p class="text-sm text-slate-600 mt-3 leading-relaxed">Validate gaps and roadmap before you build. Use real customer feedback to de-risk launches and make sure you're solving problems people actually have.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="w-full max-w-4xl mx-auto px-6 py-12 sm:py-16 mb-24 sm:mb-32" aria-label="Frequently asked questions">
+      <h2 class="text-center text-2xl sm:text-3xl font-semibold text-slate-900 mb-8">Frequently asked questions</h2>
+      <div class="space-y-2" id="faq-accordion">
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden" open>
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            Why not just ask an AI?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            Generic AI answers aren't tied to real customers or your actual competitors. Gap Detector pulls from real reviews, forums, and comparison pages — so you get cited evidence, specific gaps, and opportunities you can verify and share with your team. You're building on what people actually said, not on a model's general knowledge.
+          </div>
+        </details>
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            What does Gap Detector do?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            We scan reviews, forums, and comparison pages for any company or product you enter. You get a clear view of where competitors fall short and where customers are frustrated — so you can guide your roadmap and positioning from real feedback instead of guesswork.
+          </div>
+        </details>
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            How long does a scan take?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            Most scans finish within a few minutes. You’ll get a shareable report with gaps, themes, and suggested opportunities. Deeper or broader scans may take a bit longer.
+          </div>
+        </details>
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            Who is Gap Detector for?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            Product, marketing, and founder teams who want to base roadmap and positioning on real customer feedback. It’s especially useful before a launch, when entering a new segment, or when refining your messaging against competitors.
+          </div>
+        </details>
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            Is there a free trial?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            Yes. You can run a free analysis from the homepage. For more scans and full reports, check the <a href="/pricing" class="text-[#5e62ee] hover:underline">Pricing</a> page for plans and credits.
+          </div>
+        </details>
+        <details class="faq-details group rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-slate-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            How is this different from manual research?
+            <span class="shrink-0 text-slate-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="px-5 pb-4 pt-5 text-base text-slate-600 border-t border-slate-100">
+            We aggregate and structure feedback from many sources in one place. Instead of spending days reading reviews and forums yourself, you get a synthesized report with gaps, themes, and opportunities             — so you can decide what to build or how to position in hours, not weeks.
+          </div>
+        </details>
+      </div>
+    </section>
+
     <footer class="border-t border-slate-200 bg-white/90 mt-auto">
       <div class="max-w-6xl mx-auto px-6 py-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-2">
-            <div class="h-6 w-6 rounded-full bg-[#5e62ee] flex items-center justify-center text-[10px] font-bold text-white">
-              GD
-            </div>
+            <img src="/images/gapdetector.png" alt="Gap Detector" class="h-6 w-6">
             <span class="text-sm font-semibold text-slate-800">Gap Detector</span>
           </div>
           <nav class="flex items-center gap-6 text-sm text-slate-500">
             <a href="/app" class="hover:text-[#5e62ee] transition-colors">Analyzer</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Terms</a>
-            <a href="#" class="hover:text-[#5e62ee] transition-colors">Contact</a>
+            <a href="/privacy" class="hover:text-[#5e62ee] transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-[#5e62ee] transition-colors">Terms</a>
+            <button type="button" id="contact-open-index" class="hover:text-[#5e62ee] transition-colors">
+              Contact
+            </button>
           </nav>
         </div>
         <p class="mt-6 text-xs text-slate-400 text-center sm:text-left">
@@ -345,6 +586,43 @@
         </p>
       </div>
     </footer>
+  </div>
+
+  <!-- Contact modal -->
+  <div id="contact-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+    <div class="w-full max-w-sm rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Contact us</h2>
+          <p class="text-[11px] text-slate-500 mt-1">
+            Send a quick message and we’ll follow up by email.
+          </p>
+        </div>
+        <button id="contact-close" class="text-slate-400 hover:text-slate-600 text-xs">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label for="contact-email" class="block text-[11px] font-medium text-slate-600 mb-1">Your email (optional)</label>
+          <input id="contact-email" type="email" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label for="contact-message" class="block text-[11px] font-medium text-slate-600 mb-1">Message</label>
+          <textarea id="contact-message" rows="4" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5e62ee] focus:border-[#5e62ee]" placeholder="Tell us what you’re trying to do or what’s not working."></textarea>
+        </div>
+        <p id="contact-status" class="text-[11px] text-slate-500 min-h-[1.25rem]"></p>
+        <div class="flex justify-end gap-2">
+          <button type="button" id="contact-cancel" class="text-[11px] text-slate-500 hover:text-slate-700">
+            Cancel
+          </button>
+          <button type="button" id="contact-submit" class="inline-flex items-center justify-center rounded-full bg-[#5e62ee] px-4 py-1.5 text-[11px] font-semibold text-white shadow-md shadow-[#5e62ee]/30 hover:bg-[#4a4ed8] disabled:opacity-60 disabled:cursor-not-allowed">
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -375,6 +653,11 @@
           var res = await fetch('/me/credits', {
             headers: { 'Authorization': 'Bearer ' + stored.accessToken }
           });
+          if (res.status === 401) {
+            try { window.localStorage.removeItem('gd_auth'); } catch (e) {}
+            applyHeaderAuthState();
+            return;
+          }
           if (!res.ok) return;
           var data = await res.json();
           var val = (data && typeof data.credits_remaining === 'number') ? data.credits_remaining : null;
@@ -487,7 +770,13 @@
         var name = (company || '').trim();
         if (!name) return;
 
-        var body = { company_name: name };
+        var token = '';
+        try {
+          if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
+            token = window.turnstile.getResponse() || '';
+          }
+        } catch (e) {}
+        var body = { company_name: name, turnstile_token: token };
         var headers = { 'Content-Type': 'application/json' };
         try {
           var auth = JSON.parse(localStorage.getItem('gd_auth') || '{}');
@@ -516,11 +805,11 @@
             if (statusEl) {
               statusEl.textContent =
                 (data && (data.detail || data.error || data.message)) ||
-                'Unable to start scan. Please try again.';
+                'Unable to start scan. Please verify captcha and try again.';
             } else {
               alert(
                 (data && (data.detail || data.error || data.message)) ||
-                  'Unable to start scan. Please try again.'
+                  'Unable to start scan. Please verify captcha and try again.'
               );
             }
             return;
@@ -556,6 +845,96 @@
           startScan(value);
         });
       });
+    })();
+
+    (function initContactModal() {
+      var openBtn = document.getElementById('contact-open-index');
+      var modal = document.getElementById('contact-modal');
+      var closeBtn = document.getElementById('contact-close');
+      var cancelBtn = document.getElementById('contact-cancel');
+      var submitBtn = document.getElementById('contact-submit');
+      var emailInput = document.getElementById('contact-email');
+      var messageInput = document.getElementById('contact-message');
+      var statusEl = document.getElementById('contact-status');
+
+      function open() {
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        if (statusEl) statusEl.textContent = '';
+        if (messageInput) messageInput.focus();
+      }
+      function close() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+      }
+
+      async function submit() {
+        if (!submitBtn || !messageInput) return;
+        var msg = (messageInput.value || '').trim();
+        var email = (emailInput && emailInput.value || '').trim();
+        if (!msg) {
+          if (statusEl) statusEl.textContent = 'Please enter a message.';
+          return;
+        }
+        submitBtn.disabled = true;
+        if (statusEl) statusEl.textContent = 'Sending…';
+        try {
+          var res = await fetch('/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email || null,
+              message: msg,
+              page: window.location.pathname || '/'
+            })
+          });
+          if (!res.ok) {
+            if (statusEl) statusEl.textContent = 'Unable to send right now. Please try again later.';
+            submitBtn.disabled = false;
+            return;
+          }
+          if (statusEl) statusEl.textContent = 'Message sent. Thanks for reaching out!';
+          if (messageInput) messageInput.value = '';
+          if (emailInput) emailInput.value = '';
+          setTimeout(close, 1200);
+        } catch (e) {
+          if (statusEl) statusEl.textContent = 'Network error. Please try again.';
+          submitBtn.disabled = false;
+        }
+      }
+
+      if (openBtn) openBtn.addEventListener('click', open);
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      if (cancelBtn) cancelBtn.addEventListener('click', close);
+      if (submitBtn) submitBtn.addEventListener('click', submit);
+    })();
+  </script>
+  <script>
+    (function initFaqAccordion() {
+      function setup() {
+        var container = document.getElementById('faq-accordion');
+        if (!container) return;
+        container.addEventListener('click', function (e) {
+          var summary = e.target.closest('summary');
+          if (!summary) return;
+          e.preventDefault();
+          var details = summary.parentElement;
+          if (!details || details.tagName !== 'DETAILS') return;
+          var wasOpen = details.hasAttribute('open');
+          var all = container.querySelectorAll('details.faq-details');
+          for (var i = 0; i < all.length; i++) {
+            all[i].removeAttribute('open');
+          }
+          if (!wasOpen) {
+            details.setAttribute('open', '');
+          }
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+      } else {
+        setup();
+      }
     })();
   </script>
 </body>
