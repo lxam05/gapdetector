@@ -901,141 +901,123 @@
         };
       }
 
-      // Static demo payload for /report?demo=stripe – uses the same
-      // structured sections as a real scan, but with fixed text.
-      function buildStripeDemoDashboard() {
-        var topOpps =
-          '1.\n' +
-          'Human-First Support & Escalation Path\n\n' +
-          '2.\n' +
-          '- Opportunity: Build a payment processor with guaranteed human escalation within 24–48 hours for account disputes, fund holds, or risk flags.\n\n' +
-          '3.\n' +
-          '- Why it matters: Users repeatedly cite the absence of human contact as the primary pain point. A competitor offering a dedicated account manager or escalation hotline for merchants would directly address this gap.\n\n' +
-          '4.\n' +
-          '- Implementation: Tiered support with human review for any account suspension, fund hold, or risk flag before action is taken.\n\n' +
-          '5.\n' +
-          'Transparent Risk Assessment & Remediation\n\n' +
-          '6.\n' +
-          '- Opportunity: Provide merchants with clear, itemized explanations of why they were flagged, specific metrics they\'re being evaluated on, and a documented path to remediation.\n\n' +
-          '7.\n' +
-          '- Why it matters: Users feel trapped by \"black box\" algorithms. One merchant stated they had \"provided valid tracking numbers and official delivery confirmations\" but received only automated denials.\n\n' +
-          '8.\n' +
-          '- Implementation: Dashboard showing risk score breakdown, chargeback rate, dispute patterns, and explicit remediation steps (e.g., \"reduce chargebacks to <0.3%\" or \"provide tracking for 100% of orders\").\n\n' +
-          '9.\n' +
-          'Proportional Fund Hold Policies\n\n' +
-          '10.\n' +
-          '- Opportunity: Offer configurable, proportional fund hold policies (e.g., hold 10–20% of rolling 7-day volume) rather than 100% freezes, and cap hold periods at 30 days with automatic release unless new risk signals emerge.\n\n' +
-          '11.\n' +
-          '- Why it matters: Users describe 6-month holds as \"destroying cash flow\" and making it \"impossible to operate.\" A competitor offering faster, partial releases would be attractive to small-to-medium merchants.\n\n' +
-          '12.\n' +
-          '- Implementation: Risk-based hold tiers: low-risk merchants get 7-day holds; medium-risk get 14-day holds; high-risk get 30-day holds with mandatory human review at day 15.\n\n' +
-          '13.\n' +
-          'Merchant Communication Control\n\n' +
-          '14.\n' +
-          '- Opportunity: Let merchants set communication frequency preferences (daily, weekly, or on-demand) and consolidate status updates into single digests rather than multiple emails per day.\n\n' +
-          '15.\n' +
-          '- Why it matters: One user explicitly stated excessive emails drove them to switch providers: \"I\'m looking for another payment source.\" — ie.trustpilot.com\n\n' +
-          '16.\n' +
-          '- Implementation: Notification preferences in dashboard; weekly digest option; real-time status page instead of email spam.\n\n' +
-          '17.\n' +
-          'Faster Onboarding Verification & Lower Friction for Legitimate Businesses\n\n' +
-          '18.\n' +
-          '- Opportunity: Streamline verification for low-risk business models (e.g., made-to-order, dropshipping, SaaS subscriptions) with pre-approved categories and faster approval timelines.\n\n' +
-          '19.\n' +
-          '- Why it matters: Users report being flagged despite legitimate business models and low chargeback rates. A competitor offering faster, category-based approval would reduce friction.\n\n' +
-          '20.\n' +
-          '- Implementation: Business model templates with pre-approved risk profiles; instant approval for SaaS/subscriptions under $50k/month; 48-hour approval for other categories with documentation.\n\n' +
-          '21.\n' +
-          'Regulatory Compliance & Audit Trail\n\n' +
-          '22.\n' +
-          '- Opportunity: Provide detailed audit trails, compliance documentation, and regulatory reporting to help merchants defend themselves in disputes or regulatory inquiries.\n\n' +
-          '23.\n' +
-          '- Why it matters: Users\n';
-
+      // Static demo payload for /report?demo=stripe – shows BMW example with full sections.
+      function buildBMWDemoDashboard() {
         var sections = {
           'Overall Sentiment':
-            'Positive\n\n' +
-            '- **Highly polarized**: The dataset shows stark contrasts between satisfied enterprise/SaaS users and deeply frustrated small‑to‑medium businesses experiencing account closures and fund holds.\n' +
-            '- **Trust erosion among affected merchants**: Users who have experienced account suspensions report feeling powerless and describe Stripe as operating with \"opacity and detachment.\" One user stated they \"would never build a business on Stripe again\" due to operational risk.\n' +
-            '- **Positive for technical integrations**: Developers and SaaS platforms using Stripe for payment infrastructure report reliable, well‑documented APIs and good integration support.\n' +
-            '- **Critical gap in support responsiveness**: Multiple users report automated responses, lack of human escalation, and communication breakdowns when disputes arise—a major pain point that undermines confidence in the platform.\n',
-          'Top Opportunities to Win': topOpps,
-          // Also map into the generic opportunities key so the
-          // "Top Opportunities to Win" cards render correctly.
-          'Opportunities for a New Competitor': topOpps,
+            'Mixed\n\n' +
+            '- **Biggest Opportunity**: BMW customers cannot self-serve their purchase journey and get trapped in poor dealership experiences with no alternative path to ownership.\n' +
+            '- **What this competitor does best**: BMW positions itself around \'Sheer Driving Pleasure\' and premium automotive engineering, but struggles with consistent customer service delivery across dealerships.\n' +
+            '- **Confidence**: High\n',
           'Key Strengths':
-            'Developer‑friendly API and documentation: "The APIs are well documented, flexible, and suitable for complex, multi‑tenant SaaS use cases, including subscriptions, invoicing, and webhook‑based event handling." — ca.trustpilot.com\n' +
-            'Reliable infrastructure for scaling SaaS: "Stripe provides a reliable, secure, and scalable payment infrastructure that integrates well with our platform architecture" and "has enabled us to confidently manage payments as we scale." — ca.trustpilot.com\n' +
-            'Responsive crisis management (in some cases): "take the drama out of a difficult situation always a pleasure to deal with Stripe. they take the panic out of what could be difficult situations." — www.trustpilot.com\n' +
-            'Security and compliance posture: Users value "Strong security and compliance posture" and "Clear API documentation and developer tooling." — ca.trustpilot.com\n',
+            '- Premium brand positioning around driving pleasure and engineering.\n' +
+            '- Strong product lineup (3 Series, X3, i4) with loyal customer base.\n' +
+            '- Recognized luxury automotive brand with global presence.\n',
           'Key Weaknesses':
-            'Account suspension without warning or due process: "They closed my payment processing account recently at around 3am, with no prior warning whatsoever" and "They shut down our checkout without warning, without explanation, and without any meaningful attempt at communication." — nz.trustpilot.com\n' +
-            'Prolonged fund holds with minimal transparency: "Stripe is now holding our funds for six months while providing little more than automated responses and vague statements" and "they will keep your money without any proper explanations." — ca.trustpilot.com\n' +
-            'No meaningful human support escalation: "There is no real support structure, no escalation path that leads to a human conversation, and no sense of urgency from a company controlling other people\'s money." — nz.trustpilot.com\n' +
-            'Automated decision‑making with no recourse: "decisions are automated and you\'re left dealing with generic emails rather than a real, accountable process." — nz.trustpilot.com\n' +
-            'Disproportionate risk flagging: Users report being flagged as "High Risk" despite legitimate business models and low chargeback rates (e.g., "less than 0.5% chargebacks"). — nz.trustpilot.com\n' +
-            'Account closures and fund freezes: Multiple merchants report sudden account terminations with funds held for 3–6 months, often with minimal explanation or path to resolution.\n' +
-            'Lack of human support and bot‑loop responses: Users describe receiving only "generic emails," "scripted bot replies," and "automated responses" when attempting to resolve disputes. One user noted: "Every single one has been met with a scripted bot reply or no reply at all." — ca.trustpilot.com\n' +
-            'Opacity in risk assessment: Merchants feel the risk flagging system is a "black box" with no transparency into why they were flagged or how to remediate. One user stated: "Stripe flagged our account over \'Item Not Received\' disputes, yet I have provided valid tracking numbers and official delivery confirmations." — ie.trustpilot.com\n' +
-            'Cash flow destruction: "When Stripe\'s risk systems trigger, they can take away your cash flow and hold a large amount of money making it impossible to operate." — nz.trustpilot.com\n' +
-            'Over‑communication on minor issues: One user complained: "They have a lot of help because I get emails every other day regarding any issue that comes up...every other day is very annoying, that I\'m looking for another payment source." — ie.trustpilot.com\n' +
-            'Failed transfers and incomplete customer service responses: "I transferred 50€ of my total credit to check if it was legit or not, before trying to transfer a larger amount, it never arrived. I contacted costumer service and they told me they\'d have a lo..." (response cut off). — nz.trustpilot.com, ie.trustpilot.com, ca.trustpilot.com\n',
+            '- Extremely generic messaging with no specific audience targeting.\n' +
+            '- No quantified benefits or proof points provided.\n' +
+            '- Vague value proposition lacking concrete differentiation.\n' +
+            '- No visible pricing information creates friction for potential customers.\n' +
+            '- Poor customer service and communication at dealerships.\n',
+          'Opportunities for a New Competitor':
+            'Direct-to-consumer vehicle configurator with real-time inventory, transparent pricing, and bypass-dealer purchase option for select models.\n\n' +
+            'Eliminates the #1 complaint source (poor dealership service) while capturing the Tesla-educated buyer segment that expects seamless digital purchasing.\n',
           'How to Outperform This Competitor':
-            'Human‑First Support & Escalation Path\n' +
-            '- Opportunity: Build a payment processor with guaranteed human escalation within 24–48 hours for account disputes, fund holds, or risk flags.\n' +
-            '- Why it matters: Users repeatedly cite the absence of human contact as the primary pain point. A competitor offering a dedicated account manager or escalation hotline for merchants would directly address this gap.\n' +
-            '- Implementation: Tiered support with human review for any account suspension, fund hold, or risk flag before action is taken.\n\n' +
-            'Transparent Risk Assessment & Remediation\n' +
-            '- Opportunity: Provide merchants with clear, itemized explanations of why they were flagged, specific metrics they\'re being evaluated on, and a documented path to remediation.\n' +
-            '- Why it matters: Users feel trapped by "black box" algorithms.\n' +
-            '- Implementation: Dashboard showing risk score breakdown, chargeback rate, dispute patterns, and explicit remediation steps.\n\n' +
-            'Proportional Fund Hold Policies\n' +
-            '- Opportunity: Offer configurable, proportional fund hold policies instead of 100% freezes, with capped hold periods and automatic review.\n\n' +
-            'Merchant Communication Control\n' +
-            '- Opportunity: Let merchants set communication frequency preferences and consolidate updates into single digests.\n\n' +
-            'Faster Onboarding Verification & Lower Friction for Legitimate Businesses\n' +
-            '- Opportunity: Streamline verification for low‑risk business models with category‑based, faster approvals.\n\n' +
-            'Regulatory Compliance & Audit Trail\n' +
-            '- Opportunity: Provide detailed audit trails, compliance documentation, and regulatory reporting to support merchants in disputes and audits.\n'
+            'Launch direct-to-consumer configurator for 3 Series and X3 models in California and Texas markets.\n' +
+            'Integrate real-time inventory management system across 50 highest-volume dealerships.\n' +
+            'Implement digital warranty and service documentation platform with automated delivery.\n' +
+            'Expand direct sales model to additional states while maintaining dealer partnerships for service.\n'
         };
 
         return {
           sections: sections,
-          sentiment_badge: 'Positive',
-          biggest_opportunity: 'Human‑First Support & Escalation Path',
-          biggest_strength:
-            'Developer‑friendly API and documentation for complex, multi‑tenant SaaS use cases.',
-          biggest_weakness:
-            'Account suspension, fund holds, and risk decisions feel opaque and difficult to challenge.',
-          confidence: 'Medium',
-          opportunity_score: 6,
-          difficulty_score: 3,
+          sentiment_badge: 'Mixed',
+          biggest_opportunity: 'BMW customers cannot self-serve their purchase journey and get trapped in poor dealership experiences with no alternative path to ownership',
+          biggest_strength: 'BMW positions itself around \'Sheer Driving Pleasure\' and premium automotive engineering.',
+          biggest_weakness: 'Struggles with consistent customer service delivery across dealerships; no transparent pricing or direct purchase path.',
+          confidence: 'High',
+          opportunity_score: 8,
+          difficulty_score: 5,
           report: '',
-          opportunity_meta: [
-            { demand: 'High', impact: 'High' },   // Human-First Support & Escalation Path
-            { demand: 'High', impact: 'High' },   // Opportunity: build human escalation
-            { demand: 'High', impact: 'High' },   // Why it matters
-            { demand: 'High', impact: 'High' },   // Implementation
-            { demand: 'High', impact: 'High' },   // Transparent Risk Assessment & Remediation
-            { demand: 'High', impact: 'High' },   // Opportunity: clear, itemised explanations
-            { demand: 'High', impact: 'High' },   // Why it matters
-            { demand: 'High', impact: 'High' },   // Implementation
-            { demand: 'High', impact: 'High' },   // Proportional Fund Hold Policies
-            { demand: 'High', impact: 'High' },   // Opportunity: proportional holds
-            { demand: 'High', impact: 'High' },   // Why it matters
-            { demand: 'High', impact: 'High' },   // Implementation
-            { demand: 'Medium', impact: 'Medium' }, // Merchant Communication Control
-            { demand: 'Medium', impact: 'Medium' }, // Opportunity: communication prefs
-            { demand: 'Medium', impact: 'Medium' }, // Why it matters
-            { demand: 'Medium', impact: 'Medium' }, // Implementation
-            { demand: 'Medium', impact: 'High' },   // Faster Onboarding Verification
-            { demand: 'Medium', impact: 'High' },   // Opportunity: streamline verification
-            { demand: 'Medium', impact: 'High' },   // Why it matters
-            { demand: 'Medium', impact: 'High' },   // Implementation
-            { demand: 'Medium', impact: 'Medium' }, // Regulatory Compliance & Audit Trail
-            { demand: 'Medium', impact: 'Medium' }, // Opportunity: audit trails
-            { demand: 'Medium', impact: 'Medium' }, // Why it matters
+          dominant_wedge: {
+            problem_to_attack: 'BMW customers cannot self-serve their purchase journey and get trapped in poor dealership experiences with no alternative path to ownership',
+            who_it_targets: 'Tech-savvy luxury car buyers aged 28-45 who research extensively online before purchasing and prefer digital-first experiences',
+            first_feature_to_build: 'Direct-to-consumer vehicle configurator with real-time inventory, transparent pricing, and bypass-dealer purchase option for select models',
+            why_this_wins: 'Eliminates the #1 complaint source (poor dealership service) while capturing the Tesla-educated buyer segment that expects seamless digital purchasing. Creates new revenue stream while reducing dependency on inconsistent dealer network.',
+            what_to_ignore_initially: ['Dealer relationship management', 'Service appointment booking', 'Financing calculator integration', 'Trade-in tools']
+          },
+          positioning_analysis: {
+            positioning_weaknesses: [
+              'Extremely generic messaging with no specific audience targeting',
+              'No quantified benefits or proof points provided',
+              'Vague value proposition lacking concrete differentiation'
+            ]
+          },
+          feature_gap_analysis: {
+            inferred_missing_features: [
+              'Vehicle configurator/customization tool',
+              'Online financing calculator',
+              'Dealer locator with inventory search'
+            ]
+          },
+          pricing_analysis: {
+            monetization_weaknesses: [
+              'No visible pricing information creates friction for potential customers',
+              'Lack of transparent pricing may deter price-conscious buyers',
+              'Missing pricing page reduces conversion opportunities'
+            ]
+          },
+          top_complaint_cluster: {
+            cluster_name: 'Poor Customer Service and Communication',
+            description: 'Customers experiencing dismissive, unhelpful, or rude treatment from BMW staff, along with ignored messages and poor communication',
+            example_quotes: ['Completely unhelpful and dismissive to customers']
+          },
+          what_users_want: {
+            user_requests: [
+              'Direct online vehicle purchase without dealership interaction',
+              'Transparent, upfront pricing with no hidden fees or dealer markups',
+              'Real-time inventory visibility across all BMW models and configurations',
+              'Immediate warranty documentation delivery via digital channels',
+              'Self-service vehicle configuration with instant availability confirmation',
+              'Quality assurance guarantees with pre-delivery inspection reports'
+            ],
+            core_desire: 'Purchase a premium BMW vehicle through a seamless, transparent digital experience that eliminates dealership friction while ensuring product quality and complete documentation'
+          },
+          quick_wins_7d: [
+            'Launch real-time inventory tracker showing exact vehicle availability by location and configuration',
+            'Implement transparent pricing display with all fees included upfront (no dealer markup surprises)',
+            'Create digital warranty document delivery system with automatic email confirmation within 24 hours of purchase'
           ],
+          user_persona_fit: [
+            'BMW North America CEO (revenue impact from Tesla-style direct sales)',
+            'Head of Digital Experience (customer satisfaction scores)',
+            'VP of Sales Operations (dealer network performance metrics)',
+            'Chief Customer Officer (warranty claim resolution times)'
+          ],
+          business_impact_projection: [
+            '15-25% increase in purchase conversion rates by eliminating dealership friction points',
+            '$2,000-4,000 higher average transaction value through transparent premium pricing model',
+            '40% reduction in customer service complaints related to purchase experience',
+            '12-18 month payback period on direct-to-consumer platform investment'
+          ],
+          tactical_playbook: [
+            'Phase 1: Launch direct-to-consumer configurator for 3 Series and X3 models in California and Texas markets',
+            'Phase 2: Integrate real-time inventory management system across 50 highest-volume dealerships',
+            'Phase 3: Implement digital warranty and service documentation platform with automated delivery',
+            'Phase 4: Expand direct sales model to additional states while maintaining dealer partnerships for service'
+          ],
+          competitor_advantage_breakdown: [
+            { advantage: "Tesla's direct-to-consumer sales model eliminates dealership service inconsistency", impact_size: 'High', why_it_matters: "BMW customers specifically cite poor dealership experience as primary complaint, while Tesla buyers praise seamless purchase process" },
+            { advantage: "Mercedes-Benz's digital documentation system ensures complete warranty paperwork delivery", impact_size: 'Medium', why_it_matters: 'BMW customers frequently report missing service books and warranty documentation, creating post-purchase frustration' },
+            { advantage: "Audi's transparent online pricing reduces purchase negotiation friction", impact_size: 'Medium', why_it_matters: "BMW's dealer markup model creates pricing uncertainty that tech-savvy luxury buyers increasingly reject" }
+          ],
+          execution_plan_30_days: [
+            'Week 1: Launch market research with 500 recent BMW prospects who abandoned purchase due to dealer experience, validate willingness to pay 2-3% premium for direct purchase',
+            'Week 2: Build MVP configurator for 3 popular models (3 Series, X3, i4) with real-time inventory API from 5 pilot markets, basic pricing transparency',
+            'Week 3: Implement \'Reserve & Buy Direct\' flow with $1000 refundable deposit, legal framework for direct sales in California and Texas pilot markets',
+            'Week 4: Launch beta with 100 qualified leads from research cohort, measure conversion rate vs traditional dealer funnel, gather feedback on pricing transparency impact'
+          ],
+          opportunity_meta: [],
           sources: [],
           quotes: [],
           tailoredStrategy: null,
@@ -1047,6 +1029,11 @@
           strategicOptions: [],
           compareResults: null
         };
+      }
+
+      // Legacy name for backwards compatibility.
+      function buildStripeDemoDashboard() {
+        return buildBMWDemoDashboard();
       }
 
       // Exact same renderDashboard as app.html (uses getElementById for results-raw / results-fallback)
@@ -1768,22 +1755,22 @@
       }
 
       if (demo === 'stripe') {
-        // Hard-coded demo that shows a fully structured Stripe report
+        // Hard-coded demo that shows a fully structured BMW report
         // without requiring a real scan_id or auth.
         hideError();
-        if (companyTitle) companyTitle.textContent = 'Stripe';
+        if (companyTitle) companyTitle.textContent = 'BMW';
         if (summaryEl) {
           summaryEl.textContent =
             'We’re turning noisy customer feedback into a structured opportunity map you can actually act on.';
         }
-        if (sentimentScoreEl) sentimentScoreEl.textContent = '58/100';
-        if (opportunityScoreEl) opportunityScoreEl.textContent = '73/100';
-        if (negativePercentEl) negativePercentEl.textContent = '54%';
-        if (positivePercentEl) positivePercentEl.textContent = '46%';
-        // Simple teaser bullets to match the dashboard content.
+        if (sentimentScoreEl) sentimentScoreEl.textContent = 'Mixed';
+        if (opportunityScoreEl) opportunityScoreEl.textContent = '8/10';
+        if (negativePercentEl) negativePercentEl.textContent = '—';
+        if (positivePercentEl) positivePercentEl.textContent = '—';
+        // Teaser bullets to match the BMW dashboard content.
         if (complaintsList) {
           complaintsList.innerHTML = '';
-          ['Account suspensions and fund holds feel sudden and opaque.', 'Limited human support or escalation when money is at risk.', 'Merchants worry about cash‑flow shocks from long fund holds.'].forEach(function (c) {
+          ['Poor dealership service and communication.', 'No transparent pricing or direct online purchase.', 'Missing digital warranty and documentation delivery.'].forEach(function (c) {
             var li = document.createElement('li');
             li.className = 'flex gap-2';
             li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-rose-400"></span><span>' + c + '</span>';
@@ -1792,22 +1779,22 @@
         }
         if (strengthsList) {
           strengthsList.innerHTML = '';
-          ['Human‑first support and escalation.', 'Transparent risk assessment and remediation.'].forEach(function (o) {
+          ['Premium brand and driving experience.', 'Direct-to-consumer configurator and transparent pricing.'].forEach(function (o) {
             var li = document.createElement('li');
             li.className = 'flex gap-2';
             li.innerHTML = '<span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>' + o + '</span>';
             strengthsList.appendChild(li);
           });
         }
-        if (hiddenRequestsEl) hiddenRequestsEl.textContent = '9 recurring feature requests hidden';
-        if (unlockHintEl) unlockHintEl.textContent = 'Unlock to see full breakdown across 112 reviews';
+        if (hiddenRequestsEl) hiddenRequestsEl.textContent = '6 recurring feature requests hidden';
+        if (unlockHintEl) unlockHintEl.textContent = 'Unlock to see full breakdown and 30-day build plan';
         if (premiumPreviewEl) {
           premiumPreviewEl.textContent =
-            'Customer sentiment is positive on Stripe’s technical capabilities, but there is a clear wedge around human‑first support, transparent risk decisions, and fairer fund‑hold policies.';
+            'BMW customers cannot self-serve their purchase journey and get trapped in poor dealership experiences with no alternative path to ownership. The #1 strategic move: direct-to-consumer configurator with transparent pricing.';
         }
         if (teaserLayout) teaserLayout.classList.add('hidden');
         if (fullReportSection) fullReportSection.classList.remove('hidden');
-        var demoDashboard = buildStripeDemoDashboard();
+        var demoDashboard = buildBMWDemoDashboard();
         renderDashboard(demoDashboard);
         return;
       }
