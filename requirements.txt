@@ -10,9 +10,11 @@ redis[hiredis]>=5.2.0
 google-play-scraper
 sqlalchemy
 asyncpg
+alembic
+psycopg2-binary
 anthropic
 pydantic-settings
 email-validator
 python-jose[cryptography]
 passlib[bcrypt]
-bcrypt==4.3.0
+bcrypt==4.0.1
